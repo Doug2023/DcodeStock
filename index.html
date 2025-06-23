@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Dcode Stock</title>
+
+  <!-- Manifesto PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#007BFF" />
+
+  <!-- Fontes e Estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img src="dcodeimage.jpeg" alt="Logo Dcode Stock" class="logo-pequena" />
+    <h1>Dcode Stock</h1>
+    <div id="mesAtual"></div>
+  </header>
+
+  <section>
+    <table id="estoqueTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Entrada</th>
+          <th>Saída</th>
+          <th>Valor Total (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Linhas adicionadas pelo JS -->
+      </tbody>
+    </table>
+  </section>
+
+  <section class="graficos">
+    <canvas id="graficoPizza" width="300" height="300"></canvas>
+    <canvas id="graficoBarras" width="300" height="300"></canvas>
+  </section>
+
+  <div id="resultadoFinal">
+    <p>Entrada Total: <span id="entradaTotal">0</span></p>
+    <p>Saída Total: <span id="saidaTotal">0</span></p>
+    <p>Saldo Atual: <span id="saldoTotal">0</span></p>
+    <p>Valor Total: R$ <span id="valorFinal">0.00</span></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+
+  <!-- Registrar o Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('✅ Service Worker registrado', reg))
+        .catch(err => console.log('❌ Erro ao registrar o Service Worker', err));
+    }
+  </script>
+</body>
+</html>

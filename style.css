@@ -1,0 +1,152 @@
+/* Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+/* GERAL */
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: #121212; /* Fundo escuro */
+  color: #f0f0f0;       /* Texto claro */
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1f1f1f;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  flex-wrap: wrap;
+}
+
+.logo-pequena {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(1px 1px 1px #444);
+}
+
+h1 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+#mesAtual {
+  font-size: 1rem;
+  color: #ccc;
+  margin-left: auto;
+  font-style: italic;
+}
+
+/* TABELA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1f1f1f;
+  margin: 20px 0;
+  box-shadow: 0 0 6px rgba(255,255,255,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #eee;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  border: 2px solid #333;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: #fff;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #00bfff;
+  outline: none;
+  background: #1e1e1e;
+}
+
+/* GRÁFICOS */
+.graficos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+canvas {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+/* RESULTADO FINAL */
+#resultadoFinal {
+  background: #1f1f1f;
+  padding: 20px;
+  box-shadow: 0 0 6px rgba(255,255,255,0.05);
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  max-width: 500px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+  color: #fff;
+}
+
+#resultadoFinal p {
+  margin: 8px 0;
+}
+
+/* RESPONSIVO */
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #mesAtual {
+    margin: 0;
+  }
+
+  table, th, td {
+    font-size: 0.85rem;
+  }
+
+  input[type="text"], input[type="number"] {
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  canvas {
+    max-width: 100%;
+  }
+
+  #resultadoFinal {
+    font-size: 1rem;
+    padding: 15px;
+  }
+}
