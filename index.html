@@ -51,13 +51,24 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 
-  <!-- Registrar o Service Worker -->
+  <!-- Registrar e atualizar Service Worker automaticamente -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('✅ Service Worker registrado', reg))
-        .catch(err => console.log('❌ Erro ao registrar o Service Worker', err));
+      navigator.serviceWorker.register('sw.js').then(registration => {
+        console.log('✅ Service Worker registrado');
+
+        registration.onupdatefound = () => {
+          const newWorker = registration.installing;
+          newWorker.onstatechange = () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('🔁 Nova versão detectada. Recarregando...');
+              window.location.reload();
+            }
+          };
+        };
+      }).catch(err => console.log('❌ Erro ao registrar o Service Worker', err));
     }
   </script>
 </body>
 </html>
+
