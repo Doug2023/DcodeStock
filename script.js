@@ -1,9 +1,11 @@
-// Corrige vírgulas em campos numéricos para evitar erro nos cálculos
-document.addEventListener('input', (e) => {
-  if (e.target.matches('input[type="number"]')) {
-    e.target.value = e.target.value.replace(',', '.');
-  }
-});
+// Função que converte string em número, aceitando vírgula ou ponto
+function parseNumero(valor) {
+  if (!valor) return 0;
+  // Convertendo vírgula em ponto antes do parseFloat
+  valor = valor.toString().replace(',', '.');
+  const num = parseFloat(valor);
+  return isNaN(num) ? 0 : num;
+}
 
 // Mostra mês atual
 const mesAtualEl = document.getElementById('mesAtual');
@@ -76,17 +78,17 @@ function gerenciarLinhas() {
   // Identifica linhas vazias (todos campos vazios ou zero)
   const linhasVazias = linhas.filter(row => {
     const item = row.querySelector('.item').value.trim();
-    const entrada = parseFloat(row.querySelector('.entrada').value) || 0;
-    const saida = parseFloat(row.querySelector('.saida').value) || 0;
-    const valor = parseFloat(row.querySelector('.valor').value) || 0;
+    const entrada = parseNumero(row.querySelector('.entrada').value);
+    const saida = parseNumero(row.querySelector('.saida').value);
+    const valor = parseNumero(row.querySelector('.valor').value);
     return item === '' && entrada === 0 && saida === 0 && valor === 0;
   });
 
   const ultima = linhas[linhas.length - 1];
   const ultimaItem = ultima.querySelector('.item').value.trim();
-  const ultimaEntrada = parseFloat(ultima.querySelector('.entrada').value) || 0;
-  const ultimaSaida = parseFloat(ultima.querySelector('.saida').value) || 0;
-  const ultimaValor = parseFloat(ultima.querySelector('.valor').value) || 0;
+  const ultimaEntrada = parseNumero(ultima.querySelector('.entrada').value);
+  const ultimaSaida = parseNumero(ultima.querySelector('.saida').value);
+  const ultimaValor = parseNumero(ultima.querySelector('.valor').value);
 
   // Se a última linha NÃO está vazia, cria uma nova linha vazia
   if (!(ultimaItem === '' && ultimaEntrada === 0 && ultimaSaida === 0 && ultimaValor === 0)) {
@@ -105,9 +107,9 @@ function atualizarResumo() {
   let entrada = 0, saida = 0, saldo = 0, totalValor = 0;
 
   tabelaBody.querySelectorAll('tr').forEach(row => {
-    const ent = parseFloat(row.querySelector('.entrada').value) || 0;
-    const sai = parseFloat(row.querySelector('.saida').value) || 0;
-    const val = parseFloat(row.querySelector('.valor').value) || 0;
+    const ent = parseNumero(row.querySelector('.entrada').value);
+    const sai = parseNumero(row.querySelector('.saida').value);
+    const val = parseNumero(row.querySelector('.valor').value);
 
     entrada += ent;
     saida += sai;
@@ -129,8 +131,8 @@ function atualizarGraficos() {
 
   tabelaBody.querySelectorAll('tr').forEach(row => {
     const nome = row.querySelector('.item').value.trim();
-    const entrada = parseFloat(row.querySelector('.entrada').value) || 0;
-    const valor = parseFloat(row.querySelector('.valor').value) || 0;
+    const entrada = parseNumero(row.querySelector('.entrada').value);
+    const valor = parseNumero(row.querySelector('.valor').value);
 
     if (nome && entrada > 0) {
       labels.push(nome);
