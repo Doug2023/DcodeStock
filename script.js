@@ -1,6 +1,13 @@
+// Corrige vírgulas em campos numéricos para evitar erro nos cálculos
+document.addEventListener('input', (e) => {
+  if (e.target.matches('input[type="number"]')) {
+    e.target.value = e.target.value.replace(',', '.');
+  }
+});
+
 // Mostra mês atual
 const mesAtualEl = document.getElementById('mesAtual');
-const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const dataAtual = new Date();
 mesAtualEl.textContent = meses[dataAtual.getMonth()] + ' de ' + dataAtual.getFullYear();
 
@@ -42,66 +49,12 @@ function getCorParaItem(nome) {
   return coresMap[nome];
 }
 
-// === Função para salvar tabela no localStorage ===
-function salvarLocalStorage() {
-  const linhasData = [];
-  tabelaBody.querySelectorAll('tr').forEach(row => {
-    const item = row.querySelector('.item').value.trim();
-    const entrada = row.querySelector('.entrada').value;
-    const saida = row.querySelector('.saida').value;
-    const valor = row.querySelector('.valor').value;
-
-    linhasData.push({ item, entrada, saida, valor });
-  });
-  localStorage.setItem('dadosEstoque', JSON.stringify(linhasData));
-}
-
-// === Função para carregar tabela do localStorage ===
-function carregarLocalStorage() {
-  const dados = localStorage.getItem('dadosEstoque');
-  if (!dados) {
-    // Se não tem dados, cria uma linha vazia inicial
-    adicionarLinhaEstoque();
-    return;
-  }
-  const linhasData = JSON.parse(dados);
-
-  // Limpa tabela atual
-  tabelaBody.innerHTML = '';
-
-  linhasData.forEach(({ item, entrada, saida, valor }) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><input type="text" class="item" placeholder="Nome do item" autocomplete="off" value="${item}" /></td>
-      <td><input type="number" class="entrada" value="${entrada}" min="0" /></td>
-      <td><input type="number" class="saida" value="${saida}" min="0" /></td>
-      <td><input type="number" class="valor" value="${valor}" step="0.01" min="0" /></td>
-    `;
-    tabelaBody.appendChild(row);
-
-    const inputs = row.querySelectorAll('input');
-    inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        atualizarResumo();
-        atualizarGraficos();
-        gerenciarLinhas();
-        salvarLocalStorage();  // Salva ao editar
-      });
-    });
-  });
-
-  atualizarResumo();
-  atualizarGraficos();
-  gerenciarLinhas();
-}
-
-// Função existente para adicionar linha vazia nova
 function adicionarLinhaEstoque() {
   const row = document.createElement('tr');
   row.innerHTML = `
     <td><input type="text" class="item" placeholder="Nome do item" autocomplete="off" /></td>
-    <td><input type="number" class="entrada" value="0" min="0" /></td>
-    <td><input type="number" class="saida" value="0" min="0" /></td>
+    <td><input type="number" class="entrada" value="0" min="0" step="any" /></td>
+    <td><input type="number" class="saida" value="0" min="0" step="any" /></td>
     <td><input type="number" class="valor" value="0" step="0.01" min="0" /></td>
   `;
   tabelaBody.appendChild(row);
@@ -112,7 +65,6 @@ function adicionarLinhaEstoque() {
       atualizarResumo();
       atualizarGraficos();
       gerenciarLinhas();
-      salvarLocalStorage(); // Salva ao editar
     });
   });
 }
@@ -149,15 +101,13 @@ function gerenciarLinhas() {
   }
 }
 
-// Funções para atualizar resumo e gráficos (sem mudanças)
 function atualizarResumo() {
   let entrada = 0, saida = 0, saldo = 0, totalValor = 0;
 
   tabelaBody.querySelectorAll('tr').forEach(row => {
     const ent = parseFloat(row.querySelector('.entrada').value) || 0;
     const sai = parseFloat(row.querySelector('.saida').value) || 0;
-    const val = parseFloat(row.querySelector('.valor').value.replace(',', '.')) || 0;
-
+    const val = parseFloat(row.querySelector('.valor').value) || 0;
 
     entrada += ent;
     saida += sai;
@@ -180,8 +130,7 @@ function atualizarGraficos() {
   tabelaBody.querySelectorAll('tr').forEach(row => {
     const nome = row.querySelector('.item').value.trim();
     const entrada = parseFloat(row.querySelector('.entrada').value) || 0;
-    const valor = parseFloat(row.querySelector('.valor').value.replace(',', '.')) || 0;
-
+    const valor = parseFloat(row.querySelector('.valor').value) || 0;
 
     if (nome && entrada > 0) {
       labels.push(nome);
@@ -202,5 +151,6 @@ function atualizarGraficos() {
   chartBarras.update();
 }
 
-// Ao carregar a página, carrega os dados do localStorage
-carregarLocalStorage();
+// Inicializa com uma linha vazia para começar
+adicionarLinhaEstoque();
+
