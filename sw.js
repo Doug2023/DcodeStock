@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dcode-stock-v2'; // IMPORTANTE: sempre aumente o número para forçar update
+const CACHE_NAME = 'dcode-stock-v3'; // IMPORTANTE: sempre aumente o número para forçar update
 const urlsToCache = [
   './',
   './index.html',
