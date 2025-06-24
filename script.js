@@ -1,6 +1,6 @@
 // Mostra mês atual
 const mesAtualEl = document.getElementById('mesAtual');
-const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 const dataAtual = new Date();
 mesAtualEl.textContent = meses[dataAtual.getMonth()] + ' de ' + dataAtual.getFullYear();
 
@@ -69,7 +69,7 @@ function carregarLocalStorage() {
   // Limpa tabela atual
   tabelaBody.innerHTML = '';
 
-  linhasData.forEach(({item, entrada, saida, valor}) => {
+  linhasData.forEach(({ item, entrada, saida, valor }) => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td><input type="text" class="item" placeholder="Nome do item" autocomplete="off" value="${item}" /></td>
@@ -156,7 +156,8 @@ function atualizarResumo() {
   tabelaBody.querySelectorAll('tr').forEach(row => {
     const ent = parseFloat(row.querySelector('.entrada').value) || 0;
     const sai = parseFloat(row.querySelector('.saida').value) || 0;
-    const val = parseFloat(row.querySelector('.valor').value) || 0;
+    const val = parseFloat(row.querySelector('.valor').value.replace(',', '.')) || 0;
+
 
     entrada += ent;
     saida += sai;
@@ -179,7 +180,8 @@ function atualizarGraficos() {
   tabelaBody.querySelectorAll('tr').forEach(row => {
     const nome = row.querySelector('.item').value.trim();
     const entrada = parseFloat(row.querySelector('.entrada').value) || 0;
-    const valor = parseFloat(row.querySelector('.valor').value) || 0;
+    const valor = parseFloat(row.querySelector('.valor').value.replace(',', '.')) || 0;
+
 
     if (nome && entrada > 0) {
       labels.push(nome);
