@@ -149,4 +149,28 @@ canvas {
     font-size: 1rem;
     padding: 15px;
   }
+  .graficos {
+  display: flex;
+  gap: 1rem;            /* Espaço entre os gráficos */
+  justify-content: center;
+  flex-wrap: wrap;      /* Quebra linha se não couber na tela */
+  margin-top: 2rem;
+}
+
+.grafico-container {
+  flex: 1 1 300px;      /* Cresce, encolhe e largura base 300px */
+  max-width: 320px;     /* Largura máxima para cada gráfico */
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.7);
+}
+
+canvas {
+  width: 100% !important;  /* Faz o canvas preencher o container */
+  height: 250px !important;
+  display: block;
+  border-radius: 6px;
+}
+
 }
