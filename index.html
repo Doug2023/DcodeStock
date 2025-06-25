@@ -2,46 +2,61 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dcode Stock</title>
-
-  <!-- Manifesto PWA -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#007BFF" />
-
-  <!-- Fontes e Estilos -->
+  <meta name="theme-color" content="#000000" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <img src="dcodeimage.jpeg" alt="Logo Dcode Stock" class="logo-pequena" />
-    <h1>Dcode Stock</h1>
-    <div id="mesAtual"></div>
+  <header style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background-color: #121212; color: #eee;">
+    <img src="dcodeimage.jpeg" alt="Logo Dcode Stock" class="logo-10%" style="width: 60px; height: auto;" />
+    <div id="mesAtual" style="flex-grow: 1; font-family: 'Russo One', sans-serif; font-size: 1.4rem;"></div>
+    <!-- botão "+" removido conforme pedido -->
   </header>
 
-  <section>
-    <table id="estoqueTable">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Entrada</th>
-          <th>Saída</th>
-          <th>Valor Total (R$)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Linhas adicionadas pelo JS -->
-      </tbody>
-    </table>
+  <section style="padding: 1rem; background-color: #1e1e1e; color: #eee; font-family: 'Russo One', sans-serif;">
+    <label for="nomeEstoque" style="font-size: 1.2rem; font-weight: 700;">Nome do Estoque:</label>
+    <input
+      type="text"
+      id="nomeEstoque"
+      placeholder="Digite o nome do estoque"
+      style="
+        width: 100%;
+        max-width: 400px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        background-color: #333;
+        border: none;
+        border-radius: 6px;
+        color: #eee;
+        font-family: 'Russo One', sans-serif;
+        font-size: 1rem;
+      "
+    />
   </section>
 
-  <section class="graficos">
-    <canvas id="graficoPizza" width="300" height="300"></canvas>
-    <canvas id="graficoBarras" width="300" height="300"></canvas>
-  </section>
+  <main id="abasContainer">
+    <!-- As abas de estoque serão inseridas aqui pelo script -->
+  </main>
 
-  <div id="resultadoFinal">
+  <div class="graficos" style="display: flex; gap: 1rem; padding: 1rem; background-color: #121212;">
+    <div class="grafico-container" style="flex: 1; background-color: #222; padding: 1rem; border-radius: 8px;">
+      <h3 style="color: #eee; font-family: 'Russo One', sans-serif;">Entradas por Item</h3>
+      <canvas id="graficoPizza"></canvas>
+    </div>
+    <div class="grafico-container" style="flex: 1; background-color: #222; padding: 1rem; border-radius: 8px;">
+      <h3 style="color: #eee; font-family: 'Russo One', sans-serif;">Valor Total por Item</h3>
+      <canvas id="graficoBarras"></canvas>
+    </div>
+    <div class="grafico-container" style="flex: 1; background-color: #222; padding: 1rem; border-radius: 8px;">
+      <h3 style="color: #eee; font-family: 'Russo One', sans-serif;">Saídas por Data</h3>
+      <canvas id="graficoSaidas"></canvas>
+    </div>
+  </div>
+
+  <div id="resultadoFinal" style="padding: 1rem; background-color: #1e1e1e; color: #eee; text-align: center; font-family: 'Russo One', sans-serif;">
     <p>Entrada Total: <span id="entradaTotal">0</span></p>
     <p>Saída Total: <span id="saidaTotal">0</span></p>
     <p>Saldo Atual: <span id="saldoTotal">0</span></p>
@@ -50,23 +65,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
-
-  <!-- Registrar e atualizar Service Worker automaticamente -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(registration => {
-        console.log('✅ Service Worker registrado');
-
-        registration.onupdatefound = () => {
-          const newWorker = registration.installing;
-          newWorker.onstatechange = () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              console.log('🔁 Nova versão detectada. Recarregando...');
-              window.location.reload();
-            }
-          };
-        };
-      }).catch(err => console.log('❌ Erro ao registrar o Service Worker', err));
+      navigator.serviceWorker.register('sw.js').then(r => {
+        console.log("✅ Service Worker registrado", r);
+      }).catch(e => {
+        console.error("❌ Erro no SW", e);
+      });
     }
   </script>
 </body>
