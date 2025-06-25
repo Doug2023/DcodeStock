@@ -1,158 +1,155 @@
-// Função que converte string em número, aceitando vírgula ou ponto
-function parseNumero(valor) {
-  if (!valor) return 0;
-  // Convertendo vírgula em ponto antes do parseFloat
-  valor = valor.toString().replace(',', '.');
-  const num = parseFloat(valor);
-  return isNaN(num) ? 0 : num;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const mesAtualEl = document.getElementById('mesAtual');
+  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  const hoje = new Date();
+  mesAtualEl.textContent = `${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 
-// Mostra mês atual
-const mesAtualEl = document.getElementById('mesAtual');
-const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const dataAtual = new Date();
-mesAtualEl.textContent = meses[dataAtual.getMonth()] + ' de ' + dataAtual.getFullYear();
+  const abasContainer = document.getElementById('abasContainer');
+  const btnAdicionar = document.getElementById('adicionarAba');
+  const entradaTotalEl = document.getElementById('entradaTotal');
+  const saidaTotalEl = document.getElementById('saidaTotal');
+  const saldoTotalEl = document.getElementById('saldoTotal');
+  const valorFinalEl = document.getElementById('valorFinal');
 
-const tabelaBody = document.querySelector('#estoqueTable tbody');
-const entradaTotalEl = document.getElementById('entradaTotal');
-const saidaTotalEl = document.getElementById('saidaTotal');
-const saldoTotalEl = document.getElementById('saldoTotal');
-const valorFinalEl = document.getElementById('valorFinal');
+  const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
+  const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
+  const ctxSaidas = document.getElementById('graficoSaidas').getContext('2d');
 
-const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
-const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
-
-const chartPizza = new Chart(ctxPizza, {
-  type: 'pie',
-  data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-  options: { plugins: { legend: { position: 'bottom' } } }
-});
-
-const chartBarras = new Chart(ctxBarras, {
-  type: 'bar',
-  data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-  options: {
-    scales: { y: { beginAtZero: true } },
-    plugins: { legend: { display: false } }
-  }
-});
-
-const coresMap = {};
-function gerarCorAleatoria() {
-  const r = Math.floor((Math.random() * 127) + 127);
-  const g = Math.floor((Math.random() * 127) + 127);
-  const b = Math.floor((Math.random() * 127) + 127);
-  return `rgb(${r},${g},${b})`;
-}
-function getCorParaItem(nome) {
-  if (!coresMap[nome]) {
-    coresMap[nome] = gerarCorAleatoria();
-  }
-  return coresMap[nome];
-}
-
-function adicionarLinhaEstoque() {
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><input type="text" class="item" placeholder="Nome do item" autocomplete="off" /></td>
-    <td><input type="number" class="entrada" value="0" min="0" step="any" /></td>
-    <td><input type="number" class="saida" value="0" min="0" step="any" /></td>
-    <td><input type="number" class="valor" value="0" step="0.01" min="0" /></td>
-  `;
-  tabelaBody.appendChild(row);
-
-  const inputs = row.querySelectorAll('input');
-  inputs.forEach(input => {
-    input.addEventListener('input', () => {
-      atualizarResumo();
-      atualizarGraficos();
-      gerenciarLinhas();
-    });
-  });
-}
-
-// Controla as linhas: mantém pelo menos 1 linha vazia no final, remove extras
-function gerenciarLinhas() {
-  const linhas = Array.from(tabelaBody.querySelectorAll('tr'));
-
-  // Identifica linhas vazias (todos campos vazios ou zero)
-  const linhasVazias = linhas.filter(row => {
-    const item = row.querySelector('.item').value.trim();
-    const entrada = parseNumero(row.querySelector('.entrada').value);
-    const saida = parseNumero(row.querySelector('.saida').value);
-    const valor = parseNumero(row.querySelector('.valor').value);
-    return item === '' && entrada === 0 && saida === 0 && valor === 0;
+  const chartPizza = new Chart(ctxPizza, {
+    type: 'pie',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+    options: { plugins: { legend: { position: 'bottom' } } }
   });
 
-  const ultima = linhas[linhas.length - 1];
-  const ultimaItem = ultima.querySelector('.item').value.trim();
-  const ultimaEntrada = parseNumero(ultima.querySelector('.entrada').value);
-  const ultimaSaida = parseNumero(ultima.querySelector('.saida').value);
-  const ultimaValor = parseNumero(ultima.querySelector('.valor').value);
+  const chartBarras = new Chart(ctxBarras, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
 
-  // Se a última linha NÃO está vazia, cria uma nova linha vazia
-  if (!(ultimaItem === '' && ultimaEntrada === 0 && ultimaSaida === 0 && ultimaValor === 0)) {
-    adicionarLinhaEstoque();
-  }
+  const chartSaidas = new Chart(ctxSaidas, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Saídas por data', data: [], backgroundColor: [] }] },
+    options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+  });
 
-  // Se tem mais de 1 linha vazia, remove as extras, deixando só 1
-  if (linhasVazias.length > 1) {
-    for (let i = 0; i < linhasVazias.length - 1; i++) {
-      tabelaBody.removeChild(linhasVazias[i]);
+  const coresMap = {};
+  function gerarCor(nome) {
+    if (!coresMap[nome]) {
+      const r = Math.floor(Math.random() * 156 + 100);
+      const g = Math.floor(Math.random() * 156 + 100);
+      const b = Math.floor(Math.random() * 156 + 100);
+      coresMap[nome] = `rgb(${r},${g},${b})`;
     }
+    return coresMap[nome];
   }
-}
 
-function atualizarResumo() {
-  let entrada = 0, saida = 0, saldo = 0, totalValor = 0;
+  function criarAba() {
+    const aba = document.createElement('section');
+    const tabela = document.createElement('table');
+    tabela.className = 'estoque-table';
+    tabela.innerHTML = `
+      <thead>
+        <tr><th>Item</th><th>Entrada</th><th>Saída</th><th>Valor</th></tr>
+      </thead>
+      <tbody></tbody>
+    `;
+    aba.appendChild(tabela);
+    abasContainer.innerHTML = ''; // Só uma aba por vez
+    abasContainer.appendChild(aba);
 
-  tabelaBody.querySelectorAll('tr').forEach(row => {
-    const ent = parseNumero(row.querySelector('.entrada').value);
-    const sai = parseNumero(row.querySelector('.saida').value);
-    const val = parseNumero(row.querySelector('.valor').value);
+    function adicionarLinha() {
+      const linha = document.createElement('tr');
+      linha.innerHTML = `
+        <td><input type="text" class="item" placeholder="Ex: Arroz" /></td>
+        <td><input type="number" class="entrada" value="0" step="any" /></td>
+        <td><input type="number" class="saida" value="0" step="any" /></td>
+        <td><input type="number" class="valor" value="0" step="0.01" /></td>
+      `;
+      tabela.querySelector('tbody').appendChild(linha);
+      const inputs = linha.querySelectorAll('input');
+      inputs.forEach(input => input.addEventListener('input', () => {
+        atualizarResumo();
+        atualizarGraficos();
+        verificarLinhaFinal();
+      }));
+    }
 
-    entrada += ent;
-    saida += sai;
-    saldo += (ent - sai);
-    totalValor += val;
-  });
+    function verificarLinhaFinal() {
+      const linhas = [...tabela.querySelectorAll('tbody tr')];
+      const ultima = linhas[linhas.length - 1];
+      if (ultima && [...ultima.querySelectorAll('input')].some(inp => inp.value.trim() !== '' && inp.value !== '0')) {
+        adicionarLinha();
+      }
+    }
 
-  entradaTotalEl.textContent = entrada;
-  saidaTotalEl.textContent = saida;
-  saldoTotalEl.textContent = saldo;
-  valorFinalEl.textContent = totalValor.toFixed(2);
-}
+    function atualizarResumo() {
+      let entrada = 0, saida = 0, saldo = 0, valor = 0;
+      [...tabela.querySelectorAll('tbody tr')].forEach(linha => {
+        const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+        const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+        const val = parseFloat(linha.querySelector('.valor').value) || 0;
+        entrada += ent;
+        saida += sai;
+        saldo += (ent - sai);
+        valor += val;
+      });
+      entradaTotalEl.textContent = entrada;
+      saidaTotalEl.textContent = saida;
+      saldoTotalEl.textContent = saldo;
+      valorFinalEl.textContent = valor.toFixed(2);
+    }
 
-function atualizarGraficos() {
-  const labels = [];
-  const dadosEntrada = [];
-  const dadosValor = [];
-  const cores = [];
+    function atualizarGraficos() {
+  const labels = [], entradas = [], valores = [], cores = [];
+  const dataSaida = {};
+  const corSaidaPorItem = {};
 
-  tabelaBody.querySelectorAll('tr').forEach(row => {
-    const nome = row.querySelector('.item').value.trim();
-    const entrada = parseNumero(row.querySelector('.entrada').value);
-    const valor = parseNumero(row.querySelector('.valor').value);
+  [...tabela.querySelectorAll('tbody tr')].forEach(linha => {
+    const nome = linha.querySelector('.item').value.trim();
+    const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+    const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+    const val = parseFloat(linha.querySelector('.valor').value) || 0;
 
-    if (nome && entrada > 0) {
-      labels.push(nome);
-      dadosEntrada.push(entrada);
-      dadosValor.push(valor);
-      cores.push(getCorParaItem(nome));
+    if (nome) {
+      const cor = gerarCor(nome);
+
+      if (ent > 0) {
+        labels.push(nome);
+        entradas.push(ent);
+        valores.push(val);
+        cores.push(cor);
+      }
+
+      if (sai > 0) {
+        if (!dataSaida[nome]) dataSaida[nome] = 0;
+        dataSaida[nome] += sai;
+        corSaidaPorItem[nome] = cor;
+      }
     }
   });
 
   chartPizza.data.labels = labels;
-  chartPizza.data.datasets[0].data = dadosEntrada;
-  chartPizza.data.datasets[0].backgroundColor = cores;
+  chartPizza.data.datasets[0].data = entradas;
+  chartPizza.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
   chartPizza.update();
 
   chartBarras.data.labels = labels;
-  chartBarras.data.datasets[0].data = dadosValor;
-  chartBarras.data.datasets[0].backgroundColor = cores;
+  chartBarras.data.datasets[0].data = valores;
+  chartBarras.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
   chartBarras.update();
+
+  const saidaLabels = Object.keys(dataSaida);
+  chartSaidas.data.labels = saidaLabels;
+  chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
+  chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+  chartSaidas.update();
 }
 
-// Inicializa com uma linha vazia para começar
-adicionarLinhaEstoque();
 
+    adicionarLinha();
+  }
+
+  btnAdicionar.addEventListener('click', criarAba);
+  criarAba(); // Carrega uma aba ao iniciar
+});
