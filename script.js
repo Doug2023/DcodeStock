@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   mesAtualEl.textContent = `${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 
   const abasContainer = document.getElementById('abasContainer');
-  const btnAdicionar = document.getElementById('adicionarAba');
   const entradaTotalEl = document.getElementById('entradaTotal');
   const saidaTotalEl = document.getElementById('saidaTotal');
   const saldoTotalEl = document.getElementById('saldoTotal');
@@ -45,17 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function criarAba() {
+    // Cria a section com tabela
     const aba = document.createElement('section');
     const tabela = document.createElement('table');
     tabela.className = 'estoque-table';
     tabela.innerHTML = `
       <thead>
-        <tr><th>Item</th><th>Entrada</th><th>Saída</th><th>Valor</th></tr>
+        <tr>
+          <th>Item</th>
+          <th>Entrada</th>
+          <th>Saída</th>
+          <th>Valor</th>
+        </tr>
       </thead>
       <tbody></tbody>
     `;
     aba.appendChild(tabela);
-    abasContainer.innerHTML = ''; // Só uma aba por vez
+
+    abasContainer.innerHTML = '';  // limpa antes de inserir a aba
     abasContainer.appendChild(aba);
 
     function adicionarLinha() {
@@ -101,55 +107,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function atualizarGraficos() {
-  const labels = [], entradas = [], valores = [], cores = [];
-  const dataSaida = {};
-  const corSaidaPorItem = {};
+      const labels = [], entradas = [], valores = [], cores = [];
+      const dataSaida = {};
+      const corSaidaPorItem = {};
 
-  [...tabela.querySelectorAll('tbody tr')].forEach(linha => {
-    const nome = linha.querySelector('.item').value.trim();
-    const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
-    const sai = parseFloat(linha.querySelector('.saida').value) || 0;
-    const val = parseFloat(linha.querySelector('.valor').value) || 0;
+      [...tabela.querySelectorAll('tbody tr')].forEach(linha => {
+        const nome = linha.querySelector('.item').value.trim();
+        const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+        const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+        const val = parseFloat(linha.querySelector('.valor').value) || 0;
 
-    if (nome) {
-      const cor = gerarCor(nome);
+        if (nome) {
+          const cor = gerarCor(nome);
 
-      if (ent > 0) {
-        labels.push(nome);
-        entradas.push(ent);
-        valores.push(val);
-        cores.push(cor);
-      }
+          if (ent > 0) {
+            labels.push(nome);
+            entradas.push(ent);
+            valores.push(val);
+            cores.push(cor);
+          }
 
-      if (sai > 0) {
-        if (!dataSaida[nome]) dataSaida[nome] = 0;
-        dataSaida[nome] += sai;
-        corSaidaPorItem[nome] = cor;
-      }
+          if (sai > 0) {
+            if (!dataSaida[nome]) dataSaida[nome] = 0;
+            dataSaida[nome] += sai;
+            corSaidaPorItem[nome] = cor;
+          }
+        }
+      });
+
+      chartPizza.data.labels = labels;
+      chartPizza.data.datasets[0].data = entradas;
+      chartPizza.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+      chartPizza.update();
+
+      chartBarras.data.labels = labels;
+      chartBarras.data.datasets[0].data = valores;
+      chartBarras.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+      chartBarras.update();
+
+      const saidaLabels = Object.keys(dataSaida);
+      chartSaidas.data.labels = saidaLabels;
+      chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
+      chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+      chartSaidas.update();
     }
-  });
 
-  chartPizza.data.labels = labels;
-  chartPizza.data.datasets[0].data = entradas;
-  chartPizza.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
-  chartPizza.update();
-
-  chartBarras.data.labels = labels;
-  chartBarras.data.datasets[0].data = valores;
-  chartBarras.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
-  chartBarras.update();
-
-  const saidaLabels = Object.keys(dataSaida);
-  chartSaidas.data.labels = saidaLabels;
-  chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
-  chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
-  chartSaidas.update();
-}
-
-
-    adicionarLinha();
+    adicionarLinha(); // adiciona a primeira linha vazia para inserir produto
   }
 
-  btnAdicionar.addEventListener('click', criarAba);
-  criarAba(); // Carrega uma aba ao iniciar
+  criarAba(); // chama aqui para criar a tabela e linha inicial ao abrir
 });

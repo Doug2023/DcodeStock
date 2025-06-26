@@ -2,27 +2,82 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Dcode Stock</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Poppins', Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+    main, #resultadoFinal, #registroOperacoes {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 1rem;
+    }
+    .graficos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+    .grafico-container {
+      flex: 1 1 300px;
+      min-width: 280px;
+    }
+    @media screen and (max-width: 768px) {
+      .graficos {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+    #registroOperacoes {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+    #registroOperacoes ul {
+      list-style: none;
+      padding-left: 0;
+    }
+  </style>
 </head>
 <body>
-  
-    <img src="dcodeimage.jpeg" alt="Logo Dcode Stock"class="logo-10%" />
-    <div id="mesAtual"></div>
-    <b id="adicionarAba" title="Novo Estoque"></b
-  
+  <header style="display:flex;flex-wrap:wrap;align-items:center;padding:1rem;background:#1f1f1f">
+    <img src="dcodeimage.jpeg" src="dcodeimage.jpeg"alt="Logo Dcode Stock" class="logo" style="height:240px;margin-right:210px;" />
+    <h1 style="flex:1;font-size:1.5rem;font-family:'Russo One',sans-serif;">Dcode Stock</h1>
+    <div id="mesAtual" style="font-size:0.9rem;font-style:italic;color:#ccc;"></div>
+  </header>
 
+  <div class="nome-estoque-container" style="padding:1rem;">
+    <input type="text" placeholder="Digite o nome do estoque" style="width:100%;padding:10px;border-radius:4px;border:none;background:#2a2a2a;color:#fff;"/>
+  </div>
 
-class="nome-estoque-container">
-  
-  <input type="text" placeholder="Digite o nome do estoque" />
-</class=>
   <main id="abasContainer">
-    <!-- As abas de estoque serão inseridas aqui pelo script -->
+    <table class="estoque-table" style="width:100%;border-collapse:collapse;margin-bottom:1rem;">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Entrada</th>
+          <th>Saída</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </main>
 
   <div class="graficos">
@@ -31,33 +86,231 @@ class="nome-estoque-container">
       <canvas id="graficoPizza"></canvas>
     </div>
     <div class="grafico-container">
-      <h3> R$ </h3>
+      <h3>R$ valores</h3>
       <canvas id="graficoBarras"></canvas>
     </div>
     <div class="grafico-container">
-      <h3>Saídas </h3>
+      <h3>Saídas</h3>
       <canvas id="graficoSaidas"></canvas>
     </div>
   </div>
 
-
-  <div id="resultadoFinal">
+  <div id="resultadoFinal" style="padding:20px;text-align:center;background:#1f1f1f;margin-top:1rem;">
     <p>Entrada Total: <span id="entradaTotal">0</span></p>
     <p>Saída Total: <span id="saidaTotal">0</span></p>
     <p>Saldo Atual: <span id="saldoTotal">0</span></p>
     <p>Valor Total: R$ <span id="valorFinal">0.00</span></p>
   </div>
 
+  <div id="registroOperacoes">
+    <h3>Histórico de Operações</h3>
+    <ul id="listaOperacoes"></ul>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(r => {
-        console.log("✅ Service Worker registrado", r);
-      }).catch(e => {
-        console.error("❌ Erro no SW", e);
+    document.addEventListener('DOMContentLoaded', () => {
+      const entradaTotalEl = document.getElementById('entradaTotal');
+      const saidaTotalEl = document.getElementById('saidaTotal');
+      const saldoTotalEl = document.getElementById('saldoTotal');
+      const valorFinalEl = document.getElementById('valorFinal');
+      const tabela = document.querySelector('table tbody');
+      const listaOperacoes = document.getElementById('listaOperacoes');
+
+      const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
+      const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
+      const ctxSaidas = document.getElementById('graficoSaidas').getContext('2d');
+
+      const chartPizza = new Chart(ctxPizza, {
+        type: 'pie',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+        options: { plugins: { legend: { position: 'bottom' } } }
       });
-    }
+
+      const chartBarras = new Chart(ctxBarras, {
+        type: 'bar',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+
+      const chartSaidas = new Chart(ctxSaidas, {
+        type: 'bar',
+        data: { labels: [], datasets: [{ label: 'Saídas por data', data: [], backgroundColor: [] }] },
+        options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+      });
+
+      const coresMap = JSON.parse(localStorage.getItem('coresMap') || '{}');
+      function gerarCor(nome) {
+        if (!coresMap[nome]) {
+          const r = Math.floor(Math.random() * 156 + 100);
+          const g = Math.floor(Math.random() * 156 + 100);
+          const b = Math.floor(Math.random() * 156 + 100);
+          coresMap[nome] = `rgb(${r},${g},${b})`;
+          localStorage.setItem('coresMap', JSON.stringify(coresMap));
+        }
+        return coresMap[nome];
+      }
+
+      function registrarOperacao(tipo, item, quantidade) {
+        const data = new Date();
+        const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
+        const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
+        const li = document.createElement('li');
+        li.textContent = texto;
+        listaOperacoes.prepend(li);
+
+        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
+        historico.unshift(texto);
+        localStorage.setItem('historicoOperacoes', JSON.stringify(historico));
+      }
+
+      function restaurarHistorico() {
+        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
+        historico.forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          listaOperacoes.appendChild(li);
+        });
+      }
+
+      function salvarTabela() {
+        const linhas = [...tabela.querySelectorAll('tr')].map(linha => {
+          return {
+            item: linha.querySelector('.item').value,
+            entrada: linha.querySelector('.entrada').value,
+            saida: linha.querySelector('.saida').value,
+            valor: linha.querySelector('.valor').value
+          }
+        });
+        localStorage.setItem('dadosTabela', JSON.stringify(linhas));
+      }
+
+      function restaurarTabela() {
+        const dados = JSON.parse(localStorage.getItem('dadosTabela') || '[]');
+        dados.forEach(data => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td><input type="text" class="item" value="${data.item}" /></td>
+            <td><input type="number" class="entrada" value="${data.entrada}" /></td>
+            <td><input type="number" class="saida" value="${data.saida}" /></td>
+            <td><input type="number" class="valor" value="${data.valor}" /></td>
+          `;
+          tabela.appendChild(linha);
+          adicionarEventosLinha(linha);
+        });
+        adicionarLinha();
+        atualizarResumo();
+        atualizarGraficos();
+      }
+
+      function adicionarLinha() {
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+          <td><input type="text" class="item" placeholder="Ex: Arroz" /></td>
+          <td><input type="number" class="entrada" value="0" step="any" /></td>
+          <td><input type="number" class="saida" value="0" step="any" /></td>
+          <td><input type="number" class="valor" value="0" step="0.01" /></td>
+        `;
+        tabela.appendChild(linha);
+        adicionarEventosLinha(linha);
+      }
+
+      function adicionarEventosLinha(linha) {
+        const inputs = linha.querySelectorAll('input');
+        inputs.forEach(input => input.addEventListener('input', () => {
+          atualizarResumo();
+          atualizarGraficos();
+          salvarTabela();
+          verificarLinhaFinal();
+        }));
+
+        linha.querySelector('.entrada').addEventListener('change', () => {
+          const item = linha.querySelector('.item').value.trim();
+          const valor = linha.querySelector('.entrada').value;
+          if (item && valor > 0) registrarOperacao('entrada', item, valor);
+        });
+
+        linha.querySelector('.saida').addEventListener('change', () => {
+          const item = linha.querySelector('.item').value.trim();
+          const valor = linha.querySelector('.saida').value;
+          if (item && valor > 0) registrarOperacao('saida', item, valor);
+        });
+      }
+
+      function verificarLinhaFinal() {
+        const linhas = [...tabela.querySelectorAll('tr')];
+        const ultima = linhas[linhas.length - 1];
+        if (ultima && [...ultima.querySelectorAll('input')].some(inp => inp.value.trim() !== '' && inp.value !== '0')) {
+          adicionarLinha();
+        }
+      }
+
+      function atualizarResumo() {
+        let entrada = 0, saida = 0, saldo = 0, valor = 0;
+        [...tabela.querySelectorAll('tr')].forEach(linha => {
+          const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+          const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+          const val = parseFloat(linha.querySelector('.valor').value) || 0;
+          entrada += ent;
+          saida += sai;
+          saldo += (ent - sai);
+          valor += val;
+        });
+        entradaTotalEl.textContent = entrada;
+        saidaTotalEl.textContent = saida;
+        saldoTotalEl.textContent = saldo;
+        valorFinalEl.textContent = valor.toFixed(2);
+      }
+
+      function atualizarGraficos() {
+        const labels = [], entradas = [], valores = [], cores = [];
+        const dataSaida = {};
+        const corSaidaPorItem = {};
+
+        [...tabela.querySelectorAll('tr')].forEach(linha => {
+          const nome = linha.querySelector('.item').value.trim();
+          const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+          const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+          const val = parseFloat(linha.querySelector('.valor').value) || 0;
+
+          if (nome) {
+            const cor = gerarCor(nome);
+
+            if (ent > 0) {
+              labels.push(nome);
+              entradas.push(ent);
+              valores.push(val);
+              cores.push(cor);
+            }
+
+            if (sai > 0) {
+              if (!dataSaida[nome]) dataSaida[nome] = 0;
+              dataSaida[nome] += sai;
+              corSaidaPorItem[nome] = cor;
+            }
+          }
+        });
+
+        chartPizza.data.labels = labels;
+        chartPizza.data.datasets[0].data = entradas;
+        chartPizza.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+        chartPizza.update();
+
+        chartBarras.data.labels = labels;
+        chartBarras.data.datasets[0].data = valores;
+        chartBarras.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+        chartBarras.update();
+
+        const saidaLabels = Object.keys(dataSaida);
+        chartSaidas.data.labels = saidaLabels;
+        chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
+        chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+        chartSaidas.update();
+      }
+
+      restaurarHistorico();
+      restaurarTabela();
+    });
   </script>
 </body>
 </html>
