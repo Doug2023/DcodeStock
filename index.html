@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Dcode Stock</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -53,13 +53,15 @@
       list-style: none;
       padding-left: 0;
     }
+    tr.arrastando {
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
   <header style="display:flex;flex-wrap:wrap;align-items:center;padding:1rem;background:#1f1f1f">
-    <img src="dcodeimage.jpeg" src="dcodeimage.jpeg"alt="Logo Dcode Stock" class="logo" style="height:240px;margin-right:210px;" />
-    <h1 style="flex:1;font-size:1.5rem;font-family:'Russo One',sans-serif;">Dcode Stock</h1>
-    <div id="mesAtual" style="font-size:0.9rem;font-style:italic;color:#ccc;"></div>
+    <img src="dcodeimage.jpeg" alt="mesatual" class="logo" style="height:240px;margin-right:210px;" />
+    <div id="mesAtual" style="font-size:1.2rem;font-style:italic;color:#ccc;"></div>
   </header>
 
   <div class="nome-estoque-container" style="padding:1rem;">
@@ -110,6 +112,11 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const mesAtualEl = document.getElementById('mesAtual');
+      const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+      const agora = new Date();
+      mesAtualEl.textContent = `${meses[agora.getMonth()]} de ${agora.getFullYear()}`;
+
       const entradaTotalEl = document.getElementById('entradaTotal');
       const saidaTotalEl = document.getElementById('saidaTotal');
       const saldoTotalEl = document.getElementById('saldoTotal');
@@ -151,68 +158,50 @@
         return coresMap[nome];
       }
 
-      function registrarOperacao(tipo, item, quantidade) {
-        const data = new Date();
-        const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
-        const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
-        const li = document.createElement('li');
-        li.textContent = texto;
-        listaOperacoes.prepend(li);
-
-        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
-        historico.unshift(texto);
-        localStorage.setItem('historicoOperacoes', JSON.stringify(historico));
-      }
-
-      function restaurarHistorico() {
-        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
-        historico.forEach(txt => {
-          const li = document.createElement('li');
-          li.textContent = txt;
-          listaOperacoes.appendChild(li);
+      function adicionarEventosDrag(linha) {
+        linha.addEventListener('dragstart', e => {
+          linha.classList.add('arrastando');
         });
-      }
-
-      function salvarTabela() {
-        const linhas = [...tabela.querySelectorAll('tr')].map(linha => {
-          return {
-            item: linha.querySelector('.item').value,
-            entrada: linha.querySelector('.entrada').value,
-            saida: linha.querySelector('.saida').value,
-            valor: linha.querySelector('.valor').value
+        linha.addEventListener('dragend', () => {
+          linha.classList.remove('arrastando');
+          salvarTabela();
+        });
+        linha.addEventListener('dragover', e => {
+          e.preventDefault();
+          const arrastando = tabela.querySelector('.arrastando');
+          if (linha !== arrastando) {
+            const pos = [...tabela.children].indexOf(linha);
+            const posArrastando = [...tabela.children].indexOf(arrastando);
+            if (pos > posArrastando) {
+              linha.after(arrastando);
+            } else {
+              linha.before(arrastando);
+            }
           }
         });
-        localStorage.setItem('dadosTabela', JSON.stringify(linhas));
       }
 
-      function restaurarTabela() {
-        const dados = JSON.parse(localStorage.getItem('dadosTabela') || '[]');
-        dados.forEach(data => {
-          const linha = document.createElement('tr');
-          linha.innerHTML = `
-            <td><input type="text" class="item" value="${data.item}" /></td>
-            <td><input type="number" class="entrada" value="${data.entrada}" /></td>
-            <td><input type="number" class="saida" value="${data.saida}" /></td>
-            <td><input type="number" class="valor" value="${data.valor}" /></td>
-          `;
-          tabela.appendChild(linha);
-          adicionarEventosLinha(linha);
+      function removerLinhasVazias() {
+        const linhas = [...tabela.querySelectorAll('tr')];
+        linhas.forEach((linha, i) => {
+          const inputs = linha.querySelectorAll('input');
+          const vazia = [...inputs].every(input => input.value.trim() === '' || parseFloat(input.value) === 0);
+          if (vazia && i !== linhas.length - 1) linha.remove();
         });
-        adicionarLinha();
-        atualizarResumo();
-        atualizarGraficos();
       }
 
       function adicionarLinha() {
         const linha = document.createElement('tr');
+        linha.setAttribute('draggable', 'true');
         linha.innerHTML = `
-          <td><input type="text" class="item" placeholder="Ex: Arroz" /></td>
+          <td><input type="text" class="item" /></td>
           <td><input type="number" class="entrada" value="0" step="any" /></td>
           <td><input type="number" class="saida" value="0" step="any" /></td>
           <td><input type="number" class="valor" value="0" step="0.01" /></td>
         `;
         tabela.appendChild(linha);
         adicionarEventosLinha(linha);
+        adicionarEventosDrag(linha);
       }
 
       function adicionarEventosLinha(linha) {
@@ -222,6 +211,7 @@
           atualizarGraficos();
           salvarTabela();
           verificarLinhaFinal();
+          removerLinhasVazias();
         }));
 
         linha.querySelector('.entrada').addEventListener('change', () => {
@@ -264,9 +254,7 @@
 
       function atualizarGraficos() {
         const labels = [], entradas = [], valores = [], cores = [];
-        const dataSaida = {};
-        const corSaidaPorItem = {};
-
+        const dataSaida = {}, corSaidaPorItem = {};
         [...tabela.querySelectorAll('tr')].forEach(linha => {
           const nome = linha.querySelector('.item').value.trim();
           const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
@@ -275,17 +263,14 @@
 
           if (nome) {
             const cor = gerarCor(nome);
-
             if (ent > 0) {
               labels.push(nome);
               entradas.push(ent);
               valores.push(val);
               cores.push(cor);
             }
-
             if (sai > 0) {
-              if (!dataSaida[nome]) dataSaida[nome] = 0;
-              dataSaida[nome] += sai;
+              dataSaida[nome] = (dataSaida[nome] || 0) + sai;
               corSaidaPorItem[nome] = cor;
             }
           }
@@ -308,8 +293,67 @@
         chartSaidas.update();
       }
 
+      function salvarTabela() {
+        const linhas = [...tabela.querySelectorAll('tr')].map(linha => ({
+          item: linha.querySelector('.item').value,
+          entrada: linha.querySelector('.entrada').value,
+          saida: linha.querySelector('.saida').value,
+          valor: linha.querySelector('.valor').value
+        }));
+        localStorage.setItem('dadosTabela', JSON.stringify(linhas));
+      }
+
+      function registrarOperacao(tipo, item, quantidade) {
+        const data = new Date();
+        const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
+        const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
+        const li = document.createElement('li');
+        li.textContent = texto;
+        listaOperacoes.prepend(li);
+
+        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
+        historico.unshift(texto);
+        localStorage.setItem('historicoOperacoes', JSON.stringify(historico));
+      }
+
+      function restaurarHistorico() {
+        const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
+        listaOperacoes.innerHTML = '';
+        historico.forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          listaOperacoes.appendChild(li);
+        });
+
+        const dadosTabela = JSON.parse(localStorage.getItem('dadosTabela') || '[]');
+        tabela.innerHTML = '';
+
+        dadosTabela.forEach(data => {
+          const linha = document.createElement('tr');
+          linha.setAttribute('draggable', 'true');
+          linha.innerHTML = `
+            <td><input type="text" class="item" value="${data.item}" /></td>
+            <td><input type="number" class="entrada" value="${data.entrada}" /></td>
+            <td><input type="number" class="saida" value="${data.saida}" /></td>
+            <td><input type="number" class="valor" value="${data.valor}" /></td>
+          `;
+          tabela.appendChild(linha);
+          adicionarEventosLinha(linha);
+          adicionarEventosDrag(linha);
+        });
+
+        adicionarLinha();
+        atualizarResumo();
+        atualizarGraficos();
+      }
+
       restaurarHistorico();
-      restaurarTabela();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('Service Worker registrado com sucesso!'))
+          .catch(err => console.error('Erro ao registrar Service Worker:', err));
+      }
     });
   </script>
 </body>

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const chartSaidas = new Chart(ctxSaidas, {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Saídas por data', data: [], backgroundColor: [] }] },
+    data: { labels: [], datasets: [{ /* label removido para não aparecer texto */ data: [], backgroundColor: [] }] },
     options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
   });
 
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function criarAba() {
-    // Cria a section com tabela
     const aba = document.createElement('section');
     const tabela = document.createElement('table');
     tabela.className = 'estoque-table';
@@ -61,32 +60,54 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     aba.appendChild(tabela);
 
-    abasContainer.innerHTML = '';  // limpa antes de inserir a aba
+    abasContainer.innerHTML = '';
     abasContainer.appendChild(aba);
 
     function adicionarLinha() {
       const linha = document.createElement('tr');
       linha.innerHTML = `
         <td><input type="text" class="item" placeholder="Ex: Arroz" /></td>
-        <td><input type="number" class="entrada" value="0" step="any" /></td>
-        <td><input type="number" class="saida" value="0" step="any" /></td>
-        <td><input type="number" class="valor" value="0" step="0.01" /></td>
+        <td><input type="number" class="entrada" value="" step="any" min="0" /></td>
+        <td><input type="number" class="saida" value="" step="any" min="0" /></td>
+        <td><input type="number" class="valor" value="" step="0.01" min="0" placeholder="R$ 0,00" /></td>
       `;
       tabela.querySelector('tbody').appendChild(linha);
+
       const inputs = linha.querySelectorAll('input');
-      inputs.forEach(input => input.addEventListener('input', () => {
-        atualizarResumo();
-        atualizarGraficos();
-        verificarLinhaFinal();
-      }));
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          atualizarResumo();
+          atualizarGraficos();
+          verificarLinhaFinal();
+          removerLinhasVazias();
+        });
+      });
     }
 
     function verificarLinhaFinal() {
       const linhas = [...tabela.querySelectorAll('tbody tr')];
       const ultima = linhas[linhas.length - 1];
-      if (ultima && [...ultima.querySelectorAll('input')].some(inp => inp.value.trim() !== '' && inp.value !== '0')) {
+      const inputs = ultima.querySelectorAll('input');
+      const preenchida = [...inputs].some(inp => inp.value.trim() !== '');
+
+      if (preenchida) {
         adicionarLinha();
       }
+    }
+
+    function removerLinhasVazias() {
+      const linhas = [...tabela.querySelectorAll('tbody tr')];
+      const total = linhas.length;
+
+      linhas.forEach((linha, i) => {
+        const inputs = linha.querySelectorAll('input');
+        const vazia = [...inputs].every(inp => inp.value.trim() === '');
+
+        // Só remove se não for a última linha
+        if (vazia && i < total - 1) {
+          linha.remove();
+        }
+      });
     }
 
     function atualizarResumo() {
@@ -100,9 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saldo += (ent - sai);
         valor += val;
       });
-      entradaTotalEl.textContent = entrada;
-      saidaTotalEl.textContent = saida;
-      saldoTotalEl.textContent = saldo;
+      entradaTotalEl.textContent = entrada.toFixed(2);
+      saidaTotalEl.textContent = saida.toFixed(2);
+      saldoTotalEl.textContent = saldo.toFixed(2);
       valorFinalEl.textContent = valor.toFixed(2);
     }
 
@@ -137,12 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       chartPizza.data.labels = labels;
       chartPizza.data.datasets[0].data = entradas;
-      chartPizza.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+      chartPizza.data.datasets[0].backgroundColor = cores;
       chartPizza.update();
 
       chartBarras.data.labels = labels;
       chartBarras.data.datasets[0].data = valores;
-      chartBarras.data.datasets[0].backgroundColor = labels.map(l => gerarCor(l));
+      chartBarras.data.datasets[0].backgroundColor = cores;
       chartBarras.update();
 
       const saidaLabels = Object.keys(dataSaida);
@@ -152,8 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
       chartSaidas.update();
     }
 
-    adicionarLinha(); // adiciona a primeira linha vazia para inserir produto
+    adicionarLinha(); // Linha inicial vazia para entrada
+
   }
 
-  criarAba(); // chama aqui para criar a tabela e linha inicial ao abrir
+  criarAba(); // Inicializa a aba
 });
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(() => console.log('SW registrado com sucesso'))
+    .catch(err => console.log('Erro ao registrar o SW:', err));
+}
