@@ -5,11 +5,11 @@ const FILES_TO_CACHE = [
   './style.css',
   './script.js',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './Dcodelogo.png',
+  './Dcodeanimation.mp4'
 ];
 
-// Instala o service worker e armazena arquivos no cache
+// Instala e adiciona ao cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -18,15 +18,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Responde com os arquivos do cache quando possível
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
-});
-
-// Atualiza o cache quando necessário
+// Ativa e limpa caches antigos
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -38,25 +30,13 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 });
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open('dcode-stock-cache').then(cache => {
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/style.css',
-        '/script.js',
-        '/manifest.json',
-        '/icons/icon-192.png',
-        '/icons/icon-512.png'
-      ]);
-    })
-  );
-});
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
+// Busca os arquivos do cache primeiro
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response =>
+      response || fetch(event.request)
+    )
   );
 });
 
