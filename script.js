@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   const mesAtualEl = document.getElementById('mesAtual');
-  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  if (!mesAtualEl) {
+    console.error('Elemento mesAtual não encontrado!');
+    return; // evita erro fatal
+  }
+
+  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                 "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
   const hoje = new Date();
   mesAtualEl.textContent = `${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 
@@ -10,9 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const saldoTotalEl = document.getElementById('saldoTotal');
   const valorFinalEl = document.getElementById('valorFinal');
 
-  const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
-  const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
-  const ctxSaidas = document.getElementById('graficoSaidas').getContext('2d');
+  if (!abasContainer || !entradaTotalEl || !saidaTotalEl || !saldoTotalEl || !valorFinalEl) {
+    console.error('Algum elemento principal não foi encontrado no DOM');
+    return;
+  }
+
+  const ctxPizza = document.getElementById('graficoPizza')?.getContext('2d');
+  const ctxBarras = document.getElementById('graficoBarras')?.getContext('2d');
+  const ctxSaidas = document.getElementById('graficoSaidas')?.getContext('2d');
+
+  if (!ctxPizza || !ctxBarras || !ctxSaidas) {
+    console.error('Algum contexto de gráfico não foi encontrado');
+    return;
+  }
 
   const chartPizza = new Chart(ctxPizza, {
     type: 'pie',
@@ -28,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const chartSaidas = new Chart(ctxSaidas, {
     type: 'bar',
-    data: { labels: [], datasets: [{ /* label removido para não aparecer texto */ data: [], backgroundColor: [] }] },
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
     options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
   });
 
@@ -103,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputs = linha.querySelectorAll('input');
         const vazia = [...inputs].every(inp => inp.value.trim() === '');
 
-        // Só remove se não for a última linha
         if (vazia && i < total - 1) {
           linha.remove();
         }
@@ -173,16 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
       chartSaidas.update();
     }
 
-    adicionarLinha(); // Linha inicial vazia para entrada
-
+    adicionarLinha();
   }
 
-  criarAba(); // Inicializa a aba
+  criarAba();
 });
 
 // Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
+  navigator.serviceWorker.register('service-worker.js') // caminho relativo para evitar problemas no Vercel
     .then(() => console.log('SW registrado com sucesso'))
     .catch(err => console.log('Erro ao registrar o SW:', err));
 }
