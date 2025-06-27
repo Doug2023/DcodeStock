@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+<!-- saved from url=(0046)http://127.0.0.1:5500/Dcode%20stock/index.html -->
+<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="manifest" href="http://127.0.0.1:5500/Dcode%20stock/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <link href="./index_files/css2" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -159,13 +159,19 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="dcodeimage.jpeg" alt="Logo Dcode Stock" class="logo" />
-    <div id="mesAtual"></div>
+  <header><header>
+  <video autoplay muted loop playsinline class="logo" id="videoLogo">
+    <source src="Dcodeanimation.mp4" type="video/mp4" />
+  </video>
+  <div id="mesAtual">Junho de 2025</div>
+</header>
+
+    
+    
   </header>
 
   <div class="nome-estoque-container">
-    <input type="text" placeholder="Digite o nome do estoque" />
+    <input type="text" placeholder="Digite o nome do estoque">
   </div>
 
   <main id="abasContainer">
@@ -178,24 +184,34 @@
           <th>Valor</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody><tr draggable="false" class="" style=>
+          <td><input type="text" class="item" autocomplete="off"></td>
+          <td><input type="number" class="entrada" min="0" step="any" value="" autocomplete="off"></td>
+          <td><input type="number" class="saida" min="0" step="any" value="" autocomplete="off"></td>
+          <td><input type="number" class="valor" min="0" step="0.01" value="" autocomplete="off"></td>
+        </tr><tr>
+          <td><input type="text" class="item" autocomplete="off"></td>
+          <td><input type="number" class="entrada" min="0" step="any" value="" autocomplete="off"></td>
+          <td><input type="number" class="saida" min="0" step="any" value="" autocomplete="off"></td>
+          <td><input type="number" class="valor" min="0" step="0.01" value="" autocomplete="off"></td>
+        </tr></tbody>
     </table>
   </main>
 
   <div class="graficos-top">
     <div class="grafico-meio">
       <h3>Entrada</h3>
-      <canvas id="graficoPizza"></canvas>
+      <canvas id="graficoPizza" width="424" height="424" style="display: block; box-sizing: border-box; height: 471px; width: 471px;"></canvas>
     </div>
     <div class="grafico-meio">
       <h3>R$ valores</h3>
-      <canvas id="graficoBarras"></canvas>
+      <canvas id="graficoBarras" width="424" height="212" style="display: block; box-sizing: border-box; height: 235px; width: 471px;"></canvas>
     </div>
   </div>
 
   <div id="graficoSaidas-container">
     <h3>Saídas</h3>
-    <canvas id="graficoSaidas"></canvas>
+    <canvas id="graficoSaidas" width="863" height="431" style="display: block; box-sizing: border-box; height: 479px; width: 959px;"></canvas>
   </div>
 
   <div id="resultadoFinal">
@@ -212,9 +228,9 @@
   </div>
 
   <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./index_files/chart.js.baixados"></script>
   <!-- SortableJS para drag and drop mobile-friendly -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="./index_files/Sortable.min.js.baixados"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -471,5 +487,44 @@
       }
     });
   </script>
-</body>
-</html>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+</body></html>
