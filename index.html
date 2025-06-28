@@ -25,6 +25,21 @@
       align-items: center;
       padding: 1rem;
       background: #1f1f1f;
+      justify-content: flex-end; /* Alinha a data à direita */
+    }
+    .video-container {
+      width: 100%; /* Ocupa a largura total */
+      display: flex;
+      justify-content: center; /* Centraliza o vídeo */
+      padding: 1rem;
+      background: #1f1f1f;
+      margin-bottom: 1rem;
+    }
+    .video-container .video {
+      width: 200px; /* Largura padrão de aplicativos */
+      height: auto; /* Mantém a proporção */
+      object-fit: contain; /* Garante que o vídeo seja totalmente visível */
+      border-radius: 8px; /* Opcional: bordas arredondadas */
     }
     .logo {
       height: 120px;
@@ -32,10 +47,10 @@
       object-fit: contain;
     }
     #mesAtual {
-      font-size: 1.2rem;
+      font-size: 2rem;
       font-style: italic;
       color: #ccc;
-      flex-grow: 1;
+      /* flex-grow: 1; Removido para não empurrar a data para a esquerda */
     }
     main, #resultadoFinal, #registroOperacoes {
       width: 100%;
@@ -46,21 +61,21 @@
       padding: 1rem;
     }
     .nome-estoque-container {
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-}
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+    }
 
-.nome-estoque-container input {
-  width: 50%;
-  max-width: 400px;
-  padding: 10px;
-  border-radius: 4px;
-  border: none;
-  background: #2a2a2a;
-  color: #fff;
-  font-size: 1rem;
-}
+    .nome-estoque-container input {
+      width: 50%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 4px;
+      border: none;
+      background: #2a2a2a;
+      color: #fff;
+      font-size: 1rem;
+    }
 
     table.estoque-table {
       width: 100%;
@@ -167,12 +182,13 @@
   </style>
 </head>
 <body>
-  <header>
+  <div class="video-container">
     <video class="video" autoplay muted loop playsinline>
-  <source src="Dcodeanimation.mp4" type="video/mp4">
-  
-</video>
+      <source src="Dcodeanimation.mp4" type="video/mp4">
+    </video>
+  </div>
 
+  <header>
     <div id="mesAtual"></div>
   </header>
 
@@ -223,11 +239,9 @@
     <ul id="listaOperacoes"></ul>
   </div>
 
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SortableJS para drag and drop mobile-friendly -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-  
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Mês Atual
