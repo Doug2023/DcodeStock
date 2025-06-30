@@ -6,7 +6,21 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
     <style>
+        /* --- General Styles --- */
+        :root {
+            --bg-color-dark: #121212;
+            --bg-color-medium: #1f1f1f;
+            --bg-color-light: #2a2a2a;
+            --text-color: #fff;
+            --secondary-text-color: #ccc;
+            --border-color: #444;
+            --button-bg: #333;
+            --button-hover-bg: #555;
+            --spacing-unit: 1rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,26 +31,27 @@
         body {
             width: 100%;
             height: 100%;
-            font-family: 'Poppins', Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
+            font-family: 'Poppins', Arial, sans-serif; 
+            background-color: var(--bg-color-dark);
+            color: var(--text-color);
         }
 
+        /* --- Header & Navigation --- */
         header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1rem;
-            background: #1f1f1f;
+            padding: var(--spacing-unit);
+            background: var(--bg-color-medium);
         }
 
         .video-container {
             width: 100%;
             display: flex;
             justify-content: center;
-            padding: 1rem;
-            background: #1f1f1f;
-            margin-bottom: 1rem;
+            padding: var(--spacing-unit);
+            background: var(--bg-color-medium);
+            margin-bottom: var(--spacing-unit);
         }
 
         .video-container .video {
@@ -48,32 +63,31 @@
 
         .logo {
             height: 120px;
-            margin-right: 20px;
+            margin-right: 20px; /* Consider if this is needed, logo not present in HTML */
             object-fit: contain;
         }
 
         .month-navigation,
         .stock-actions {
             display: flex;
-            justify-content: space-between; /* Espalha itens para as extremidades */
+            justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 0 1rem; /* Adiciona algum padding para melhor espaçamento */
+            padding: 0 var(--spacing-unit);
         }
 
         .month-navigation {
-            margin-bottom: 10px; /* Espaço entre navegação de mês e estoque */
+            margin-bottom: 10px;
         }
 
         .stock-actions {
-            margin-bottom: 1rem; /* Espaço abaixo das ações do estoque */
-            /* REMOVIDO: flex-direction: column; ou row aqui para controlar nas media queries */
+            margin-bottom: var(--spacing-unit);
         }
 
         .month-navigation button,
         .stock-actions button {
-            background-color: #333;
-            color: #fff;
+            background-color: var(--button-bg);
+            color: var(--text-color);
             border: none;
             padding: 8px 12px;
             border-radius: 4px;
@@ -83,36 +97,37 @@
         }
         
         .stock-actions .nav-button {
-            width: 40px; /* Mantém largura fixa para os botões +/- */
+            width: 40px;
             height: 40px;
             padding: 0;
             font-size: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0; /* Impede que os botões encolham */
+            flex-shrink: 0;
         }
 
         .month-navigation button:hover,
         .stock-actions button:hover {
-            background-color: #555;
+            background-color: var(--button-hover-bg);
         }
 
         #mesAtual {
             font-size: 2rem;
             font-style: italic;
-            color: #ccc;
+            color: var(--secondary-text-color);
             text-align: center;
-            flex-grow: 1; /* Permite que ocupe o espaço disponível */
-            margin: 0 10px; /* Espaço ao redor da exibição do mês */
+            flex-grow: 1;
+            margin: 0 10px;
         }
 
+        /* --- Main Content & Table --- */
         main,
         #resultadoFinal,
         #registroOperacoes {
             width: 100%;
             max-width: 100%;
-            padding: 0 1rem;
+            padding: 0 var(--spacing-unit);
         }
 
         .nome-estoque-container {
@@ -123,54 +138,74 @@
 
         .nome-estoque-container input,
         #nomeEstoqueInput {
-            width: 100%; /* Permite que o input preencha o espaço */
-            max-width: 400px; /* Máximo 400px em telas grandes */
+            width: 100%;
+            max-width: 400px;
             padding: 10px;
             border-radius: 4px;
             border: none;
-            background: #2a2a2a;
-            color: #fff;
+            background: var(--bg-color-light);
+            color: var(--text-color);
             font-size: 1rem;
             text-align: center;
-            flex-grow: 1; /* Permite que o input cresça */
-            margin: 0 10px; /* Espaçamento entre o input e os botões */
+            flex-grow: 1;
+            margin: 0 10px;
+        }
+
+        /* Responsive table container */
+        .table-responsive {
+            width: 100%;
+            /* Removed overflow-x to prevent horizontal scrollbar */
+            margin-bottom: var(--spacing-unit);
         }
 
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 1rem;
-            table-layout: fixed;
+            /* Removed min-width to allow the table to shrink */
+            table-layout: fixed; /* Keep column widths fixed based on percentages */
         }
 
         table.estoque-table th,
         table.estoque-table td {
-            border: 1px solid #444;
+            border: 1px solid var(--border-color);
             padding: 8px;
             text-align: center;
             font-size: 0.9rem;
+            word-wrap: break-word; /* Allow long words to wrap */
         }
+        
+        /* Adjust column widths to be percentages */
+        table.estoque-table th:nth-child(1),
+        table.estoque-table td:nth-child(1) { width: 40%; } /* Item */
+        table.estoque-table th:nth-child(2),
+        table.estoque-table td:nth-child(2) { width: 20%; } /* Entrada */
+        table.estoque-table th:nth-child(3),
+        table.estoque-table td:nth-child(3) { width: 20%; } /* Saída */
+        table.estoque-table th:nth-child(4),
+        table.estoque-table td:nth-child(4) { width: 20%; } /* Valor */
 
         table.estoque-table input {
             width: 100%;
             background: transparent;
             border: none;
-            color: #fff;
+            color: var(--text-color);
             font-size: 0.9rem;
             text-align: center;
+            padding: 0; /* Remove default input padding */
         }
 
         table.estoque-table input:focus {
             outline: 1px solid #888;
-            background: #333;
+            background: var(--button-bg);
         }
 
+        /* --- Charts --- */
         .graficos {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
-            padding: 0 1rem;
+            gap: var(--spacing-unit);
+            padding: 0 var(--spacing-unit);
         }
 
         .grafico-container {
@@ -180,9 +215,10 @@
 
         .graficos-top {
             display: flex;
-            gap: 1rem;
-            padding: 0 1rem;
-            margin-top: 1rem; /* Added margin for spacing */
+            flex-wrap: wrap; 
+            gap: var(--spacing-unit);
+            padding: 0 var(--spacing-unit);
+            margin-top: var(--spacing-unit);
         }
 
         .grafico-meio {
@@ -191,17 +227,18 @@
         }
 
         #graficoSaidas-container {
-            margin-top: 1rem;
+            margin-top: var(--spacing-unit);
             width: 100%;
-            padding: 0 1rem;
+            padding: 0 var(--spacing-unit);
         }
 
+        /* --- Results & History --- */
         #resultadoFinal {
             padding: 20px;
             text-align: center;
-            background: #1f1f1f;
-            margin-top: 1rem;
-            border-radius: 8px; /* Added border-radius */
+            background: var(--bg-color-medium);
+            margin-top: var(--spacing-unit);
+            border-radius: 8px;
         }
 
         #registroOperacoes {
@@ -210,8 +247,8 @@
             padding: 20px;
             border-radius: 8px;
             font-family: monospace;
-            margin-top: 1rem;
-            margin-bottom: 1rem; /* Added bottom margin */
+            margin-top: var(--spacing-unit);
+            margin-bottom: var(--spacing-unit);
         }
 
         #registroOperacoes ul {
@@ -219,7 +256,7 @@
             padding-left: 0;
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #333; /* Added border for visual separation */
+            border: 1px solid #333;
             padding: 10px;
             border-radius: 4px;
         }
@@ -247,11 +284,11 @@
         }
 
         #btnLimparHistorico:hover {
-            color: #fff;
+            color: var(--text-color);
             text-decoration: underline;
         }
 
-        /* Media Query para telas até 768px (smartphones e tablets em retrato) */
+        /* --- Media Queries --- */
         @media screen and (max-width: 768px) {
             .graficos {
                 flex-direction: column;
@@ -270,80 +307,88 @@
                 padding: 0;
             }
 
-            /* Navegação de Mês: Permanece em linha, ajusta espaçamento */
             .month-navigation {
-                flex-direction: row; /* Garante que fique em linha */
-                flex-wrap: wrap; /* Permite quebrar linha se necessário */
-                justify-content: space-between; /* Mantém botões nas pontas */
-                gap: 5px; /* Espaço menor entre os itens */
-                padding: 0 0.5rem; /* Reduz padding */
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 5px;
+                padding: 0 0.5rem;
             }
 
             .month-navigation button {
-                width: auto; /* Deixa o botão se ajustar ao conteúdo */
-                padding: 6px 10px; /* Reduz o padding */
-                font-size: 0.85rem; /* Reduz o tamanho da fonte */
+                width: auto;
+                padding: 6px 10px;
+                font-size: 0.85rem;
             }
 
             #mesAtual {
-                flex-grow: 1; /* Permite que o mês cresça */
-                font-size: 1.5rem; /* Ajusta o tamanho da fonte */
-                margin: 0 5px; /* Ajusta margem */
+                flex-grow: 1;
+                font-size: 1.5rem;
+                margin: 0 5px;
             }
 
-            /* Ações do Estoque: Alinha o input entre os botões */
             .stock-actions {
-                flex-direction: row; /* Garante que fique em linha */
-                justify-content: space-between; /* Botões nas pontas */
-                align-items: center; /* Alinha verticalmente */
-                padding: 0 0.5rem; /* Reduz padding */
-                gap: 5px; /* Espaço entre os itens */
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 0.5rem;
+                gap: 5px;
             }
 
             #nomeEstoqueInput {
-                flex-grow: 1; /* Permite que o input se expanda */
-                max-width: none; /* Remove a largura máxima para permitir expansão */
-                width: auto; /* Ajusta a largura automaticamente */
-                font-size: 1rem; /* Mantém o tamanho da fonte para leitura */
-                margin: 0 5px; /* Espaçamento entre o input e os botões */
+                flex-grow: 1;
+                max-width: none;
+                width: auto;
+                font-size: 1rem;
+                margin: 0 5px;
             }
 
             .stock-actions .nav-button {
-                width: 35px; /* Ligeiramente menor para economizar espaço */
+                width: 35px;
                 height: 35px;
-                font-size: 1.2rem; /* Menor ícone para caber */
+                font-size: 1.2rem;
+            }
+
+            /* Responsive table for smaller screens */
+            table.estoque-table th,
+            table.estoque-table td {
+                padding: 4px; /* Reduced padding */
+                font-size: 0.75rem; /* Reduced font size */
+            }
+            table.estoque-table input {
+                font-size: 0.75rem; /* Reduced font size for inputs */
+                padding: 1px; /* Minimal padding for inputs */
             }
         }
 
         /* Landscape orientation for smaller screens (e.g., phones) */
         @media screen and (max-height: 450px) and (orientation: landscape) {
             header {
-                padding: 0.5rem; /* Reduce header padding */
+                padding: 0.5rem;
             }
             .video-container {
-                margin-bottom: 0.5rem; /* Reduce video margin */
+                margin-bottom: 0.5rem;
             }
             .month-navigation,
             .stock-actions {
-                flex-direction: row; /* Keep buttons in a row */
+                flex-direction: row;
                 justify-content: space-between;
                 padding: 0 0.5rem;
                 margin-bottom: 5px;
-                flex-wrap: wrap; /* Allow wrapping if content is too wide */
+                flex-wrap: wrap;
             }
             .month-navigation button,
             .stock-actions button {
-                width: auto; /* Allow buttons to size naturally */
+                width: auto;
                 max-width: none;
-                padding: 6px 10px; /* Smaller padding */
-                font-size: 0.8rem; /* Smaller font size */
+                padding: 4px 8px; /* Even smaller padding */
+                font-size: 0.75rem; /* Even smaller font size */
             }
             #mesAtual, #nomeEstoqueInput {
                 margin: 0 5px;
-                font-size: 1.2rem; /* Smaller font for month */
-                max-width: 150px; /* Limit width */
+                font-size: 1rem; /* Smaller font size */
+                max-width: 120px; /* Limit width */
             }
-            /* Adjust table and charts for less vertical space */
             main,
             #resultadoFinal,
             #registroOperacoes {
@@ -351,21 +396,22 @@
             }
             table.estoque-table th,
             table.estoque-table td {
-                padding: 5px;
-                font-size: 0.8rem;
+                padding: 3px; /* Very small padding */
+                font-size: 0.7rem; /* Smallest font size for table */
             }
             table.estoque-table input {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
+                padding: 0px; /* No padding for inputs in landscape */
             }
             .graficos-top, #graficoSaidas-container {
                 margin-top: 0.5rem;
                 padding: 0 0.5rem;
             }
             #registroOperacoes ul {
-                max-height: 100px; /* Reduce history height */
+                max-height: 80px; /* Smaller history height */
             }
             #resultadoFinal p {
-                font-size: 0.9rem; /* Smaller text for totals */
+                font-size: 0.8rem; /* Smaller result font size */
             }
         }
     </style>
@@ -374,6 +420,7 @@
     <div class="video-container">
         <video class="video" autoplay muted loop playsinline>
             <source src="Dcodeanimation.mp4" type="video/mp4">
+            
         </video>
     </div>
 
@@ -385,23 +432,25 @@
         </div>
         <div class="stock-actions">
             <button id="btnVoltarEstoque" class="nav-button">-</button>
-            <input type="text" id="nomeEstoqueInput" placeholder="Estoque 1" />
+            <input type="text" id="nomeEstoqueInput" placeholder="Digite o nome do estoque" autocomplete="off" />
             <button id="btnNovoEstoque" class="nav-button">+</button>
         </div>
     </header>
 
     <main id="abasContainer">
-        <table class="estoque-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Entrada</th>
-                    <th>Saída</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-responsive"> 
+            <table class="estoque-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Entrada</th>
+                        <th>Saída</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div> 
     </main>
 
     <div class="graficos-top">
@@ -461,18 +510,6 @@
                 mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
             }
 
-            btnMesAnterior.addEventListener('click', () => {
-                displayedDate.setMonth(displayedDate.getMonth() - 1);
-                updateMonthDisplay();
-            });
-
-            btnProximoMes.addEventListener('click', () => {
-                displayedDate.setMonth(displayedDate.getMonth() + 1);
-                updateMonthDisplay();
-            });
-
-            updateMonthDisplay(); // Initial month display
-
             // --- Chart Setup ---
             const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
             const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
@@ -511,45 +548,47 @@
 
             // --- Stock Management Variables ---
             const MAX_STOCKS = 10;
-            let allStocksData = [];
+            let allStocksMeta = []; 
             try {
-                const storedData = JSON.parse(localStorage.getItem('allStocksData'));
-                if (Array.isArray(storedData)) {
-                    allStocksData = storedData;
+                const storedMeta = JSON.parse(localStorage.getItem('allStocksMeta'));
+                if (Array.isArray(storedMeta)) {
+                    allStocksMeta = storedMeta;
                 }
             } catch (e) {
-                console.error("Erro ao parsear allStocksData do localStorage. Inicializando como array vazio.", e);
+                console.error("Erro ao parsear allStocksMeta do localStorage. Inicializando como array vazio.", e);
             }
-
-            // Ensure allStocksData has MAX_STOCKS valid stock objects
+            // Ensure allStocksMeta has MAX_STOCKS entries, each with a 'namesByMonth' object
             for (let i = 0; i < MAX_STOCKS; i++) {
-                if (!allStocksData[i] || typeof allStocksData[i] !== 'object' || allStocksData[i] === null) {
-                    allStocksData[i] = {
-                        customName: `Estoque ${i + 1}`,
-                        tableData: [],
-                        history: []
-                    };
+                if (!allStocksMeta[i] || typeof allStocksMeta[i] !== 'object' || allStocksMeta[i] === null) {
+                    allStocksMeta[i] = { namesByMonth: {} };
                 } else {
-                    // Ensure existing stocks have all required properties
-                    if (!allStocksData[i].customName) allStocksData[i].customName = `Estoque ${i + 1}`;
-                    if (!allStocksData[i].tableData) allStocksData[i].tableData = [];
-                    if (!allStocksData[i].history) allStocksData[i].history = [];
+                    if (!allStocksMeta[i].namesByMonth) {
+                        allStocksMeta[i].namesByMonth = {};
+                    }
                 }
             }
-            // Truncate if somehow more than MAX_STOCKS
-            if (allStocksData.length > MAX_STOCKS) {
-                allStocksData = allStocksData.slice(0, MAX_STOCKS);
+            if (allStocksMeta.length > MAX_STOCKS) {
+                allStocksMeta = allStocksMeta.slice(0, MAX_STOCKS);
             }
             
             let currentStockIndex = parseInt(localStorage.getItem('currentStockIndex') || '0');
-            // Ensure the initial currentStockIndex is valid
             if (currentStockIndex < 0 || currentStockIndex >= MAX_STOCKS) {
                 currentStockIndex = 0;
             }
 
-            // --- Table & Data Manipulation Functions ---
+            // --- Função para obter a chave do localStorage para o estoque e mês específicos ---
+            function getStorageKey(index, date) {
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                return `estoque_${year}-${month}_${index}`;
+            }
 
-            // Helper to check if a row is completely empty
+            // --- Helper para obter a chave do nome do mês/ano ---
+            function getMonthYearKey(date) {
+                return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            }
+
+            // --- Table & Data Manipulation Functions ---
             function isRowEmpty(row) {
                 const inputs = row.querySelectorAll('input');
                 return [...inputs].every(input => 
@@ -558,7 +597,6 @@
                 );
             }
 
-            // Adds a new empty row to the table
             function adicionarLinha(data = {}) {
                 const linha = document.createElement('tr');
                 linha.innerHTML = `
@@ -571,15 +609,13 @@
                 adicionarEventosLinha(linha);
             }
 
-            // Attaches event listeners to inputs within a table row
             function adicionarEventosLinha(linha) {
                 const inputs = linha.querySelectorAll('input');
                 inputs.forEach(input => {
                     input.addEventListener('input', () => {
                         atualizarResumo();
                         atualizarGraficos();
-                        salvarTabela();
-                        // Call cleanup functions after input to maintain table structure
+                        salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
                         verificarLinhaFinal();
                         removerLinhasVazias();
                     });
@@ -597,7 +633,6 @@
                 });
             }
 
-            // Ensures there's always an empty line at the end for user input
             function verificarLinhaFinal() {
                 const linhas = tabelaBody.querySelectorAll('tr');
                 if (linhas.length === 0 || !isRowEmpty(linhas[linhas.length - 1])) {
@@ -605,10 +640,8 @@
                 }
             }
 
-            // Removes empty rows, but keeps the last one for input
             function removerLinhasVazias() {
                 const linhas = tabelaBody.querySelectorAll('tr');
-                // Iterate from the second to last line upwards
                 for (let i = linhas.length - 2; i >= 0; i--) { 
                     if (isRowEmpty(linhas[i])) {
                         linhas[i].remove();
@@ -616,7 +649,6 @@
                 }
             }
 
-            // Calculates and updates summary totals
             function atualizarResumo() {
                 let entrada = 0, saida = 0, saldo = 0, valorTotal = 0;
                 const linhas = tabelaBody.querySelectorAll('tr');
@@ -635,7 +667,6 @@
                 valorFinalEl.textContent = valorTotal.toFixed(2);
             }
 
-            // Updates chart data based on table content
             function atualizarGraficos() {
                 const labels = [], entradas = [], valores = [], cores = [];
                 const dataSaida = {}, corSaidaPorItem = {};
@@ -649,7 +680,6 @@
 
                     if (nome) {
                         const cor = gerarCor(nome);
-                        // For pie and bar chart (Entrada and Valor)
                         if (ent > 0) {
                             const existingIndex = labels.indexOf(nome);
                             if (existingIndex > -1) {
@@ -662,7 +692,6 @@
                                 cores.push(cor);
                             }
                         }
-                        // For horizontal bar chart (Saída)
                         if (sai > 0) {
                             dataSaida[nome] = (dataSaida[nome] || 0) + sai;
                             corSaidaPorItem[nome] = cor;
@@ -670,19 +699,16 @@
                     }
                 });
 
-                // Update Pie Chart
                 chartPizza.data.labels = labels;
                 chartPizza.data.datasets[0].data = entradas;
                 chartPizza.data.datasets[0].backgroundColor = cores;
                 chartPizza.update();
 
-                // Update Bar Chart (Valores)
                 chartBarras.data.labels = labels;
                 chartBarras.data.datasets[0].data = valores;
                 chartBarras.data.datasets[0].backgroundColor = cores;
                 chartBarras.update();
 
-                // Update Saídas Chart
                 const saidaLabels = Object.keys(dataSaida);
                 chartSaidas.data.labels = saidaLabels;
                 chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
@@ -690,9 +716,8 @@
                 chartSaidas.update();
             }
 
-            // Saves current table and stock name data to allStocksData array and localStorage
-            function salvarTabela() {
-                // Filter out empty rows when saving
+            // --- Salvamento de Dados ---
+            function salvarDadosDoMesAtual(index, dateToSave) {
                 const linhasVisiveis = [...tabelaBody.querySelectorAll('tr')].filter(row => !isRowEmpty(row));
                 const dadosParaSalvar = linhasVisiveis.map(linha => ({
                     item: linha.querySelector('.item').value,
@@ -701,57 +726,70 @@
                     valor: linha.querySelector('.valor').value
                 }));
                 
-                allStocksData[currentStockIndex].tableData = dadosParaSalvar;
-                allStocksData[currentStockIndex].customName = nomeEstoqueInput.value.trim() || `Estoque ${currentStockIndex + 1}`;
+                const monthYearKey = getMonthYearKey(dateToSave);
+                const currentName = nomeEstoqueInput.value.trim();
                 
-                localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
-                localStorage.setItem('currentStockIndex', currentStockIndex);
-            }
+                // Salva o nome personalizado do estoque para o mês e ano específicos
+                allStocksMeta[index].namesByMonth[monthYearKey] = currentName || `Estoque ${index + 1}`;
+                localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
 
-            // Registers an operation in the history list
+                const stockDataForMonth = {
+                    tableData: dadosParaSalvar,
+                    history: [...listaOperacoes.children].map(li => li.textContent)
+                };
+                
+                localStorage.setItem(getStorageKey(index, dateToSave), JSON.stringify(stockDataForMonth));
+            }
+            
             function registrarOperacao(tipo, item, quantidade) {
                 const data = new Date();
                 const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
                 const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
                 
-                // Add to the beginning of the history array
-                allStocksData[currentStockIndex].history.unshift(texto); 
-                localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
-                
-                // Update displayed list (most recent first)
                 const li = document.createElement('li');
                 li.textContent = texto;
                 listaOperacoes.prepend(li);
+
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
             }
 
-            // Loads a specific stock by its index
-            function loadStock(indexToLoad) {
-                // Save current stock data before switching
-                if (currentStockIndex !== null && allStocksData[currentStockIndex]) {
-                    salvarTabela(); 
+            // --- Carregamento de Estoque ---
+            function loadStock(indexToLoad, previousDateForSave = null) {
+                // 1. Salva o estoque anterior antes de carregar o novo (se aplicável)
+                if (previousDateForSave) {
+                    salvarDadosDoMesAtual(currentStockIndex, previousDateForSave);
+                } else {
+                    // Caso contrário, salva o estado atual antes de carregar outro estoque (mesmo mês)
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                 }
 
-                currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; // Ensure index wraps correctly (0-9)
+                // 2. Atualiza o índice do estoque atual
+                currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; 
                 localStorage.setItem('currentStockIndex', currentStockIndex);
 
-                const stockData = allStocksData[currentStockIndex];
-                const dadosTabela = stockData.tableData || [];
-                const historicoOperacoes = stockData.history || [];
-                const customName = stockData.customName || `Estoque ${currentStockIndex + 1}`;
-
-                nomeEstoqueInput.value = customName;
+                // 3. Carrega o nome personalizado para o estoque e mês ATUAIS
+                const monthYearKey = getMonthYearKey(displayedDate);
+                const defaultName = `Estoque ${currentStockIndex + 1}`;
+                nomeEstoqueInput.value = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
                 
-                tabelaBody.innerHTML = ''; // Clear existing rows
+                // 4. Carrega os dados da tabela e histórico para o estoque e mês ATUAIS
+                const storageKey = getStorageKey(currentStockIndex, displayedDate); 
+                let stockDataForMonth = {};
+                try {
+                    stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], history: [] };
+                } catch (e) {
+                    console.error("Erro ao carregar dados do mês para a chave:", storageKey, e);
+                    stockDataForMonth = { tableData: [], history: [] };
+                }
 
-                // Populate table with saved data
-                dadosTabela.forEach(data => {
+                tabelaBody.innerHTML = ''; 
+                (stockDataForMonth.tableData || []).forEach(data => {
                     adicionarLinha(data);
                 });
-                adicionarLinha(); // Always ensure there's at least one empty row for new input
+                adicionarLinha(); 
 
-                listaOperacoes.innerHTML = '';
-                // Display history in reverse chronological order (most recent first)
-                historicoOperacoes.forEach(txt => {
+                listaOperacoes.innerHTML = ''; 
+                (stockDataForMonth.history || []).reverse().forEach(txt => { 
                     const li = document.createElement('li');
                     li.textContent = txt;
                     listaOperacoes.appendChild(li); 
@@ -761,61 +799,64 @@
                 atualizarGraficos();
             }
 
-            // --- Initial Setup and Event Listeners ---
-
-            // Initial load of the current stock when the page loads
-            loadStock(currentStockIndex);
-
-            // Event Listener for stock name input (on blur/change)
-            nomeEstoqueInput.addEventListener('change', () => {
-                salvarTabela(); // Save when stock name is changed
+            // --- Event Listeners ---
+            btnMesAnterior.addEventListener('click', () => {
+                const dateBeforeChange = new Date(displayedDate); 
+                displayedDate.setMonth(displayedDate.getMonth() - 1);
+                updateMonthDisplay();
+                loadStock(currentStockIndex, dateBeforeChange); 
             });
 
-            // '+' button to navigate to next stock (0-9)
+            btnProximoMes.addEventListener('click', () => {
+                const dateBeforeChange = new Date(displayedDate);
+                displayedDate.setMonth(displayedDate.getMonth() + 1);
+                updateMonthDisplay();
+                loadStock(currentStockIndex, dateBeforeChange); 
+            });
+
             btnNovoEstoque.addEventListener('click', () => {
                 loadStock(currentStockIndex + 1);
             });
 
-            // '-' button to navigate to previous stock (0-9)
             btnVoltarEstoque.addEventListener('click', () => {
                 loadStock(currentStockIndex - 1);
+            });
+
+            nomeEstoqueInput.addEventListener('change', () => {
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+            });
+
+            btnLimparHistorico.addEventListener('click', () => {
+                if (confirm('Tem certeza que deseja limpar o histórico de operações para este mês e estoque? Esta ação não pode ser desfeita.')) {
+                    listaOperacoes.innerHTML = '';
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+                }
             });
 
             // Make table rows sortable
             new Sortable(tabelaBody, {
                 animation: 150,
-                ghostClass: 'arrastando',
-                onEnd: () => {
-                    salvarTabela();
-                    atualizarResumo();
-                    atualizarGraficos();
-                    verificarLinhaFinal(); // Ensure empty row is still at the bottom after sorting
-                    removerLinhasVazias(); // Clean up if any rows became empty after drag
-                }
+                onEnd: function (evt) {
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+                },
             });
 
-            // Button to clear history for current stock
-            btnLimparHistorico.addEventListener('click', () => {
-                const stockName = allStocksData[currentStockIndex].customName || `Estoque ${currentStockIndex + 1}`;
-                if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}"? Esta ação é irreversível.`)) {
-                    allStocksData[currentStockIndex].history = [];
-                    localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
-                    listaOperacoes.innerHTML = '';
-                    alert('Histórico de operações apagado com sucesso!');
-                }
-            });
+            // Initial load
+            updateMonthDisplay();
+            loadStock(currentStockIndex); 
 
-            // Service Worker Registration for PWA capabilities
+            // Register service worker for PWA capabilities
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(() => console.log('Service Worker registrado com sucesso!'))
-                    .catch(err => console.error('Erro ao registrar Service Worker:', err));
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('ServiceWorker registered: ', registration);
+                        })
+                        .catch(registrationError => {
+                            console.log('ServiceWorker registration failed: ', registrationError);
+                        });
+                });
             }
-
-            // Save current stock data when the page is closed or reloaded
-            window.addEventListener('beforeunload', () => {
-                salvarTabela(); // Final save before page unload
-            });
         });
     </script>
 </body>

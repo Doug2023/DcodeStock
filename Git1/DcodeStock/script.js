@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnMesAnterior = document.getElementById('btnMesAnterior');
     const btnProximoMes = document.getElementById('btnProximoMes');
     const nomeEstoqueInput = document.getElementById('nomeEstoqueInput');
-    const btnNovoEstoque = document.getElementById('btnNovoEstoque');
+    const btnNovoEstoque = document.getElementById('btnNovoEstocue');
     const btnVoltarEstoque = document.getElementById('btnVoltarEstoque');
     const entradaTotalEl = document.getElementById('entradaTotal');
     const saidaTotalEl = document.getElementById('saidaTotal');
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Month Navigation ---
     const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    let displayedDate = new Date(); // This will now control which month's data is loaded
+    let displayedDate = new Date(); 
 
     function updateMonthDisplay() {
         mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
@@ -388,4 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(() => console.log('Service Worker registrado com sucesso!'))
             .catch(err => console.error('Erro ao registrar Service Worker:', err));
     }
+
+    // Save current stock data when the page is closed or reloaded
+    window.addEventListener('beforeunload', () => {
+        salvarTabela(); // Final save before page unload
+    });
 });
