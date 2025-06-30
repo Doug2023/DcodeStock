@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000" />
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: #1f1f1f;
+        }
+
+        .video-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            background: #1f1f1f;
+            margin-bottom: 1rem;
+        }
+
+        .video-container .video {
+            width: 200px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .logo {
+            height: 120px;
+            margin-right: 20px;
+            object-fit: contain;
+        }
+
+        .month-navigation,
+        .stock-actions {
+            display: flex;
+            justify-content: space-between; /* Espalha itens para as extremidades */
+            align-items: center;
+            width: 100%;
+            padding: 0 1rem; /* Adiciona algum padding para melhor espaçamento */
+        }
+
+        .month-navigation {
+            margin-bottom: 10px; /* Espaço entre navegação de mês e estoque */
+        }
+
+        .stock-actions {
+            margin-bottom: 1rem; /* Espaço abaixo das ações do estoque */
+            /* REMOVIDO: flex-direction: column; ou row aqui para controlar nas media queries */
+        }
+
+        .month-navigation button,
+        .stock-actions button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .stock-actions .nav-button {
+            width: 40px; /* Mantém largura fixa para os botões +/- */
+            height: 40px;
+            padding: 0;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0; /* Impede que os botões encolham */
+        }
+
+        .month-navigation button:hover,
+        .stock-actions button:hover {
+            background-color: #555;
+        }
+
+        #mesAtual {
+            font-size: 2rem;
+            font-style: italic;
+            color: #ccc;
+            text-align: center;
+            flex-grow: 1; /* Permite que ocupe o espaço disponível */
+            margin: 0 10px; /* Espaço ao redor da exibição do mês */
+        }
+
+        main,
+        #resultadoFinal,
+        #registroOperacoes {
+            width: 100%;
+            max-width: 100%;
+            padding: 0 1rem;
+        }
+
+        .nome-estoque-container {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .nome-estoque-container input,
+        #nomeEstoqueInput {
+            width: 100%; /* Permite que o input preencha o espaço */
+            max-width: 400px; /* Máximo 400px em telas grandes */
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            flex-grow: 1; /* Permite que o input cresça */
+            margin: 0 10px; /* Espaçamento entre o input e os botões */
+        }
+
+        table.estoque-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            table-layout: fixed;
+        }
+
+        table.estoque-table th,
+        table.estoque-table td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        table.estoque-table input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        table.estoque-table input:focus {
+            outline: 1px solid #888;
+            background: #333;
+        }
+
+        .graficos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        .grafico-container {
+            flex: 1 1 300px;
+            min-width: 280px;
+        }
+
+        .graficos-top {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1rem;
+            margin-top: 1rem; /* Added margin for spacing */
+        }
+
+        .grafico-meio {
+            flex: 1 1 50%;
+            min-width: 280px;
+        }
+
+        #graficoSaidas-container {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        #resultadoFinal {
+            padding: 20px;
+            text-align: center;
+            background: #1f1f1f;
+            margin-top: 1rem;
+            border-radius: 8px; /* Added border-radius */
+        }
+
+        #registroOperacoes {
+            position: relative;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-top: 1rem;
+            margin-bottom: 1rem; /* Added bottom margin */
+        }
+
+        #registroOperacoes ul {
+            list-style: none;
+            padding-left: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333; /* Added border for visual separation */
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        #registroOperacoes ul li {
+            padding: 4px 0;
+            border-bottom: 1px dashed #2a2a2a;
+        }
+
+        #registroOperacoes ul li:last-child {
+            border-bottom: none;
+        }
+
+        #btnLimparHistorico {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0;
+        }
+
+        #btnLimparHistorico:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* Media Query para telas até 768px (smartphones e tablets em retrato) */
+        @media screen and (max-width: 768px) {
+            .graficos {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .graficos-top {
+                flex-direction: column;
+            }
+
+            .grafico-meio {
+                min-width: 100%;
+            }
+
+            #graficoSaidas-container {
+                padding: 0;
+            }
+
+            /* Navegação de Mês: Permanece em linha, ajusta espaçamento */
+            .month-navigation {
+                flex-direction: row; /* Garante que fique em linha */
+                flex-wrap: wrap; /* Permite quebrar linha se necessário */
+                justify-content: space-between; /* Mantém botões nas pontas */
+                gap: 5px; /* Espaço menor entre os itens */
+                padding: 0 0.5rem; /* Reduz padding */
+            }
+
+            .month-navigation button {
+                width: auto; /* Deixa o botão se ajustar ao conteúdo */
+                padding: 6px 10px; /* Reduz o padding */
+                font-size: 0.85rem; /* Reduz o tamanho da fonte */
+            }
+
+            #mesAtual {
+                flex-grow: 1; /* Permite que o mês cresça */
+                font-size: 1.5rem; /* Ajusta o tamanho da fonte */
+                margin: 0 5px; /* Ajusta margem */
+            }
+
+            /* Ações do Estoque: Alinha o input entre os botões */
+            .stock-actions {
+                flex-direction: row; /* Garante que fique em linha */
+                justify-content: space-between; /* Botões nas pontas */
+                align-items: center; /* Alinha verticalmente */
+                padding: 0 0.5rem; /* Reduz padding */
+                gap: 5px; /* Espaço entre os itens */
+            }
+
+            #nomeEstoqueInput {
+                flex-grow: 1; /* Permite que o input se expanda */
+                max-width: none; /* Remove a largura máxima para permitir expansão */
+                width: auto; /* Ajusta a largura automaticamente */
+                font-size: 1rem; /* Mantém o tamanho da fonte para leitura */
+                margin: 0 5px; /* Espaçamento entre o input e os botões */
+            }
+
+            .stock-actions .nav-button {
+                width: 35px; /* Ligeiramente menor para economizar espaço */
+                height: 35px;
+                font-size: 1.2rem; /* Menor ícone para caber */
+            }
+        }
+
+        /* Landscape orientation for smaller screens (e.g., phones) */
+        @media screen and (max-height: 450px) and (orientation: landscape) {
+            header {
+                padding: 0.5rem; /* Reduce header padding */
+            }
+            .video-container {
+                margin-bottom: 0.5rem; /* Reduce video margin */
+            }
+            .month-navigation,
+            .stock-actions {
+                flex-direction: row; /* Keep buttons in a row */
+                justify-content: space-between;
+                padding: 0 0.5rem;
+                margin-bottom: 5px;
+                flex-wrap: wrap; /* Allow wrapping if content is too wide */
+            }
+            .month-navigation button,
+            .stock-actions button {
+                width: auto; /* Allow buttons to size naturally */
+                max-width: none;
+                padding: 6px 10px; /* Smaller padding */
+                font-size: 0.8rem; /* Smaller font size */
+            }
+            #mesAtual, #nomeEstoqueInput {
+                margin: 0 5px;
+                font-size: 1.2rem; /* Smaller font for month */
+                max-width: 150px; /* Limit width */
+            }
+            /* Adjust table and charts for less vertical space */
+            main,
+            #resultadoFinal,
+            #registroOperacoes {
+                padding: 0 0.5rem;
+            }
+            table.estoque-table th,
+            table.estoque-table td {
+                padding: 5px;
+                font-size: 0.8rem;
+            }
+            table.estoque-table input {
+                font-size: 0.8rem;
+            }
+            .graficos-top, #graficoSaidas-container {
+                margin-top: 0.5rem;
+                padding: 0 0.5rem;
+            }
+            #registroOperacoes ul {
+                max-height: 100px; /* Reduce history height */
+            }
+            #resultadoFinal p {
+                font-size: 0.9rem; /* Smaller text for totals */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video class="video" autoplay muted loop playsinline>
+            <source src="Dcodeanimation.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <header>
+        <div class="month-navigation">
+            <button id="btnMesAnterior">Mês Anterior</button>
+            <span id="mesAtual">Junho de 2025</span>
+            <button id="btnProximoMes">Próximo Mês</button>
+        </div>
+        <div class="stock-actions">
+            <button id="btnVoltarEstoque" class="nav-button">-</button>
+            <input type="text" id="nomeEstoqueInput" placeholder="Estoque 1" />
+            <button id="btnNovoEstoque" class="nav-button">+</button>
+        </div>
+    </header>
+
+    <main id="abasContainer">
+        <table class="estoque-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <div class="graficos-top">
+        <div class="grafico-meio">
+            <h3>Entrada</h3>
+            <canvas id="graficoPizza"></canvas>
+        </div>
+        <div class="grafico-meio">
+            <h3>R$ valores</h3>
+            <canvas id="graficoBarras"></canvas>
+        </div>
+    </div>
+
+    <div id="graficoSaidas-container">
+        <h3>Saídas</h3>
+        <canvas id="graficoSaidas"></canvas>
+    </div>
+
+    <div id="resultadoFinal">
+        <p>Entrada Total: <span id="entradaTotal">0</span></p>
+        <p>Saída Total: <span id="saidaTotal">0</span></p>
+        <p>Saldo Atual: <span id="saldoTotal">0</span></p>
+        <p>Valor Total: R$ <span id="valorFinal">0.00</span></p>
+    </div>
+
+    <div id="registroOperacoes">
+        <button id="btnLimparHistorico" title="Apagar histórico">Apagar Histórico</button>
+        <h3>Histórico de Operações</h3>
+        <ul id="listaOperacoes"></ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const mesAtualEl = document.getElementById('mesAtual');
+            const btnMesAnterior = document.getElementById('btnMesAnterior');
+            const btnProximoMes = document.getElementById('btnProximoMes');
+            const nomeEstoqueInput = document.getElementById('nomeEstoqueInput');
+            const btnNovoEstoque = document.getElementById('btnNovoEstoque');
+            const btnVoltarEstoque = document.getElementById('btnVoltarEstoque');
+            const entradaTotalEl = document.getElementById('entradaTotal');
+            const saidaTotalEl = document.getElementById('saidaTotal');
+            const saldoTotalEl = document.getElementById('saldoTotal');
+            const valorFinalEl = document.getElementById('valorFinal');
+            const tabelaBody = document.querySelector('table.estoque-table tbody');
+            const listaOperacoes = document.getElementById('listaOperacoes');
+            const btnLimparHistorico = document.getElementById('btnLimparHistorico');
+
+            // --- Month Navigation ---
+            const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            let displayedDate = new Date();
+
+            function updateMonthDisplay() {
+                mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
+            }
+
+            btnMesAnterior.addEventListener('click', () => {
+                displayedDate.setMonth(displayedDate.getMonth() - 1);
+                updateMonthDisplay();
+            });
+
+            btnProximoMes.addEventListener('click', () => {
+                displayedDate.setMonth(displayedDate.getMonth() + 1);
+                updateMonthDisplay();
+            });
+
+            updateMonthDisplay(); // Initial month display
+
+            // --- Chart Setup ---
+            const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
+            const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
+            const ctxSaidas = document.getElementById('graficoSaidas').getContext('2d');
+
+            const chartPizza = new Chart(ctxPizza, {
+                type: 'pie',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
+
+            const chartBarras = new Chart(ctxBarras, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            const chartSaidas = new Chart(ctxSaidas, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+                options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            });
+
+            // --- Color Generation & Storage ---
+            const coresMap = JSON.parse(localStorage.getItem('coresMap') || '{}');
+            function gerarCor(nome) {
+                if (!coresMap[nome]) {
+                    const r = Math.floor(Math.random() * 156 + 100);
+                    const g = Math.floor(Math.random() * 156 + 100);
+                    const b = Math.floor(Math.random() * 156 + 100);
+                    coresMap[nome] = `rgb(${r},${g},${b})`;
+                    localStorage.setItem('coresMap', JSON.stringify(coresMap));
+                }
+                return coresMap[nome];
+            }
+
+            // --- Stock Management Variables ---
+            const MAX_STOCKS = 10;
+            let allStocksData = [];
+            try {
+                const storedData = JSON.parse(localStorage.getItem('allStocksData'));
+                if (Array.isArray(storedData)) {
+                    allStocksData = storedData;
+                }
+            } catch (e) {
+                console.error("Erro ao parsear allStocksData do localStorage. Inicializando como array vazio.", e);
+            }
+
+            // Ensure allStocksData has MAX_STOCKS valid stock objects
+            for (let i = 0; i < MAX_STOCKS; i++) {
+                if (!allStocksData[i] || typeof allStocksData[i] !== 'object' || allStocksData[i] === null) {
+                    allStocksData[i] = {
+                        customName: `Estoque ${i + 1}`,
+                        tableData: [],
+                        history: []
+                    };
+                } else {
+                    // Ensure existing stocks have all required properties
+                    if (!allStocksData[i].customName) allStocksData[i].customName = `Estoque ${i + 1}`;
+                    if (!allStocksData[i].tableData) allStocksData[i].tableData = [];
+                    if (!allStocksData[i].history) allStocksData[i].history = [];
+                }
+            }
+            // Truncate if somehow more than MAX_STOCKS
+            if (allStocksData.length > MAX_STOCKS) {
+                allStocksData = allStocksData.slice(0, MAX_STOCKS);
+            }
+            
+            let currentStockIndex = parseInt(localStorage.getItem('currentStockIndex') || '0');
+            // Ensure the initial currentStockIndex is valid
+            if (currentStockIndex < 0 || currentStockIndex >= MAX_STOCKS) {
+                currentStockIndex = 0;
+            }
+
+            // --- Table & Data Manipulation Functions ---
+
+            // Helper to check if a row is completely empty
+            function isRowEmpty(row) {
+                const inputs = row.querySelectorAll('input');
+                return [...inputs].every(input => 
+                    input.value.trim() === '' || 
+                    (input.type === 'number' && (isNaN(parseFloat(input.value)) || parseFloat(input.value) === 0))
+                );
+            }
+
+            // Adds a new empty row to the table
+            function adicionarLinha(data = {}) {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td><input type="text" class="item" value="${data.item || ''}" autocomplete="off" /></td>
+                    <td><input type="number" class="entrada" min="0" step="any" value="${data.entrada || ''}" autocomplete="off"/></td>
+                    <td><input type="number" class="saida" min="0" step="any" value="${data.saida || ''}" autocomplete="off"/></td>
+                    <td><input type="number" class="valor" min="0" step="0.01" value="${data.valor || ''}" autocomplete="off"/></td>
+                `;
+                tabelaBody.appendChild(linha);
+                adicionarEventosLinha(linha);
+            }
+
+            // Attaches event listeners to inputs within a table row
+            function adicionarEventosLinha(linha) {
+                const inputs = linha.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => {
+                        atualizarResumo();
+                        atualizarGraficos();
+                        salvarTabela();
+                        // Call cleanup functions after input to maintain table structure
+                        verificarLinhaFinal();
+                        removerLinhasVazias();
+                    });
+                });
+
+                linha.querySelector('.entrada').addEventListener('change', () => {
+                    const item = linha.querySelector('.item').value.trim();
+                    const valor = parseFloat(linha.querySelector('.entrada').value) || 0;
+                    if (item && valor > 0) registrarOperacao('entrada', item, valor);
+                });
+                linha.querySelector('.saida').addEventListener('change', () => {
+                    const item = linha.querySelector('.item').value.trim();
+                    const valor = parseFloat(linha.querySelector('.saida').value) || 0;
+                    if (item && valor > 0) registrarOperacao('saida', item, valor);
+                });
+            }
+
+            // Ensures there's always an empty line at the end for user input
+            function verificarLinhaFinal() {
+                const linhas = tabelaBody.querySelectorAll('tr');
+                if (linhas.length === 0 || !isRowEmpty(linhas[linhas.length - 1])) {
+                    adicionarLinha();
+                }
+            }
+
+            // Removes empty rows, but keeps the last one for input
+            function removerLinhasVazias() {
+                const linhas = tabelaBody.querySelectorAll('tr');
+                // Iterate from the second to last line upwards
+                for (let i = linhas.length - 2; i >= 0; i--) { 
+                    if (isRowEmpty(linhas[i])) {
+                        linhas[i].remove();
+                    }
+                }
+            }
+
+            // Calculates and updates summary totals
+            function atualizarResumo() {
+                let entrada = 0, saida = 0, saldo = 0, valorTotal = 0;
+                const linhas = tabelaBody.querySelectorAll('tr');
+                linhas.forEach(linha => {
+                    const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+                    const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+                    const val = parseFloat(linha.querySelector('.valor').value) || 0;
+                    entrada += ent;
+                    saida += sai;
+                    saldo += (ent - sai);
+                    valorTotal += val;
+                });
+                entradaTotalEl.textContent = entrada;
+                saidaTotalEl.textContent = saida;
+                saldoTotalEl.textContent = saldo;
+                valorFinalEl.textContent = valorTotal.toFixed(2);
+            }
+
+            // Updates chart data based on table content
+            function atualizarGraficos() {
+                const labels = [], entradas = [], valores = [], cores = [];
+                const dataSaida = {}, corSaidaPorItem = {};
+                const linhas = tabelaBody.querySelectorAll('tr');
+
+                linhas.forEach(linha => {
+                    const nome = linha.querySelector('.item').value.trim();
+                    const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
+                    const sai = parseFloat(linha.querySelector('.saida').value) || 0;
+                    const val = parseFloat(linha.querySelector('.valor').value) || 0;
+
+                    if (nome) {
+                        const cor = gerarCor(nome);
+                        // For pie and bar chart (Entrada and Valor)
+                        if (ent > 0) {
+                            const existingIndex = labels.indexOf(nome);
+                            if (existingIndex > -1) {
+                                entradas[existingIndex] += ent;
+                                valores[existingIndex] += val;
+                            } else {
+                                labels.push(nome);
+                                entradas.push(ent);
+                                valores.push(val);
+                                cores.push(cor);
+                            }
+                        }
+                        // For horizontal bar chart (Saída)
+                        if (sai > 0) {
+                            dataSaida[nome] = (dataSaida[nome] || 0) + sai;
+                            corSaidaPorItem[nome] = cor;
+                        }
+                    }
+                });
+
+                // Update Pie Chart
+                chartPizza.data.labels = labels;
+                chartPizza.data.datasets[0].data = entradas;
+                chartPizza.data.datasets[0].backgroundColor = cores;
+                chartPizza.update();
+
+                // Update Bar Chart (Valores)
+                chartBarras.data.labels = labels;
+                chartBarras.data.datasets[0].data = valores;
+                chartBarras.data.datasets[0].backgroundColor = cores;
+                chartBarras.update();
+
+                // Update Saídas Chart
+                const saidaLabels = Object.keys(dataSaida);
+                chartSaidas.data.labels = saidaLabels;
+                chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
+                chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+                chartSaidas.update();
+            }
+
+            // Saves current table and stock name data to allStocksData array and localStorage
+            function salvarTabela() {
+                // Filter out empty rows when saving
+                const linhasVisiveis = [...tabelaBody.querySelectorAll('tr')].filter(row => !isRowEmpty(row));
+                const dadosParaSalvar = linhasVisiveis.map(linha => ({
+                    item: linha.querySelector('.item').value,
+                    entrada: linha.querySelector('.entrada').value,
+                    saida: linha.querySelector('.saida').value,
+                    valor: linha.querySelector('.valor').value
+                }));
+                
+                allStocksData[currentStockIndex].tableData = dadosParaSalvar;
+                allStocksData[currentStockIndex].customName = nomeEstoqueInput.value.trim() || `Estoque ${currentStockIndex + 1}`;
+                
+                localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
+                localStorage.setItem('currentStockIndex', currentStockIndex);
+            }
+
+            // Registers an operation in the history list
+            function registrarOperacao(tipo, item, quantidade) {
+                const data = new Date();
+                const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
+                const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
+                
+                // Add to the beginning of the history array
+                allStocksData[currentStockIndex].history.unshift(texto); 
+                localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
+                
+                // Update displayed list (most recent first)
+                const li = document.createElement('li');
+                li.textContent = texto;
+                listaOperacoes.prepend(li);
+            }
+
+            // Loads a specific stock by its index
+            function loadStock(indexToLoad) {
+                // Save current stock data before switching
+                if (currentStockIndex !== null && allStocksData[currentStockIndex]) {
+                    salvarTabela(); 
+                }
+
+                currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; // Ensure index wraps correctly (0-9)
+                localStorage.setItem('currentStockIndex', currentStockIndex);
+
+                const stockData = allStocksData[currentStockIndex];
+                const dadosTabela = stockData.tableData || [];
+                const historicoOperacoes = stockData.history || [];
+                const customName = stockData.customName || `Estoque ${currentStockIndex + 1}`;
+
+                nomeEstoqueInput.value = customName;
+                
+                tabelaBody.innerHTML = ''; // Clear existing rows
+
+                // Populate table with saved data
+                dadosTabela.forEach(data => {
+                    adicionarLinha(data);
+                });
+                adicionarLinha(); // Always ensure there's at least one empty row for new input
+
+                listaOperacoes.innerHTML = '';
+                // Display history in reverse chronological order (most recent first)
+                historicoOperacoes.forEach(txt => {
+                    const li = document.createElement('li');
+                    li.textContent = txt;
+                    listaOperacoes.appendChild(li); 
+                });
+
+                atualizarResumo();
+                atualizarGraficos();
+            }
+
+            // --- Initial Setup and Event Listeners ---
+
+            // Initial load of the current stock when the page loads
+            loadStock(currentStockIndex);
+
+            // Event Listener for stock name input (on blur/change)
+            nomeEstoqueInput.addEventListener('change', () => {
+                salvarTabela(); // Save when stock name is changed
+            });
+
+            // '+' button to navigate to next stock (0-9)
+            btnNovoEstoque.addEventListener('click', () => {
+                loadStock(currentStockIndex + 1);
+            });
+
+            // '-' button to navigate to previous stock (0-9)
+            btnVoltarEstoque.addEventListener('click', () => {
+                loadStock(currentStockIndex - 1);
+            });
+
+            // Make table rows sortable
+            new Sortable(tabelaBody, {
+                animation: 150,
+                ghostClass: 'arrastando',
+                onEnd: () => {
+                    salvarTabela();
+                    atualizarResumo();
+                    atualizarGraficos();
+                    verificarLinhaFinal(); // Ensure empty row is still at the bottom after sorting
+                    removerLinhasVazias(); // Clean up if any rows became empty after drag
+                }
+            });
+
+            // Button to clear history for current stock
+            btnLimparHistorico.addEventListener('click', () => {
+                const stockName = allStocksData[currentStockIndex].customName || `Estoque ${currentStockIndex + 1}`;
+                if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}"? Esta ação é irreversível.`)) {
+                    allStocksData[currentStockIndex].history = [];
+                    localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
+                    listaOperacoes.innerHTML = '';
+                    alert('Histórico de operações apagado com sucesso!');
+                }
+            });
+
+            // Service Worker Registration for PWA capabilities
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(() => console.log('Service Worker registrado com sucesso!'))
+                    .catch(err => console.error('Erro ao registrar Service Worker:', err));
+            }
+
+            // Save current stock data when the page is closed or reloaded
+            window.addEventListener('beforeunload', () => {
+                salvarTabela(); // Final save before page unload
+            });
+        });
+    </script>
+</body>
+</html>

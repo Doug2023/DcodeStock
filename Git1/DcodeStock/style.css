@@ -1,0 +1,108 @@
+/* RESET BÁSICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #121212;
+  color: #fff;
+  position: relative;
+  z-index: 0;
+}
+
+/* MÁSCARA ESCURA GLOBAL */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* máscara escura */
+  z-index: -1;
+}
+
+/* HEADER COM VÍDEO DE FUNDO */
+header {
+  position: relative;
+  width: 100%;
+  /* altura automática para ajustar ao conteúdo */
+  background: #1f1f1f;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* Centraliza horizontalmente */
+  padding: 1rem;
+  z-index: 1;
+}
+
+/* Estilo do wrapper que contém o mês */
+.mes-centralizado-wrapper {
+  width: 100%;             /* Ocupa a largura toda do header */
+  height: 80px;            /* Defina a altura que quiser para a caixa */
+  background-color: #1f1f1f; /* Cor de fundo (ajuste se quiser) */
+  display: flex;           /* Usamos flexbox */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
+  border-radius: 8px;      /* Opcional: cantos arredondados */
+  user-select: none;       /* Evita seleção do texto por acidente */
+}
+
+/* Estilo do texto do mês */
+#mesAtual {
+  font-size: 2rem;
+  font-style: italic;
+  color: #ccc;
+  text-align: center;
+}
+
+
+/* VÍDEO DE FUNDO DENTRO DO HEADER */
+/* Este vídeo será o "logo" animado no topo, centralizado */
+.video-container {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: #121212; /* Fundo igual ao body */
+  margin-bottom: 1rem;
+}
+.video-container .video {
+  width: 10px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Logo escondido */
+.logo {
+  height: 120px;
+  margin-right: 20px;
+  object-fit: contain;
+  display: none; /* Oculto, pois o .video-container substitui */
+}
+
+
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column; /* Empilha itens */
+    padding-left: 0;
+    height: auto;
+  }
+  .video-container {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  #mesAtual {
+    font-size: 1.6rem;
+    padding: 0.2em 0.4em;
+    margin: 10px 0;
+    order: -1; /* Coloca acima dos botões */
+  }
+  .mes-centralizado-wrapper {
+    padding: 0.5rem 0;
+  }
+
+  /* ... restante das regras responsivas ... */
+}
