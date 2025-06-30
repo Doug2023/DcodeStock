@@ -200,37 +200,28 @@
         }
 
         /* --- Charts --- */
-        .graficos {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: var(--spacing-unit);
-            padding: 0 var(--spacing-unit);
-        }
-
-        .grafico-container {
-            flex: 1 1 300px;
-            min-width: 280px;
-        }
-
         .graficos-top {
             display: flex;
             flex-wrap: wrap; 
+            justify-content: center;
             gap: var(--spacing-unit);
             padding: 0 var(--spacing-unit);
             margin-top: var(--spacing-unit);
         }
 
         .grafico-meio {
-            flex: 1 1 50%;
+            flex: 1 1 45%; /* Allow two charts per row, with some flex for responsiveness */
             min-width: 280px;
         }
 
-        #graficoSaidas-container {
+        #graficoValores-container { /* New container for the 'Valor' chart */
             margin-top: var(--spacing-unit);
             width: 100%;
             padding: 0 var(--spacing-unit);
         }
+        
+        /* Original graficoSaidas-container is now for 'Valor' chart, let's rename it for clarity */
+        /* Removed original #graficoSaidas-container as it's being repurposed */
 
         /* --- Results & History --- */
         #resultadoFinal {
@@ -290,20 +281,16 @@
 
         /* --- Media Queries --- */
         @media screen and (max-width: 768px) {
-            .graficos {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
             .graficos-top {
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .grafico-meio {
                 min-width: 100%;
             }
 
-            #graficoSaidas-container {
+            #graficoValores-container {
                 padding: 0;
             }
 
@@ -403,7 +390,7 @@
                 font-size: 0.7rem;
                 padding: 0px; /* No padding for inputs in landscape */
             }
-            .graficos-top, #graficoSaidas-container {
+            .graficos-top, #graficoValores-container { /* Adjusted for new container */
                 margin-top: 0.5rem;
                 padding: 0 0.5rem;
             }
@@ -459,14 +446,14 @@
             <canvas id="graficoPizza"></canvas>
         </div>
         <div class="grafico-meio">
-            <h3>R$ valores</h3>
-            <canvas id="graficoBarras"></canvas>
+            <h3>Saídas</h3>
+            <canvas id="graficoSaidas"></canvas>
         </div>
     </div>
 
-    <div id="graficoSaidas-container">
-        <h3>Saídas</h3>
-        <canvas id="graficoSaidas"></canvas>
+    <div id="graficoValores-container">
+        <h3>Valores</h3>
+        <canvas id="graficoBarras"></canvas>
     </div>
 
     <div id="resultadoFinal">
@@ -837,26 +824,13 @@
             new Sortable(tabelaBody, {
                 animation: 150,
                 onEnd: function (evt) {
-                    salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
-                },
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                }
             });
 
             // Initial load
             updateMonthDisplay();
-            loadStock(currentStockIndex); 
-
-            // Register service worker for PWA capabilities
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/service-worker.js')
-                        .then(registration => {
-                            console.log('ServiceWorker registered: ', registration);
-                        })
-                        .catch(registrationError => {
-                            console.log('ServiceWorker registration failed: ', registrationError);
-                        });
-                });
-            }
+            loadStock(currentStockIndex);
         });
     </script>
 </body>

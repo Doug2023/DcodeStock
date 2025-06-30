@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnMesAnterior = document.getElementById('btnMesAnterior');
     const btnProximoMes = document.getElementById('btnProximoMes');
     const nomeEstoqueInput = document.getElementById('nomeEstoqueInput');
-    const btnNovoEstoque = document.getElementById('btnNovoEstocue');
+    const btnNovoEstoque = document.getElementById('btnNovoEstoque');
     const btnVoltarEstoque = document.getElementById('btnVoltarEstoque');
     const entradaTotalEl = document.getElementById('entradaTotal');
     const saidaTotalEl = document.getElementById('saidaTotal');
@@ -16,26 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Month Navigation ---
     const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    let displayedDate = new Date(); 
+    let displayedDate = new Date();
 
     function updateMonthDisplay() {
         mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
-        // CRITICAL CHANGE: When the displayed month changes, reload the current stock's data
-        // This ensures the table and charts reflect the selected month.
-        loadStock(currentStockIndex);
     }
 
     btnMesAnterior.addEventListener('click', () => {
+        const dateBeforeChange = new Date(displayedDate);
         displayedDate.setMonth(displayedDate.getMonth() - 1);
         updateMonthDisplay();
+        loadStock(currentStockIndex, dateBeforeChange);
     });
 
     btnProximoMes.addEventListener('click', () => {
+        const dateBeforeChange = new Date(displayedDate);
         displayedDate.setMonth(displayedDate.getMonth() + 1);
         updateMonthDisplay();
+        loadStock(currentStockIndex, dateBeforeChange);
     });
-
-    updateMonthDisplay(); // Initial month display
 
     // --- Chart Setup ---
     const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
@@ -75,42 +74,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Stock Management Variables ---
     const MAX_STOCKS = 10;
-    let allStocksData = [];
+    let allStocksMeta = [];
     try {
-        const storedData = JSON.parse(localStorage.getItem('allStocksData'));
-        if (Array.isArray(storedData)) {
-            allStocksData = storedData;
+        const storedMeta = JSON.parse(localStorage.getItem('allStocksMeta'));
+        if (Array.isArray(storedMeta)) {
+            allStocksMeta = storedMeta;
         }
     } catch (e) {
-        console.error("Erro ao parsear allStocksData do localStorage. Inicializando como array vazio.", e);
+        console.error("Erro ao parsear allStocksMeta do localStorage. Inicializando como array vazio.", e);
     }
-
-    // Ensure allStocksData has MAX_STOCKS valid stock objects
     for (let i = 0; i < MAX_STOCKS; i++) {
-        if (!allStocksData[i] || typeof allStocksData[i] !== 'object' || allStocksData[i] === null) {
-            allStocksData[i] = {
-                customName: `Estoque ${i + 1}`,
-                // CHANGED: Use monthlyData to store data per month
-                monthlyData: {}, 
-                history: []
-            };
+        if (!allStocksMeta[i] || typeof allStocksMeta[i] !== 'object' || allStocksMeta[i] === null) {
+            allStocksMeta[i] = { namesByMonth: {} };
         } else {
-            // Ensure existing stocks have all required properties
-            if (!allStocksData[i].customName) allStocksData[i].customName = `Estoque ${i + 1}`;
-            // CHANGED: Initialize monthlyData if it doesn't exist
-            if (!allStocksData[i].monthlyData) allStocksData[i].monthlyData = {}; 
-            if (!allStocksData[i].history) allStocksData[i].history = [];
+            if (!allStocksMeta[i].namesByMonth) {
+                allStocksMeta[i].namesByMonth = {};
+            }
         }
     }
-    // Truncate if somehow more than MAX_STOCKS
-    if (allStocksData.length > MAX_STOCKS) {
-        allStocksData = allStocksData.slice(0, MAX_STOCKS);
+    if (allStocksMeta.length > MAX_STOCKS) {
+        allStocksMeta = allStocksMeta.slice(0, MAX_STOCKS);
     }
-    
+
     let currentStockIndex = parseInt(localStorage.getItem('currentStockIndex') || '0');
-    // Ensure the initial currentStockIndex is valid
     if (currentStockIndex < 0 || currentStockIndex >= MAX_STOCKS) {
         currentStockIndex = 0;
+    }
+
+    // --- Função para obter a chave do localStorage para o estoque e mês específicos ---
+    function getStorageKey(index, date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `estoque_${year}-${month}_${index}`;
+    }
+
+    // --- Helper para obter a chave do nome do mês/ano ---
+    function getMonthYearKey(date) {
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     }
 
     // --- Table & Data Manipulation Functions ---
@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper to check if a row is completely empty
     function isRowEmpty(row) {
         const inputs = row.querySelectorAll('input');
-        return [...inputs].every(input => 
-            input.value.trim() === '' || 
+        return [...inputs].every(input =>
+            input.value.trim() === '' ||
             (input.type === 'number' && (isNaN(parseFloat(input.value)) || parseFloat(input.value) === 0))
         );
     }
@@ -144,8 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             input.addEventListener('input', () => {
                 atualizarResumo();
                 atualizarGraficos();
-                salvarTabela();
-                // Call cleanup functions after input to maintain table structure
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                 verificarLinhaFinal();
                 removerLinhasVazias();
             });
@@ -174,8 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Removes empty rows, but keeps the last one for input
     function removerLinhasVazias() {
         const linhas = tabelaBody.querySelectorAll('tr');
-        // Iterate from the second to last line upwards
-        for (let i = linhas.length - 2; i >= 0; i--) { 
+        for (let i = linhas.length - 2; i >= 0; i--) {
             if (isRowEmpty(linhas[i])) {
                 linhas[i].remove();
             }
@@ -215,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (nome) {
                 const cor = gerarCor(nome);
-                // For pie and bar chart (Entrada and Valor)
                 if (ent > 0) {
                     const existingIndex = labels.indexOf(nome);
                     if (existingIndex > -1) {
@@ -228,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         cores.push(cor);
                     }
                 }
-                // For horizontal bar chart (Saída)
                 if (sai > 0) {
                     dataSaida[nome] = (dataSaida[nome] || 0) + sai;
                     corSaidaPorItem[nome] = cor;
@@ -256,9 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chartSaidas.update();
     }
 
-    // Saves current table and stock name data to allStocksData array and localStorage
-    function salvarTabela() {
-        // Filter out empty rows when saving
+    // Saves current table and stock name data to localStorage for the specific month
+    function salvarDadosDoMesAtual(index, dateToSave) {
         const linhasVisiveis = [...tabelaBody.querySelectorAll('tr')].filter(row => !isRowEmpty(row));
         const dadosParaSalvar = linhasVisiveis.map(linha => ({
             item: linha.querySelector('.item').value,
@@ -266,86 +261,89 @@ document.addEventListener('DOMContentLoaded', () => {
             saida: linha.querySelector('.saida').value,
             valor: linha.querySelector('.valor').value
         }));
-        
-        // NEW: Create a unique key for the current month and year
-        const monthKey = `${displayedDate.getMonth()}_${displayedDate.getFullYear()}`;
 
-        allStocksData[currentStockIndex].customName = nomeEstoqueInput.value.trim() || `Estoque ${currentStockIndex + 1}`;
-        // CHANGED: Store table data under the specific month key
-        allStocksData[currentStockIndex].monthlyData[monthKey] = dadosParaSalvar; 
-        
-        localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
+        const monthYearKey = getMonthYearKey(dateToSave);
+        const currentName = nomeEstoqueInput.value.trim();
+
+        allStocksMeta[index].namesByMonth[monthYearKey] = currentName || `Estoque ${index + 1}`;
+        localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
+
+        const stockDataForMonth = {
+            tableData: dadosParaSalvar,
+            history: [...listaOperacoes.children].map(li => li.textContent)
+        };
+
+        localStorage.setItem(getStorageKey(index, dateToSave), JSON.stringify(stockDataForMonth));
         localStorage.setItem('currentStockIndex', currentStockIndex);
     }
 
-    // Registers an operation in the history list
+    // Registers an operation in the history list and saves it
     function registrarOperacao(tipo, item, quantidade) {
         const data = new Date();
         const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
-        // NEW: Add the displayed month/year to the history entry for clarity
         const displayedMonthYear = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
         const texto = `[${dataFormatada} - ${displayedMonthYear}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
-        
-        // Add to the beginning of the history array
-        allStocksData[currentStockIndex].history.unshift(texto); 
-        localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
-        
-        // Update displayed list (most recent first)
+
         const li = document.createElement('li');
         li.textContent = texto;
         listaOperacoes.prepend(li);
+
+        salvarDadosDoMesAtual(currentStockIndex, displayedDate);
     }
 
-    // Loads a specific stock by its index
-    function loadStock(indexToLoad) {
-        // Save current stock data before switching, but only if it's not the initial load
-        // This ensures data for the previously viewed month/stock is saved.
-        if (currentStockIndex !== null && allStocksData[currentStockIndex]) {
-            salvarTabela(); 
+    // Loads a specific stock by its index and the current displayed month
+    function loadStock(indexToLoad, previousDateForSave = null) {
+        if (currentStockIndex !== null && currentStockIndex < MAX_STOCKS && allStocksMeta[currentStockIndex]) {
+            const dateToSave = previousDateForSave || displayedDate;
+            salvarDadosDoMesAtual(currentStockIndex, dateToSave);
         }
 
-        currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; // Ensure index wraps correctly (0-9)
+        currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS;
         localStorage.setItem('currentStockIndex', currentStockIndex);
 
-        const stockData = allStocksData[currentStockIndex];
-        // NEW: Get data for the current displayed month, or an empty array if none exists
-        const monthKey = `${displayedDate.getMonth()}_${displayedDate.getFullYear()}`;
-        const dadosTabela = (stockData.monthlyData && stockData.monthlyData[monthKey]) ? stockData.monthlyData[monthKey] : [];
+        const monthYearKey = getMonthYearKey(displayedDate);
+        const defaultName = `Estoque ${currentStockIndex + 1}`;
+        nomeEstoqueInput.value = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
 
-        const historicoOperacoes = stockData.history || []; // History remains global per stock
-        const customName = stockData.customName || `Estoque ${currentStockIndex + 1}`;
+        const storageKey = getStorageKey(currentStockIndex, displayedDate);
+        let stockDataForMonth = {};
+        try {
+            stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], history: [] };
+        } catch (e) {
+            console.error("Erro ao carregar dados do mês para a chave:", storageKey, e);
+            stockDataForMonth = { tableData: [], history: [] };
+        }
 
-        nomeEstoqueInput.value = customName;
-        
-        tabelaBody.innerHTML = ''; // Clear existing rows
+        tabelaBody.innerHTML = '';
 
-        // Populate table with saved data for the CURRENT MONTH
-        dadosTabela.forEach(data => {
+        (stockDataForMonth.tableData || []).forEach(data => {
             adicionarLinha(data);
         });
-        adicionarLinha(); // Always ensure there's at least one empty row for new input
+        adicionarLinha();
 
         listaOperacoes.innerHTML = '';
-        // Display history in reverse chronological order (most recent first)
-        historicoOperacoes.forEach(txt => {
+        (stockDataForMonth.history || []).slice().reverse().forEach(txt => {
             const li = document.createElement('li');
             li.textContent = txt;
-            listaOperacoes.appendChild(li); 
+            listaOperacoes.appendChild(li);
         });
 
+        updateMonthDisplay();
         atualizarResumo();
         atualizarGraficos();
+
+        // Esta é a linha mais importante para evitar o "pulo"
+        nomeEstoqueInput.blur();
     }
 
     // --- Initial Setup and Event Listeners ---
 
     // Initial load of the current stock when the page loads
-    // This will now correctly load the data for the initially displayed month.
-    loadStock(currentStockIndex); 
+    loadStock(currentStockIndex);
 
     // Event Listener for stock name input (on blur/change)
     nomeEstoqueInput.addEventListener('change', () => {
-        salvarTabela(); // Save when stock name is changed
+        salvarDadosDoMesAtual(currentStockIndex, displayedDate);
     });
 
     // '+' button to navigate to next stock (0-9)
@@ -358,27 +356,26 @@ document.addEventListener('DOMContentLoaded', () => {
         loadStock(currentStockIndex - 1);
     });
 
+    // Button to clear history for current stock (for the current month)
+    btnLimparHistorico.addEventListener('click', () => {
+        const stockName = allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)] || `Estoque ${currentStockIndex + 1}`;
+        if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}" no mês de ${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}? Esta ação é irreversível.`)) {
+            listaOperacoes.innerHTML = '';
+            salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+            alert('Histórico de operações apagado com sucesso!');
+        }
+    });
+
     // Make table rows sortable
     new Sortable(tabelaBody, {
         animation: 150,
         ghostClass: 'arrastando',
         onEnd: () => {
-            salvarTabela();
+            salvarDadosDoMesAtual(currentStockIndex, displayedDate);
             atualizarResumo();
             atualizarGraficos();
-            verificarLinhaFinal(); // Ensure empty row is still at the bottom after sorting
-            removerLinhasVazias(); // Clean up if any rows became empty after drag
-        }
-    });
-
-    // Button to clear history for current stock
-    btnLimparHistorico.addEventListener('click', () => {
-        const stockName = allStocksData[currentStockIndex].customName || `Estoque ${currentStockIndex + 1}`;
-        if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}"? Esta ação é irreversível.`)) {
-            allStocksData[currentStockIndex].history = [];
-            localStorage.setItem('allStocksData', JSON.stringify(allStocksData));
-            listaOperacoes.innerHTML = '';
-            alert('Histórico de operações apagado com sucesso!');
+            verificarLinhaFinal();
+            removerLinhasVazias();
         }
     });
 
@@ -391,6 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Save current stock data when the page is closed or reloaded
     window.addEventListener('beforeunload', () => {
-        salvarTabela(); // Final save before page unload
+        salvarDadosDoMesAtual(currentStockIndex, displayedDate);
     });
 });
