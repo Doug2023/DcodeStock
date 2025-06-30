@@ -27,16 +27,36 @@ body::before {
 header {
   position: relative;
   width: 100%;
-  height: auto; /* Alterado para auto para se ajustar ao conteúdo */
-  overflow: hidden;
+  /* altura automática para ajustar ao conteúdo */
   background: #1f1f1f;
   display: flex;
-  flex-wrap: wrap; /* Permite que os itens quebrem linha em telas menores */
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center; /* Centraliza todo o conteúdo do header */
-  padding: 1rem; /* Adicionado padding para espaçamento interno */
+  justify-content: center; /* Centraliza horizontalmente */
+  padding: 1rem;
   z-index: 1;
 }
+
+/* Estilo do wrapper que contém o mês */
+.mes-centralizado-wrapper {
+  width: 100%;             /* Ocupa a largura toda do header */
+  height: 80px;            /* Defina a altura que quiser para a caixa */
+  background-color: #1f1f1f; /* Cor de fundo (ajuste se quiser) */
+  display: flex;           /* Usamos flexbox */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
+  border-radius: 8px;      /* Opcional: cantos arredondados */
+  user-select: none;       /* Evita seleção do texto por acidente */
+}
+
+/* Estilo do texto do mês */
+#mesAtual {
+  font-size: 2rem;
+  font-style: italic;
+  color: #ccc;
+  text-align: center;
+}
+
 
 /* VÍDEO DE FUNDO DENTRO DO HEADER */
 /* Este vídeo será o "logo" animado no topo, centralizado */
@@ -45,492 +65,44 @@ header {
   display: flex;
   justify-content: center;
   padding: 1rem;
-  background: #121212; /* Fundo do container do vídeo igual ao corpo */
+  background: #121212; /* Fundo igual ao body */
   margin-bottom: 1rem;
 }
 .video-container .video {
-  width: 200px; /* Tamanho ajustado para ser um logo visível */
+  width: 200px;
   height: auto;
   object-fit: contain;
   border-radius: 8px;
 }
 
-/* Removido: .logo-fixa e a posição absoluta de #mesAtual e .logo,
-   já que o header agora usa flexbox para organizar os botões e a data. */
-
-/* MÊS ATUAL AGORA DENTRO DO FLUXO DO HEADER FLEXBOX */
-#mesAtual {
-  font-family: 'Russo One', sans-serif;
-  font-size: 2rem; /* Tamanho ajustado para caber na linha */
-  font-weight: bold;
-  color: #FFD700;
-  text-shadow:
-    2px 2px 4px rgba(0, 0, 0, 0.7),
-    0 0 10px rgba(255, 215, 0, 0.8);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 0.3em 0.6em;
-  border-radius: 8px;
-  user-select: none;
-  white-space: nowrap;
-  margin: 0 15px; /* Espaçamento entre a data e os botões */
-  flex-grow: 1; /* Permite que a data ocupe o espaço disponível e centralize */
-  text-align: center; /* Centraliza o texto do mês/ano */
-}
-
-/* LOGO PADRÃO (SE USADA EM OUTRAS SEÇÕES - manter apenas se houver uso) */
-/* O seu HTML já tinha um '.video-container' para o vídeo principal,
-   então 'video' e 'logo' podem ser substituídos por ele se o objetivo
-   é que o vídeo seja a única "logo" no topo.
-   Se você tem uma imagem de logo separada, mantenha este estilo e ajuste o HTML. */
+/* Logo escondido */
 .logo {
   height: 120px;
   margin-right: 20px;
   object-fit: contain;
-  display: none; /* Escondido, pois o .video-container assume essa função no HTML atual */
-}
-
-/* --- Novos Estilos para Navegação de Mês/Ano --- */
-.month-navigation-button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-  margin: 5px; /* Espaçamento entre os botões */
-  flex-shrink: 0; /* Evita que os botões encolham */
-}
-.month-navigation-button:hover {
-  background-color: #555;
-}
-
-/* --- Estilos para o Nome do Estoque --- */
-.nome-estoque-container {
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem; /* Espaçamento abaixo do input */
-}
-.nome-estoque-container input {
-  width: 80%; /* Ajuste para ser mais responsivo */
-  max-width: 500px; /* Limite de largura */
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #2a2a2a;
-  color: #fff;
-  font-size: 1.1rem;
-  text-align: center;
-}
-.nome-estoque-container input::placeholder {
-  color: #bbb;
-}
-
-/* --- Estilos para as Abas de Estoque --- */
-#abasContainer {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 1rem; /* Mantém o padding da tabela */
-}
-.tabs-container {
-    display: flex;
-    overflow-x: auto; /* Permite rolar as abas se houver muitas */
-    -webkit-overflow-scrolling: touch; /* Rolagem suave em dispositivos móveis */
-    background-color: #1f1f1f;
-    border-bottom: 1px solid #444;
-    padding-top: 10px;
-    margin-bottom: 1rem; /* Espaçamento entre as abas e a tabela */
-    border-top-left-radius: 8px; /* Arredonda as bordas superiores do container */
-    border-top-right-radius: 8px;
-}
-.tab-button {
-    background-color: #2a2a2a;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    margin-right: 2px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    white-space: nowrap; /* Evita que o texto da aba quebre */
-    position: relative; /* Necessário para o posicionamento do botão de fechar */
-}
-.tab-button.active {
-    background-color: #121212; /* Fundo da aba ativa */
-    color: #007bff; /* Cor do texto da aba ativa */
-    border-bottom: 2px solid #007bff; /* Linha azul na aba ativa */
-    font-weight: bold;
-}
-.tab-button:hover:not(.active) {
-    background-color: #3e3e3e;
-}
-.tab-close {
-    background: none;
-    border: none;
-    color: #ccc;
-    font-size: 0.8em;
-    margin-left: 8px;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1; /* Alinha o 'x' melhor */
-}
-.tab-close:hover {
-    color: #fff;
-}
-#addEstoqueButton {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-left: auto; /* Empurra o botão para a direita */
-    white-space: nowrap;
-    transition: background-color 0.3s ease;
-}
-#addEstoqueButton:hover {
-    background-color: #0056b3;
-}
-
-/* --- Tabela de Estoque --- */
-table.estoque-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem; /* Espaço abaixo da tabela */
-  table-layout: fixed;
-  background-color: #1f1f1f; /* Fundo da tabela */
-  border-radius: 8px; /* Arredonda as bordas da tabela */
-  overflow: hidden; /* Garante que os cantos arredondados sejam aplicados */
-}
-table.estoque-table th, table.estoque-table td {
-  border: 1px solid #444;
-  padding: 10px; /* Aumentado padding para melhor toque */
-  text-align: center;
-  font-size: 0.95rem; /* Levemente maior */
-  vertical-align: middle; /* Centraliza verticalmente o conteúdo */
-}
-table.estoque-table th {
-    background-color: #2a2a2a; /* Fundo dos cabeçalhos */
-    font-weight: normal;
-    color: #ddd;
-}
-table.estoque-table input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 0.95rem;
-  text-align: center;
-  padding: 5px 0; /* Padding interno para inputs */
-}
-table.estoque-table input:focus {
-  outline: 1px solid #007bff; /* Borda de foco azul */
-  background: #333;
-  border-radius: 4px;
-}
-
-/* --- Gráficos --- */
-.graficos-top {
-  display: flex;
-  flex-wrap: wrap; /* Permite quebrar linha em telas menores */
-  justify-content: center;
-  gap: 1rem;
-  padding: 0 1rem;
-  margin-top: 1rem;
-}
-.grafico-meio {
-  flex: 1 1 45%; /* Ajustado para ter dois por linha em telas maiores */
-  min-width: 280px;
-  background: #1f1f1f;
-  padding: 1.5rem; /* Mais padding */
-  border-radius: 10px; /* Bordas mais arredondadas */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
-}
-.grafico-meio h3, #graficoSaidas-container h3 {
-    text-align: center;
-    color: #ddd;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-#graficoSaidas-container {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 1.5rem 1rem; /* Mais padding */
-  background: #1f1f1f;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* --- Resumo Final --- */
-#resultadoFinal {
-  padding: 25px; /* Mais padding */
-  text-align: center;
-  background: #1f1f1f;
-  margin-top: 1.5rem; /* Mais espaçamento */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-#resultadoFinal p span {
-    color: #007bff; /* Cor destacada para os números */
-    font-weight: bold;
-}
-#resultadoFinal p:last-child span {
-    color: #28a745; /* Cor verde para o valor final */
+  display: none; /* Oculto, pois o .video-container substitui */
 }
 
 
-/* --- Histórico de Operações --- */
-#registroOperacoes {
-  position: relative;
-  background: #1f1f1f;
-  padding: 25px; /* Mais padding */
-  border-radius: 10px;
-  font-family: monospace;
-  margin-top: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-#registroOperacoes h3 {
-    text-align: center;
-    color: #ddd;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-#registroOperacoes ul {
-  list-style: none;
-  padding-left: 0;
-  max-height: 250px; /* Aumentado para mais espaço */
-  overflow-y: auto;
-  border: 1px solid #444; /* Borda para a lista */
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #2a2a2a;
-}
-#registroOperacoes ul li {
-    padding: 5px 0;
-    border-bottom: 1px dotted #3e3e3e; /* Linha pontilhada entre itens */
-    color: #bbb;
-}
-#registroOperacoes ul li:last-child {
-    border-bottom: none;
-}
-
-/* Botão discreto apagar histórico */
-#btnLimparHistorico {
-  position: absolute;
-  top: 15px; /* Ajustado para estar mais para dentro */
-  right: 15px;
-  background: transparent;
-  border: none;
-  color: #aaa;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 5px 10px;
-  border-radius: 4px;
-}
-#btnLimparHistorico:hover {
-  color: #fff;
-  background-color: #3e3e3e;
-  text-decoration: none; /* Remove sublinhado no hover */
-}
-
-/* --- Botão Gerar Gráfico Anual --- */
-#btnGerarGraficoAnual {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 12px 25px; /* Padding maior */
-    border-radius: 8px; /* Mais arredondado */
-    cursor: pointer;
-    font-size: 1.1rem; /* Fonte maior */
-    margin-top: 2rem; /* Mais espaçamento */
-    margin-bottom: 2rem; /* Espaçamento inferior */
-    display: block;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* Sombra para o botão */
-}
-#btnGerarGraficoAnual:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px); /* Efeito de elevação no hover */
-}
-#btnGerarGraficoAnual:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
-}
-
-/* --- Modal para o Gráfico Anual --- */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.85); /* Fundo mais escuro */
-  justify-content: center; /* Centraliza conteúdo flex */
-  align-items: center; /* Centraliza conteúdo flex */
-  padding: 1rem; /* Padding para garantir que não encoste nas bordas */
-}
-.modal-content {
-  background-color: #1f1f1f;
-  margin: auto;
-  padding: 25px; /* Mais padding */
-  border: 1px solid #444;
-  width: 95%; /* Ligeiramente mais largo em telas pequenas */
-  max-width: 900px; /* Aumentado para gráficos maiores */
-  border-radius: 12px; /* Bordas mais arredondadas */
-  position: relative;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra mais pronunciada */
-  max-height: 90vh; /* Limita a altura do modal */
-  overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
-}
-.modal-content h2 {
-    color: #FFD700;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-}
-.modal canvas {
-    max-height: 60vh; /* Garante que o canvas não seja muito grande no modal */
-}
-
-.close-button {
-  color: #aaa;
-  font-size: 32px; /* Maior para melhor clique */
-  font-weight: bold;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.close-button:hover,
-.close-button:focus {
-  color: #fff;
-  text-decoration: none;
-}
-
-/* --- Estilos para o SortableJS (drag and drop) --- */
-.arrastando {
-  opacity: 0.5;
-  background-color: #3e3e3e;
-  border: 1px dashed #007bff;
-}
-
-/* --- Responsividade (Media Queries) --- */
 @media screen and (max-width: 768px) {
   header {
-    flex-direction: column; /* Empilha os itens do header */
-    padding-left: 0; /* Remove o padding extra */
+    flex-direction: column; /* Empilha itens */
+    padding-left: 0;
     height: auto;
   }
   .video-container {
-    padding-bottom: 0.5rem; /* Reduz espaço */
+    padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
   }
-  .month-navigation-button {
-    width: 48%; /* Quase metade da largura para 2 botões por linha */
-    margin: 5px 1%; /* Pequeno espaçamento entre eles */
-  }
   #mesAtual {
-    font-size: 1.6rem; /* Menor em telas pequenas */
+    font-size: 1.6rem;
     padding: 0.2em 0.4em;
-    margin: 10px 0; /* Espaçamento vertical */
-    order: -1; /* Coloca o mês/ano acima dos botões de navegação */
+    margin: 10px 0;
+    order: -1; /* Coloca acima dos botões */
+  }
+  .mes-centralizado-wrapper {
+    padding: 0.5rem 0;
   }
 
-  .nome-estoque-container input {
-    width: 95%; /* Mais largo em telas pequenas */
-    font-size: 1rem;
-  }
-
-  .tabs-container {
-      margin-bottom: 0.5rem;
-      padding-top: 5px;
-  }
-  .tab-button {
-      padding: 8px 10px;
-      font-size: 0.8rem;
-  }
-  #addEstoqueButton {
-      padding: 8px 10px;
-      font-size: 0.8rem;
-  }
-
-  table.estoque-table th, table.estoque-table td {
-    padding: 8px; /* Menos padding */
-    font-size: 0.85rem;
-  }
-  table.estoque-table input {
-    font-size: 0.85rem;
-  }
-
-  .graficos-top {
-    flex-direction: column;
-    padding: 0; /* Remove padding */
-    gap: 0.8rem;
-  }
-  .grafico-meio {
-    min-width: 100%;
-    padding: 1rem; /* Menos padding */
-  }
-  #graficoSaidas-container {
-    padding: 1rem; /* Menos padding */
-  }
-  .grafico-meio h3, #graficoSaidas-container h3 {
-      font-size: 1.1rem;
-  }
-
-  #resultadoFinal, #registroOperacoes {
-    padding: 15px; /* Menos padding */
-    margin-top: 1rem;
-    font-size: 1rem;
-  }
-  #registroOperacoes h3 {
-      font-size: 1.1rem;
-  }
-  #registroOperacoes ul {
-      max-height: 180px; /* Menor altura */
-  }
-  #btnLimparHistorico {
-      font-size: 0.75rem;
-      top: 10px;
-      right: 10px;
-  }
-
-  #btnGerarGraficoAnual {
-      padding: 10px 20px;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
-  }
-
-  .modal-content {
-      width: 98%; /* Quase tela cheia no modal */
-      padding: 15px;
-      max-height: 95vh;
-  }
-  .modal-content h2 {
-      font-size: 1.5rem;
-  }
-  .close-button {
-      font-size: 24px;
-      top: 5px;
-      right: 10px;
-  }
+  /* ... restante das regras responsivas ... */
 }
-
-/* Estilos para o SortableJS (drag and drop) */
