@@ -6,7 +6,7 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* --- General Styles --- */
         :root {
@@ -30,10 +30,11 @@
         html,
         body {
             width: 100%;
-            height: 100%;
-            font-family: 'Poppins', Arial, sans-serif; 
+            min-height: 100%; /* Use min-height to allow content to expand */
+            font-family: 'Poppins', Arial, sans-serif;
             background-color: var(--bg-color-dark);
             color: var(--text-color);
+            overflow-x: hidden; /* Prevent horizontal scrolling caused by elements extending beyond viewport */
         }
 
         /* --- Header & Navigation --- */
@@ -55,7 +56,8 @@
         }
 
         .video-container .video {
-            width: 200px;
+            width: 200px; /* Keep a reasonable fixed width for the video */
+            max-width: 100%; /* Ensure it doesn't overflow on small screens */
             height: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -63,7 +65,6 @@
 
         .logo {
             height: 120px;
-            margin-right: 20px; /* Consider if this is needed, logo not present in HTML */
             object-fit: contain;
         }
 
@@ -74,6 +75,8 @@
             align-items: center;
             width: 100%;
             padding: 0 var(--spacing-unit);
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 0.5rem; /* Space between items when wrapped */
         }
 
         .month-navigation {
@@ -94,8 +97,9 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: background-color 0.3s ease;
+            flex-shrink: 0; /* Prevent buttons from shrinking too much */
         }
-        
+
         .stock-actions .nav-button {
             width: 40px;
             height: 40px;
@@ -119,6 +123,7 @@
             text-align: center;
             flex-grow: 1;
             margin: 0 10px;
+            min-width: 150px; /* Ensure month display has enough space */
         }
 
         /* --- Main Content & Table --- */
@@ -154,15 +159,16 @@
         /* Responsive table container */
         .table-responsive {
             width: 100%;
-            /* Removed overflow-x to prevent horizontal scrollbar */
             margin-bottom: var(--spacing-unit);
+            overflow-x: auto; /* Re-introduce horizontal scroll for table only */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
         }
 
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
-            /* Removed min-width to allow the table to shrink */
-            table-layout: fixed; /* Keep column widths fixed based on percentages */
+            table-layout: auto;
+            min-width: 500px; /* Set a minimum width for the table to ensure content is readable before scrolling */
         }
 
         table.estoque-table th,
@@ -171,18 +177,20 @@
             padding: 8px;
             text-align: center;
             font-size: 0.9rem;
-            word-wrap: break-word; /* Allow long words to wrap */
+            word-wrap: break-word;
+            white-space: normal; /* Allow text to wrap naturally */
         }
-        
-        /* Adjust column widths to be percentages */
+
+        /* Adjust column widths - these are suggestions and might need fine-tuning */
         table.estoque-table th:nth-child(1),
-        table.estoque-table td:nth-child(1) { width: 40%; } /* Item */
+        table.estoque-table td:nth-child(1) { width: 40%; min-width: 120px; } /* Item */
         table.estoque-table th:nth-child(2),
-        table.estoque-table td:nth-child(2) { width: 20%; } /* Entrada */
+        table.estoque-table td:nth-child(2) { width: 20%; min-width: 80px; } /* Entrada */
         table.estoque-table th:nth-child(3),
-        table.estoque-table td:nth-child(3) { width: 20%; } /* Saída */
+        table.estoque-table td:nth-child(3) { width: 20%; min-width: 80px; } /* Saída */
         table.estoque-table th:nth-child(4),
-        table.estoque-table td:nth-child(4) { width: 20%; } /* Valor */
+        table.estoque-table td:nth-child(4) { width: 20%; min-width: 80px; } /* Valor */
+
 
         table.estoque-table input {
             width: 100%;
@@ -191,7 +199,8 @@
             color: var(--text-color);
             font-size: 0.9rem;
             text-align: center;
-            padding: 0; /* Remove default input padding */
+            padding: 0;
+            min-width: 0; /* Allow inputs to shrink */
         }
 
         table.estoque-table input:focus {
@@ -202,26 +211,44 @@
         /* --- Charts --- */
         .graficos-top {
             display: flex;
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: var(--spacing-unit);
+            flex-wrap: wrap; /* Permite que os gráficos quebrem para a próxima linha se não houver espaço */
+            justify-content: center; /* Centraliza os gráficos na linha */
+            align-items: flex-start; /* Alinha os gráficos pelo topo se tiverem alturas ligeiramente diferentes (o que não deve acontecer agora) */
+            gap: var(--spacing-unit); /* Espaço entre os gráficos */
             padding: 0 var(--spacing-unit);
             margin-top: var(--spacing-unit);
+            margin-bottom: var(--spacing-unit); /* Adiciona margem abaixo do grupo de gráficos */
         }
 
         .grafico-meio {
-            flex: 1 1 45%; /* Allow two charts per row, with some flex for responsiveness */
-            min-width: 280px;
+            flex: 1 1 calc(33.33% - var(--spacing-unit) * 2 / 3); /* Ajusta para 3 gráficos por linha, considerando o gap */
+            min-width: 280px; /* Largura mínima para o gráfico individual antes de quebrar */
+            background: var(--bg-color-medium);
+            padding: var(--spacing-unit);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            height: 280px; /* Altura fixa para consistência */
         }
 
-        #graficoValores-container { /* New container for the 'Valor' chart */
-            margin-top: var(--spacing-unit);
-            width: 100%;
-            padding: 0 var(--spacing-unit);
-        }
+        /* O #graficoValores-container agora é tratado como um .grafico-meio para flexbox */
+        /* Removendo estilos específicos que o fariam se comportar de forma diferente */
+        /* Garanta que o #graficoValores-container tenha a classe .grafico-meio no HTML */
         
-        /* Original graficoSaidas-container is now for 'Valor' chart, let's rename it for clarity */
-        /* Removed original #graficoSaidas-container as it's being repurposed */
+        .grafico-meio h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-text-color);
+        }
+
+        /* Chart canvas sizing */
+        .grafico-meio canvas {
+            max-width: 100%;
+            max-height: calc(100% - 30px); /* Ajusta baseado na altura do h3 e padding */
+            width: 100% !important; /* Força largura */
+            height: 100% !important; /* Força altura */
+        }
 
         /* --- Results & History --- */
         #resultadoFinal {
@@ -230,7 +257,19 @@
             background: var(--bg-color-medium);
             margin-top: var(--spacing-unit);
             border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap; /* Allow result items to wrap */
+            justify-content: space-around;
+            gap: 0.5rem;
         }
+
+        #resultadoFinal p {
+            flex: 1 1 auto; /* Allow paragraphs to take space and wrap */
+            min-width: 120px; /* Ensure each result has a minimum width */
+            font-size: 1rem;
+            padding: 5px 0;
+        }
+
 
         #registroOperacoes {
             position: relative;
@@ -240,6 +279,11 @@
             font-family: monospace;
             margin-top: var(--spacing-unit);
             margin-bottom: var(--spacing-unit);
+        }
+
+        #registroOperacoes h3 {
+            margin-bottom: 10px;
+            color: var(--secondary-text-color);
         }
 
         #registroOperacoes ul {
@@ -255,6 +299,7 @@
         #registroOperacoes ul li {
             padding: 4px 0;
             border-bottom: 1px dashed #2a2a2a;
+            font-size: 0.9rem; /* Adjust font size for history */
         }
 
         #registroOperacoes ul li:last-child {
@@ -272,6 +317,7 @@
             cursor: pointer;
             transition: color 0.3s ease;
             padding: 0;
+            z-index: 10; /* Ensure button is above other content */
         }
 
         #btnLimparHistorico:hover {
@@ -280,71 +326,105 @@
         }
 
         /* --- Media Queries --- */
+
+        /* For devices up to 768px (tablets and phones) */
         @media screen and (max-width: 768px) {
-            .graficos-top {
-                flex-direction: column;
-                align-items: stretch;
+            body {
+                font-size: 0.9rem; /* Slightly smaller base font size */
             }
 
-            .grafico-meio {
-                min-width: 100%;
+            .video-container {
+                padding: 0.5rem;
+                margin-bottom: 0.5rem;
             }
 
-            #graficoValores-container {
-                padding: 0;
-            }
-
-            .month-navigation {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                gap: 5px;
+            .month-navigation,
+            .stock-actions {
+                flex-direction: row; /* Keep as row, but allow wrapping */
+                justify-content: space-around; /* Distribute space more evenly */
                 padding: 0 0.5rem;
+                gap: 0.5rem;
             }
 
-            .month-navigation button {
-                width: auto;
+            .month-navigation button,
+            .stock-actions button {
                 padding: 6px 10px;
-                font-size: 0.85rem;
+                font-size: 0.8rem; /* Smaller button text */
+                flex: 1 1 auto; /* Allow buttons to grow/shrink */
+                min-width: 80px; /* Minimum width for buttons */
             }
 
             #mesAtual {
-                flex-grow: 1;
-                font-size: 1.5rem;
+                font-size: 1.2rem; /* Smaller month display */
                 margin: 0 5px;
-            }
-
-            .stock-actions {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0 0.5rem;
-                gap: 5px;
+                flex-grow: 1;
+                min-width: 100px;
             }
 
             #nomeEstoqueInput {
                 flex-grow: 1;
                 max-width: none;
                 width: auto;
-                font-size: 1rem;
+                font-size: 0.9rem; /* Smaller input font */
                 margin: 0 5px;
+                padding: 8px; /* Slightly more padding for input */
             }
 
             .stock-actions .nav-button {
                 width: 35px;
                 height: 35px;
-                font-size: 1.2rem;
+                font-size: 1.1rem; /* Smaller +/- buttons */
             }
 
-            /* Responsive table for smaller screens */
+            main,
+            #resultadoFinal,
+            #registroOperacoes {
+                padding: 0 0.5rem; /* Reduced horizontal padding */
+            }
+
+            /* Table specific adjustments for small screens */
+            .table-responsive {
+                overflow-x: auto; /* Ensure horizontal scrolling is enabled for the table */
+            }
+
+            table.estoque-table {
+                min-width: 400px; /* Maintain a minimum width for the table itself */
+            }
+
             table.estoque-table th,
             table.estoque-table td {
-                padding: 4px; /* Reduced padding */
-                font-size: 0.75rem; /* Reduced font size */
+                padding: 5px; /* Reduced padding */
+                font-size: 0.7rem; /* Smaller font size for table cells */
             }
             table.estoque-table input {
-                font-size: 0.75rem; /* Reduced font size for inputs */
-                padding: 1px; /* Minimal padding for inputs */
+                font-size: 0.7rem; /* Reduced font size for inputs */
+                padding: 0px; /* Minimal padding for inputs */
+            }
+
+            .graficos-top {
+                flex-direction: column; /* Stack charts vertically */
+                align-items: stretch;
+                padding: 0 0.5rem;
+            }
+
+            .grafico-meio {
+                min-width: 100%; /* Charts take full width */
+                margin-bottom: 0.5rem; /* Space between stacked charts */
+                height: 230px; /* Diminuindo a altura em telas menores */
+            }
+
+            #resultadoFinal p {
+                font-size: 0.9rem; /* Adjust result font size */
+                min-width: 100px;
+            }
+
+            #registroOperacoes ul {
+                max-height: 150px; /* Slightly smaller history height */
+                padding: 8px;
+            }
+
+            #registroOperacoes ul li {
+                font-size: 0.8rem;
             }
         }
 
@@ -362,43 +442,64 @@
                 justify-content: space-between;
                 padding: 0 0.5rem;
                 margin-bottom: 5px;
-                flex-wrap: wrap;
+                flex-wrap: nowrap; /* Prevent wrapping in landscape for more compact layout */
+                gap: 0.3rem; /* Even smaller gap */
             }
             .month-navigation button,
             .stock-actions button {
-                width: auto;
-                max-width: none;
-                padding: 4px 8px; /* Even smaller padding */
-                font-size: 0.75rem; /* Even smaller font size */
+                padding: 3px 6px; /* Even smaller padding */
+                font-size: 0.7rem; /* Even smaller font size */
+                min-width: unset; /* Remove min-width to allow more compression */
             }
             #mesAtual, #nomeEstoqueInput {
-                margin: 0 5px;
-                font-size: 1rem; /* Smaller font size */
-                max-width: 120px; /* Limit width */
+                margin: 0 3px; /* Smaller margins */
+                font-size: 0.9rem; /* Smaller font size */
+                max-width: 100px; /* Limit width */
+                padding: 5px;
+            }
+            .stock-actions .nav-button {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
             }
             main,
             #resultadoFinal,
             #registroOperacoes {
-                padding: 0 0.5rem;
+                padding: 0 0.3rem; /* Very little horizontal padding */
             }
             table.estoque-table th,
             table.estoque-table td {
-                padding: 3px; /* Very small padding */
-                font-size: 0.7rem; /* Smallest font size for table */
+                padding: 2px; /* Very small padding */
+                font-size: 0.65rem; /* Smallest font size for table */
             }
             table.estoque-table input {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
                 padding: 0px; /* No padding for inputs in landscape */
             }
-            .graficos-top, #graficoValores-container { /* Adjusted for new container */
+            .graficos-top {
+                flex-direction: row; /* Tenta manter em linha em paisagem */
+                flex-wrap: nowrap; /* Não quebra para a próxima linha para tentar mantê-los na mesma faixa */
+                justify-content: center;
+                gap: 0.5rem;
                 margin-top: 0.5rem;
-                padding: 0 0.5rem;
+                padding: 0 0.3rem;
+                overflow-x: auto; /* Adiciona rolagem horizontal se necessário para caber os 3 gráficos na mesma linha */
+                -webkit-overflow-scrolling: touch;
+                align-items: flex-start;
+            }
+            .grafico-meio { /* Aplica a todos os gráficos dentro de .graficos-top */
+                flex: 0 0 calc(33.33% - var(--spacing-unit) * 2 / 3); /* Tenta forçar 3 gráficos por linha */
+                min-width: 140px; /* Largura mínima para cada gráfico, pode ser necessário ajustar */
+                padding: 0.5rem;
+                height: 180px; /* Mantém a altura reduzida */
             }
             #registroOperacoes ul {
-                max-height: 80px; /* Smaller history height */
+                max-height: 70px; /* Even smaller history height */
+                padding: 5px;
             }
             #resultadoFinal p {
-                font-size: 0.8rem; /* Smaller result font size */
+                font-size: 0.75rem; /* Smaller result font size */
+                min-width: 80px;
             }
         }
     </style>
@@ -449,11 +550,10 @@
             <h3>Saídas</h3>
             <canvas id="graficoSaidas"></canvas>
         </div>
-    </div>
-
-    <div id="graficoValores-container">
-        <h3>Valores</h3>
-        <canvas id="graficoBarras"></canvas>
+        <div class="grafico-meio" id="graficoValores-container"> 
+            <h3>Valores</h3>
+            <canvas id="graficoBarras"></canvas>
+        </div>
     </div>
 
     <div id="resultadoFinal">
@@ -829,8 +929,8 @@
             });
 
             // Initial load
-            updateMonthDisplay();
             loadStock(currentStockIndex);
+            updateMonthDisplay();
         });
     </script>
 </body>
