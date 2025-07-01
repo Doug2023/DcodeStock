@@ -44,192 +44,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const chartPizza = new Chart(ctxPizza, {
         type: 'pie',
         data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: 'var(--text-color)',
-                        font: {
-                            size: 10,
-                            family: 'Poppins',
-                        }
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Distribuição de Entradas por Item',
-                    color: 'var(--secondary-text-color)',
-                    font: {
-                        size: 16,
-                        family: 'Poppins',
-                        weight: '600'
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed !== null) {
-                                label += context.parsed;
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            animation: {
-                animateRotate: true,
-                animateScale: true
-            }
-        }
+        options: { plugins: { legend: { position: 'bottom' } } }
     });
 
     const chartBarras = new Chart(ctxBarras, {
         type: 'bar',
         data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Valores Totais por Item',
-                    color: 'var(--secondary-text-color)',
-                    font: {
-                        size: 16,
-                        family: 'Poppins',
-                        weight: '600'
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += `R$ ${context.parsed.y.toFixed(2)}`;
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: 'var(--secondary-text-color)',
-                        font: {
-                            family: 'Poppins',
-                            size: 10
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)',
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: 'var(--secondary-text-color)',
-                        font: {
-                            family: 'Poppins',
-                            size: 10
-                        },
-                        callback: function(value, index, values) {
-                            return 'R$ ' + value.toFixed(2);
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart'
-            }
-        }
+        options: { scales: { y: { beginAtZero: true } } }
     });
 
     const chartSaidas = new Chart(ctxSaidas, {
         type: 'bar',
         data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Total de Saídas por Item',
-                    color: 'var(--secondary-text-color)',
-                    font: {
-                        size: 16,
-                        family: 'Poppins',
-                        weight: '600'
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.x !== null) {
-                                label += context.parsed.x;
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: 'var(--secondary-text-color)',
-                        font: {
-                            family: 'Poppins',
-                            size: 10
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)',
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: 'var(--secondary-text-color)',
-                        font: {
-                            family: 'Poppins',
-                            size: 10
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)',
-                        drawBorder: false
-                    }
-                }
-            },
-            animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart'
-            }
-        }
+        options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
     });
 
     // --- Color Generation & Storage ---

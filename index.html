@@ -6,18 +6,18 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
     <style>
         /* --- General Styles --- */
         :root {
-            --bg-color-dark: #121212; /* Fundo mais escuro */
-            --bg-color-medium: #1f1f1f; /* Fundo médio (cards, header) */
-            --bg-color-light: #2a2a2a; /* Fundo mais claro (inputs) */
-            --text-color: #fff; /* Texto principal branco */
-            --secondary-text-color: #ccc; /* Texto secundário cinza claro */
-            --border-color: #444; /* Cor da borda */
-            --button-bg: #333; /* Fundo dos botões */
-            --button-hover-bg: #555; /* Fundo dos botões ao passar o mouse */
+            --bg-color-dark: #121212;
+            --bg-color-medium: #1f1f1f;
+            --bg-color-light: #2a2a2a;
+            --text-color: #fff;
+            --secondary-text-color: #ccc;
+            --border-color: #444;
+            --button-bg: #333;
+            --button-hover-bg: #555;
             --spacing-unit: 1rem;
         }
 
@@ -30,11 +30,10 @@
         html,
         body {
             width: 100%;
-            min-height: 100%;
-            font-family: 'Poppins', Arial, sans-serif;
-            background-color: var(--bg-color-dark); /* Aplica o fundo escuro ao body */
+            height: 100%;
+            font-family: 'Poppins', Arial, sans-serif; 
+            background-color: var(--bg-color-dark);
             color: var(--text-color);
-            overflow-x: hidden;
         }
 
         /* --- Header & Navigation --- */
@@ -57,7 +56,6 @@
 
         .video-container .video {
             width: 200px;
-            max-width: 100%;
             height: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -65,6 +63,7 @@
 
         .logo {
             height: 120px;
+            margin-right: 20px; /* Consider if this is needed, logo not present in HTML */
             object-fit: contain;
         }
 
@@ -75,8 +74,6 @@
             align-items: center;
             width: 100%;
             padding: 0 var(--spacing-unit);
-            flex-wrap: wrap;
-            gap: 0.5rem;
         }
 
         .month-navigation {
@@ -92,22 +89,18 @@
             background-color: var(--button-bg);
             color: var(--text-color);
             border: none;
-            /* Diminuído o padding dos botões de mês */
-            padding: 6px 10px; 
+            padding: 8px 12px;
             border-radius: 4px;
             cursor: pointer;
-            /* Diminuído o tamanho da fonte dos botões de mês */
-            font-size: 0.8rem; 
+            font-size: 0.9rem;
             transition: background-color 0.3s ease;
-            flex-shrink: 0;
         }
-
+        
         .stock-actions .nav-button {
-            /* Diminuído o tamanho dos botões de navegação de estoque */
-            width: 35px; 
-            height: 35px;
+            width: 40px;
+            height: 40px;
             padding: 0;
-            font-size: 1.2rem; /* Ajustado um pouco para se encaixar melhor */
+            font-size: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -126,7 +119,6 @@
             text-align: center;
             flex-grow: 1;
             margin: 0 10px;
-            min-width: 150px;
         }
 
         /* --- Main Content & Table --- */
@@ -148,12 +140,12 @@
         #nomeEstoqueInput {
             width: 100%;
             max-width: 400px;
-            padding: 8px; /* Diminuído o padding do input de nome de estoque */
+            padding: 10px;
             border-radius: 4px;
             border: none;
             background: var(--bg-color-light);
             color: var(--text-color);
-            font-size: 0.9rem; /* Diminuído o tamanho da fonte do input de nome de estoque */
+            font-size: 1rem;
             text-align: center;
             flex-grow: 1;
             margin: 0 10px;
@@ -162,16 +154,15 @@
         /* Responsive table container */
         .table-responsive {
             width: 100%;
+            /* Removed overflow-x to prevent horizontal scrollbar */
             margin-bottom: var(--spacing-unit);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: auto;
-            min-width: 500px;
+            /* Removed min-width to allow the table to shrink */
+            table-layout: fixed; /* Keep column widths fixed based on percentages */
         }
 
         table.estoque-table th,
@@ -180,20 +171,18 @@
             padding: 8px;
             text-align: center;
             font-size: 0.9rem;
-            word-wrap: break-word;
-            white-space: normal;
+            word-wrap: break-word; /* Allow long words to wrap */
         }
-
-        /* Adjust column widths - these are suggestions and might need fine-tuning */
+        
+        /* Adjust column widths to be percentages */
         table.estoque-table th:nth-child(1),
-        table.estoque-table td:nth-child(1) { width: 40%; min-width: 120px; } /* Item */
+        table.estoque-table td:nth-child(1) { width: 40%; } /* Item */
         table.estoque-table th:nth-child(2),
-        table.estoque-table td:nth-child(2) { width: 20%; min-width: 80px; } /* Entrada */
+        table.estoque-table td:nth-child(2) { width: 20%; } /* Entrada */
         table.estoque-table th:nth-child(3),
-        table.estoque-table td:nth-child(3) { width: 20%; min-width: 80px; } /* Saída */
+        table.estoque-table td:nth-child(3) { width: 20%; } /* Saída */
         table.estoque-table th:nth-child(4),
-        table.estoque-table td:nth-child(4) { width: 20%; min-width: 80px; } /* Valor */
-
+        table.estoque-table td:nth-child(4) { width: 20%; } /* Valor */
 
         table.estoque-table input {
             width: 100%;
@@ -202,8 +191,7 @@
             color: var(--text-color);
             font-size: 0.9rem;
             text-align: center;
-            padding: 0;
-            min-width: 0;
+            padding: 0; /* Remove default input padding */
         }
 
         table.estoque-table input:focus {
@@ -214,41 +202,26 @@
         /* --- Charts --- */
         .graficos-top {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: wrap; 
             justify-content: center;
-            align-items: flex-start;
             gap: var(--spacing-unit);
             padding: 0 var(--spacing-unit);
             margin-top: var(--spacing-unit);
-            margin-bottom: var(--spacing-unit);
         }
 
         .grafico-meio {
-            flex: 1 1 calc(33.33% - var(--spacing-unit) * 2 / 3);
+            flex: 1 1 45%; /* Allow two charts per row, with some flex for responsiveness */
             min-width: 280px;
-            background: var(--bg-color-medium);
-            padding: var(--spacing-unit);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            /* Aumentado o tamanho para o gráfico de pizza */
-            height: 320px; 
-        }
-        
-        .grafico-meio h3 {
-            margin-bottom: 0.5rem;
-            color: var(--secondary-text-color);
         }
 
-        /* Chart canvas sizing */
-        .grafico-meio canvas {
-            max-width: 100%;
-            max-height: calc(100% - 30px);
-            width: 100% !important;
-            height: 100% !important;
+        #graficoValores-container { /* New container for the 'Valor' chart */
+            margin-top: var(--spacing-unit);
+            width: 100%;
+            padding: 0 var(--spacing-unit);
         }
+        
+        /* Original graficoSaidas-container is now for 'Valor' chart, let's rename it for clarity */
+        /* Removed original #graficoSaidas-container as it's being repurposed */
 
         /* --- Results & History --- */
         #resultadoFinal {
@@ -257,23 +230,11 @@
             background: var(--bg-color-medium);
             margin-top: var(--spacing-unit);
             border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 0.5rem;
         }
-
-        #resultadoFinal p {
-            flex: 1 1 auto;
-            min-width: 120px;
-            font-size: 1rem;
-            padding: 5px 0;
-        }
-
 
         #registroOperacoes {
             position: relative;
-            background: var(--bg-color-medium); /* Alterado para usar a cor de fundo médio */
+            background: #1a1a1a;
             padding: 20px;
             border-radius: 8px;
             font-family: monospace;
@@ -281,25 +242,19 @@
             margin-bottom: var(--spacing-unit);
         }
 
-        #registroOperacoes h3 {
-            margin-bottom: 10px;
-            color: var(--secondary-text-color);
-        }
-
         #registroOperacoes ul {
             list-style: none;
             padding-left: 0;
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid var(--border-color); /* Usando a cor de borda definida */
+            border: 1px solid #333;
             padding: 10px;
             border-radius: 4px;
         }
 
         #registroOperacoes ul li {
             padding: 4px 0;
-            border-bottom: 1px dashed var(--border-color); /* Usando a cor de borda definida */
-            font-size: 0.9rem;
+            border-bottom: 1px dashed #2a2a2a;
         }
 
         #registroOperacoes ul li:last-child {
@@ -317,7 +272,6 @@
             cursor: pointer;
             transition: color 0.3s ease;
             padding: 0;
-            z-index: 10;
         }
 
         #btnLimparHistorico:hover {
@@ -326,106 +280,71 @@
         }
 
         /* --- Media Queries --- */
-
-        /* For devices up to 768px (tablets and phones) */
         @media screen and (max-width: 768px) {
-            body {
-                font-size: 0.9rem;
+            .graficos-top {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .video-container {
-                padding: 0.5rem;
-                margin-bottom: 0.5rem;
+            .grafico-meio {
+                min-width: 100%;
             }
 
-            .month-navigation,
-            .stock-actions {
+            #graficoValores-container {
+                padding: 0;
+            }
+
+            .month-navigation {
                 flex-direction: row;
-                justify-content: space-around;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 5px;
                 padding: 0 0.5rem;
-                gap: 0.5rem;
             }
 
-            .month-navigation button,
-            .stock-actions button {
-                padding: 4px 8px; /* Ajuste para telas menores */
-                font-size: 0.75rem; /* Ajuste para telas menores */
-                flex: 1 1 auto;
-                min-width: 70px; /* Ajuste para telas menores */
+            .month-navigation button {
+                width: auto;
+                padding: 6px 10px;
+                font-size: 0.85rem;
             }
 
             #mesAtual {
-                font-size: 1.2rem;
-                margin: 0 5px;
                 flex-grow: 1;
-                min-width: 90px; /* Ajuste para telas menores */
+                font-size: 1.5rem;
+                margin: 0 5px;
+            }
+
+            .stock-actions {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 0.5rem;
+                gap: 5px;
             }
 
             #nomeEstoqueInput {
                 flex-grow: 1;
                 max-width: none;
                 width: auto;
-                font-size: 0.8rem; /* Ajuste para telas menores */
+                font-size: 1rem;
                 margin: 0 5px;
-                padding: 6px; /* Ajuste para telas menores */
             }
 
             .stock-actions .nav-button {
-                width: 30px; /* Ajuste para telas menores */
-                height: 30px; /* Ajuste para telas menores */
-                font-size: 1rem; /* Ajuste para telas menores */
+                width: 35px;
+                height: 35px;
+                font-size: 1.2rem;
             }
 
-            main,
-            #resultadoFinal,
-            #registroOperacoes {
-                padding: 0 0.5rem;
-            }
-
-            /* Table specific adjustments for small screens */
-            .table-responsive {
-                overflow-x: auto;
-            }
-
-            table.estoque-table {
-                min-width: 400px;
-            }
-
+            /* Responsive table for smaller screens */
             table.estoque-table th,
             table.estoque-table td {
-                padding: 5px;
-                font-size: 0.7rem;
+                padding: 4px; /* Reduced padding */
+                font-size: 0.75rem; /* Reduced font size */
             }
             table.estoque-table input {
-                font-size: 0.7rem;
-                padding: 0px;
-            }
-
-            .graficos-top {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 0 0.5rem;
-            }
-
-            .grafico-meio {
-                min-width: 100%;
-                margin-bottom: 0.5rem;
-                /* Aumentado ligeiramente para telas menores */
-                height: 250px; 
-            }
-
-            #resultadoFinal p {
-                font-size: 0.9rem;
-                min-width: 100px;
-            }
-
-            #registroOperacoes ul {
-                max-height: 150px;
-                padding: 8px;
-            }
-
-            #registroOperacoes ul li {
-                font-size: 0.8rem;
+                font-size: 0.75rem; /* Reduced font size for inputs */
+                padding: 1px; /* Minimal padding for inputs */
             }
         }
 
@@ -443,65 +362,43 @@
                 justify-content: space-between;
                 padding: 0 0.5rem;
                 margin-bottom: 5px;
-                flex-wrap: nowrap;
-                gap: 0.3rem;
+                flex-wrap: wrap;
             }
             .month-navigation button,
             .stock-actions button {
-                padding: 2px 5px; /* Mais ajustes para paisagem */
-                font-size: 0.65rem; /* Mais ajustes para paisagem */
-                min-width: unset;
+                width: auto;
+                max-width: none;
+                padding: 4px 8px; /* Even smaller padding */
+                font-size: 0.75rem; /* Even smaller font size */
             }
             #mesAtual, #nomeEstoqueInput {
-                margin: 0 3px;
-                font-size: 0.8rem; /* Mais ajustes para paisagem */
-                max-width: 90px; /* Mais ajustes para paisagem */
-                padding: 4px; /* Mais ajustes para paisagem */
-            }
-            .stock-actions .nav-button {
-                width: 28px; /* Mais ajustes para paisagem */
-                height: 28px; /* Mais ajustes para paisagem */
-                font-size: 0.9rem; /* Mais ajustes para paisagem */
+                margin: 0 5px;
+                font-size: 1rem; /* Smaller font size */
+                max-width: 120px; /* Limit width */
             }
             main,
             #resultadoFinal,
             #registroOperacoes {
-                padding: 0 0.3rem;
+                padding: 0 0.5rem;
             }
             table.estoque-table th,
             table.estoque-table td {
-                padding: 2px;
-                font-size: 0.65rem;
+                padding: 3px; /* Very small padding */
+                font-size: 0.7rem; /* Smallest font size for table */
             }
             table.estoque-table input {
-                font-size: 0.65rem;
-                padding: 0px;
+                font-size: 0.7rem;
+                padding: 0px; /* No padding for inputs in landscape */
             }
-            .graficos-top {
-                flex-direction: row;
-                flex-wrap: nowrap;
-                justify-content: center;
-                gap: 0.5rem;
+            .graficos-top, #graficoValores-container { /* Adjusted for new container */
                 margin-top: 0.5rem;
-                padding: 0 0.3rem;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                align-items: flex-start;
-            }
-            .grafico-meio {
-                flex: 0 0 calc(33.33% - var(--spacing-unit) * 2 / 3);
-                min-width: 140px;
-                padding: 0.5rem;
-                /* Mantido igual para paisagem, mas pode ser ajustado se necessário */
-                height: 180px; 
+                padding: 0 0.5rem;
             }
             #registroOperacoes ul {
-                max-height: 70px;
-                padding: 5px;
+                max-height: 80px; /* Smaller history height */
             }
             #resultadoFinal p {
-                font-size: 0.75rem;
-                min-width: 80px;
+                font-size: 0.8rem; /* Smaller result font size */
             }
         }
     </style>
@@ -552,10 +449,11 @@
             <h3>Saídas</h3>
             <canvas id="graficoSaidas"></canvas>
         </div>
-        <div class="grafico-meio" id="graficoValores-container"> 
-            <h3>Valores</h3>
-            <canvas id="graficoBarras"></canvas>
-        </div>
+    </div>
+
+    <div id="graficoValores-container">
+        <h3>Valores</h3>
+        <canvas id="graficoBarras"></canvas>
     </div>
 
     <div id="resultadoFinal">
@@ -604,95 +502,22 @@
             const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
             const ctxSaidas = document.getElementById('graficoSaidas').getContext('2d');
 
-            // Configurações globais para Chart.js para tema escuro e linhas brancas
-            Chart.defaults.color = '#fff'; // Cor do texto padrão para todos os gráficos (legendas, títulos)
-            Chart.defaults.borderColor = '#fff'; // Cor da borda padrão para todos os gráficos (linhas, eixos)
-            Chart.defaults.font.family = 'Poppins'; // Fonte padrão
-            Chart.defaults.plugins.legend.labels.color = '#fff'; // Cor do texto das legendas
-            Chart.defaults.plugins.tooltip.bodyColor = '#fff'; // Cor do texto do tooltip
-            Chart.defaults.plugins.tooltip.titleColor = '#fff'; // Cor do título do tooltip
-            Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(0,0,0,0.8)'; // Fundo escuro do tooltip
-
             const chartPizza = new Chart(ctxPizza, {
                 type: 'pie',
                 data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-                options: { 
-                    plugins: { 
-                        legend: { 
-                            position: 'bottom',
-                            labels: {
-                                color: '#fff' // Garante que a legenda da pizza seja branca
-                            }
-                        } 
-                    } 
-                }
+                options: { plugins: { legend: { position: 'bottom' } } }
             });
 
             const chartBarras = new Chart(ctxBarras, {
                 type: 'bar',
                 data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-                options: { 
-                    scales: { 
-                        y: { 
-                            beginAtZero: true,
-                            grid: {
-                                color: '#fff' // Linhas do grid Y brancas
-                            },
-                            ticks: {
-                                color: '#fff' // Números do eixo Y brancos
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: '#fff' // Linhas do grid X brancas
-                            },
-                            ticks: {
-                                color: '#fff' // Rótulos do eixo X brancos
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#fff' // Legenda das barras brancas
-                            }
-                        }
-                    }
-                }
+                options: { scales: { y: { beginAtZero: true } } }
             });
 
             const chartSaidas = new Chart(ctxSaidas, {
                 type: 'bar',
                 data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-                options: { 
-                    indexAxis: 'y', 
-                    scales: { 
-                        x: { 
-                            beginAtZero: true,
-                            grid: {
-                                color: '#fff' // Linhas do grid X brancas (para gráfico horizontal)
-                            },
-                            ticks: {
-                                color: '#fff' // Números do eixo X brancos
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: '#fff' // Linhas do grid Y brancas (para gráfico horizontal)
-                            },
-                            ticks: {
-                                color: '#fff' // Rótulos do eixo Y brancos
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#fff' // Legenda das saídas brancas
-                            }
-                        }
-                    }
-                }
+                options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
             });
 
             // --- Color Generation & Storage ---
@@ -883,95 +708,116 @@
                 const linhasVisiveis = [...tabelaBody.querySelectorAll('tr')].filter(row => !isRowEmpty(row));
                 const dadosParaSalvar = linhasVisiveis.map(linha => ({
                     item: linha.querySelector('.item').value,
-                    entrada: parseFloat(linha.querySelector('.entrada').value) || 0,
-                    saida: parseFloat(linha.querySelector('.saida').value) || 0,
-                    valor: parseFloat(linha.querySelector('.valor').value) || 0
+                    entrada: linha.querySelector('.entrada').value,
+                    saida: linha.querySelector('.saida').value,
+                    valor: linha.querySelector('.valor').value
                 }));
-                const key = getStorageKey(index, dateToSave);
-                localStorage.setItem(key, JSON.stringify(dadosParaSalvar));
-
+                
                 const monthYearKey = getMonthYearKey(dateToSave);
-                allStocksMeta[index].namesByMonth[monthYearKey] = nomeEstoqueInput.value.trim();
+                const currentName = nomeEstoqueInput.value.trim();
+                
+                // Salva o nome personalizado do estoque para o mês e ano específicos
+                allStocksMeta[index].namesByMonth[monthYearKey] = currentName || `Estoque ${index + 1}`;
                 localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
+
+                const stockDataForMonth = {
+                    tableData: dadosParaSalvar,
+                    history: [...listaOperacoes.children].map(li => li.textContent)
+                };
+                
+                localStorage.setItem(getStorageKey(index, dateToSave), JSON.stringify(stockDataForMonth));
+            }
+            
+            function registrarOperacao(tipo, item, quantidade) {
+                const data = new Date();
+                const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
+                const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
+                
+                const li = document.createElement('li');
+                li.textContent = texto;
+                listaOperacoes.prepend(li);
+
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
             }
 
-            function carregarDadosDoMesAtual(index, dateToLoad) {
-                tabelaBody.innerHTML = ''; // Limpa a tabela
-                const key = getStorageKey(index, dateToLoad);
-                const dadosSalvos = JSON.parse(localStorage.getItem(key) || '[]');
-                if (dadosSalvos.length > 0) {
-                    dadosSalvos.forEach(data => adicionarLinha(data));
+            // --- Carregamento de Estoque ---
+            function loadStock(indexToLoad, previousDateForSave = null) {
+                // 1. Salva o estoque anterior antes de carregar o novo (se aplicável)
+                if (previousDateForSave) {
+                    salvarDadosDoMesAtual(currentStockIndex, previousDateForSave);
+                } else {
+                    // Caso contrário, salva o estado atual antes de carregar outro estoque (mesmo mês)
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                 }
-                verificarLinhaFinal(); // Garante que há sempre uma linha vazia no final
+
+                // 2. Atualiza o índice do estoque atual
+                currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; 
+                localStorage.setItem('currentStockIndex', currentStockIndex);
+
+                // 3. Carrega o nome personalizado para o estoque e mês ATUAIS
+                const monthYearKey = getMonthYearKey(displayedDate);
+                const defaultName = `Estoque ${currentStockIndex + 1}`;
+                nomeEstoqueInput.value = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
+                
+                // 4. Carrega os dados da tabela e histórico para o estoque e mês ATUAIS
+                const storageKey = getStorageKey(currentStockIndex, displayedDate); 
+                let stockDataForMonth = {};
+                try {
+                    stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], history: [] };
+                } catch (e) {
+                    console.error("Erro ao carregar dados do mês para a chave:", storageKey, e);
+                    stockDataForMonth = { tableData: [], history: [] };
+                }
+
+                tabelaBody.innerHTML = ''; 
+                (stockDataForMonth.tableData || []).forEach(data => {
+                    adicionarLinha(data);
+                });
+                adicionarLinha(); 
+
+                listaOperacoes.innerHTML = ''; 
+                (stockDataForMonth.history || []).reverse().forEach(txt => { 
+                    const li = document.createElement('li');
+                    li.textContent = txt;
+                    listaOperacoes.appendChild(li); 
+                });
+
                 atualizarResumo();
                 atualizarGraficos();
-                
-                const monthYearKey = getMonthYearKey(dateToLoad);
-                nomeEstoqueInput.value = allStocksMeta[index].namesByMonth[monthYearKey] || '';
             }
-
-            // --- Histórico de Operações ---
-            function registrarOperacao(tipo, item, valor) {
-                const dataHora = new Date().toLocaleString();
-                const operacao = `${dataHora}: ${tipo === 'entrada' ? 'Entrada' : 'Saída'} de ${item} - Quantidade: ${valor}`;
-                const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
-                historico.push(operacao);
-                localStorage.setItem('historicoOperacoes', JSON.stringify(historico));
-                atualizarHistorico();
-            }
-
-            function atualizarHistorico() {
-                listaOperacoes.innerHTML = '';
-                const historico = JSON.parse(localStorage.getItem('historicoOperacoes') || '[]');
-                historico.slice(-20).forEach(op => { // Exibe as últimas 20 operações
-                    const li = document.createElement('li');
-                    li.textContent = op;
-                    listaOperacoes.prepend(li); // Adiciona as mais recentes no topo
-                });
-            }
-
-            btnLimparHistorico.addEventListener('click', () => {
-                if (confirm('Tem certeza que deseja apagar todo o histórico de operações?')) {
-                    localStorage.removeItem('historicoOperacoes');
-                    atualizarHistorico();
-                }
-            });
 
             // --- Event Listeners ---
             btnMesAnterior.addEventListener('click', () => {
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                const dateBeforeChange = new Date(displayedDate); 
                 displayedDate.setMonth(displayedDate.getMonth() - 1);
                 updateMonthDisplay();
-                carregarDadosDoMesAtual(currentStockIndex, displayedDate);
+                loadStock(currentStockIndex, dateBeforeChange); 
             });
 
             btnProximoMes.addEventListener('click', () => {
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                const dateBeforeChange = new Date(displayedDate);
                 displayedDate.setMonth(displayedDate.getMonth() + 1);
                 updateMonthDisplay();
-                carregarDadosDoMesAtual(currentStockIndex, displayedDate);
+                loadStock(currentStockIndex, dateBeforeChange); 
             });
 
             btnNovoEstoque.addEventListener('click', () => {
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate); // Salva o estoque atual antes de mudar
-                currentStockIndex = (currentStockIndex + 1) % MAX_STOCKS;
-                localStorage.setItem('currentStockIndex', currentStockIndex.toString());
-                alert(`Mudando para o Estoque ${currentStockIndex + 1}/${MAX_STOCKS}.`);
-                carregarDadosDoMesAtual(currentStockIndex, displayedDate);
+                loadStock(currentStockIndex + 1);
             });
 
             btnVoltarEstoque.addEventListener('click', () => {
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate); // Salva o estoque atual antes de mudar
-                currentStockIndex = (currentStockIndex - 1 + MAX_STOCKS) % MAX_STOCKS;
-                localStorage.setItem('currentStockIndex', currentStockIndex.toString());
-                alert(`Mudando para o Estoque ${currentStockIndex + 1}/${MAX_STOCKS}.`);
-                carregarDadosDoMesAtual(currentStockIndex, displayedDate);
+                loadStock(currentStockIndex - 1);
             });
 
-            nomeEstoqueInput.addEventListener('input', () => {
-                const monthYearKey = getMonthYearKey(displayedDate);
-                allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] = nomeEstoqueInput.value.trim();
-                localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
+            nomeEstoqueInput.addEventListener('change', () => {
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+            });
+
+            btnLimparHistorico.addEventListener('click', () => {
+                if (confirm('Tem certeza que deseja limpar o histórico de operações para este mês e estoque? Esta ação não pode ser desfeita.')) {
+                    listaOperacoes.innerHTML = '';
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+                }
             });
 
             // Make table rows sortable
@@ -982,10 +828,9 @@
                 }
             });
 
-            // --- Initial Load ---
+            // Initial load
             updateMonthDisplay();
-            carregarDadosDoMesAtual(currentStockIndex, displayedDate);
-            atualizarHistorico();
+            loadStock(currentStockIndex);
         });
     </script>
 </body>
