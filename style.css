@@ -20,14 +20,11 @@
 html,
 body {
     width: 100%;
-    height: 100%; /* Use height: 100% para que o body ocupe a altura total */
+    min-height: 100%; /* Use min-height to allow content to expand */
     font-family: 'Poppins', Arial, sans-serif;
     background-color: var(--bg-color-dark);
     color: var(--text-color);
-    overflow-x: hidden; /* Evita rolagem horizontal indesejada na página inteira */
-    overflow-y: hidden; /* Oculta a barra de rolagem vertical PRINCIPAL do body */
-    display: flex;
-    flex-direction: column; /* Organiza o layout em coluna */
+    overflow-x: hidden; /* Prevent horizontal scrolling caused by elements extending beyond viewport */
 }
 
 /* --- Header & Navigation --- */
@@ -37,7 +34,6 @@ header {
     align-items: center;
     padding: var(--spacing-unit);
     background: var(--bg-color-medium);
-    flex-shrink: 0; /* Impede que o cabeçalho encolha para garantir que esteja sempre visível */
 }
 
 .video-container {
@@ -47,12 +43,11 @@ header {
     padding: var(--spacing-unit);
     background: var(--bg-color-medium);
     margin-bottom: var(--spacing-unit);
-    flex-shrink: 0; /* Impede que o vídeo encolha demais */
 }
 
 .video-container .video {
-    width: 200px; /* Mantém uma largura razoável para o vídeo */
-    max-width: 100%; /* Garante que não transborde em telas pequenas */
+    width: 200px; /* Keep a reasonable fixed width for the video */
+    max-width: 100%; /* Ensure it doesn't overflow on small screens */
     height: auto;
     object-fit: contain;
     border-radius: 8px;
@@ -70,9 +65,8 @@ header {
     align-items: center;
     width: 100%;
     padding: 0 var(--spacing-unit);
-    flex-wrap: wrap; /* Permite que os itens quebrem em telas menores */
-    gap: 0.5rem; /* Espaço entre os itens quando quebram */
-    flex-shrink: 0; /* Impede que as navegações encolham demais */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 0.5rem; /* Space between items when wrapped */
 }
 
 .month-navigation {
@@ -93,7 +87,7 @@ header {
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Evita que os botões encolham muito */
+    flex-shrink: 0; /* Prevent buttons from shrinking too much */
 }
 
 .stock-actions .nav-button {
@@ -119,26 +113,22 @@ header {
     text-align: center;
     flex-grow: 1;
     margin: 0 10px;
-    min-width: 150px; /* Garante que o display do mês tenha espaço suficiente */
+    min-width: 150px; /* Ensure month display has enough space */
 }
 
 /* --- Main Content & Table --- */
-main {
+main,
+#resultadoFinal,
+#registroOperacoes {
     width: 100%;
     max-width: 100%;
     padding: 0 var(--spacing-unit);
-    flex-grow: 1; /* Permite que o main ocupe todo o espaço vertical restante */
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; /* IMPORTANTE: Adiciona rolagem vertical APENAS ao conteúdo principal, mantendo cabeçalho fixo */
-    -webkit-overflow-scrolling: touch; /* Suaviza a rolagem em iOS */
 }
 
 .nome-estoque-container {
     display: flex;
     justify-content: center;
     flex-grow: 1;
-    flex-shrink: 0; /* Impede que o input de estoque encolha muito */
 }
 
 .nome-estoque-container input,
@@ -160,16 +150,15 @@ main {
 .table-responsive {
     width: 100%;
     margin-bottom: var(--spacing-unit);
-    overflow-x: auto; /* IMPORTANTE: Rolagem horizontal APENAS para a tabela */
-    -webkit-overflow-scrolling: touch; /* Suaviza a rolagem em iOS */
-    flex-shrink: 0; /* Impede que a tabela encolha para ficar ilegível */
+    overflow-x: auto; /* Re-introduce horizontal scroll for table only */
+    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
 }
 
 table.estoque-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto; /* Auto permite que o navegador ajuste as colunas com base no conteúdo */
-    min-width: 500px; /* Mantém uma largura mínima para a tabela, permitindo rolagem horizontal se menor */
+    table-layout: auto;
+    min-width: 500px; /* Set a minimum width for the table to ensure content is readable before scrolling */
 }
 
 table.estoque-table th,
@@ -179,10 +168,10 @@ table.estoque-table td {
     text-align: center;
     font-size: 0.9rem;
     word-wrap: break-word;
-    white-space: normal; /* Permite que o texto quebre naturalmente */
+    white-space: normal; /* Allow text to wrap naturally */
 }
 
-/* Ajuste das larguras das colunas - sugestões, pode precisar de ajuste fino */
+/* Adjust column widths - these are suggestions and might need fine-tuning */
 table.estoque-table th:nth-child(1),
 table.estoque-table td:nth-child(1) { width: 40%; min-width: 120px; } /* Item */
 table.estoque-table th:nth-child(2),
@@ -192,6 +181,7 @@ table.estoque-table td:nth-child(3) { width: 20%; min-width: 80px; } /* Saída *
 table.estoque-table th:nth-child(4),
 table.estoque-table td:nth-child(4) { width: 20%; min-width: 80px; } /* Valor */
 
+
 table.estoque-table input {
     width: 100%;
     background: transparent;
@@ -200,7 +190,7 @@ table.estoque-table input {
     font-size: 0.9rem;
     text-align: center;
     padding: 0;
-    min-width: 0; /* Permite que inputs encolham */
+    min-width: 0; /* Allow inputs to shrink */
 }
 
 table.estoque-table input:focus {
@@ -211,18 +201,17 @@ table.estoque-table input:focus {
 /* --- Charts --- */
 .graficos-top {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: var(--spacing-unit);
+    flex-wrap: wrap; /* Permite que os gráficos quebrem para a próxima linha se não houver espaço */
+    justify-content: center; /* Centraliza os gráficos na linha */
+    align-items: flex-start; /* Alinha os gráficos pelo topo se tiverem alturas ligeiramente diferentes (o que não deve acontecer agora) */
+    gap: var(--spacing-unit); /* Espaço entre os gráficos */
     padding: 0 var(--spacing-unit);
     margin-top: var(--spacing-unit);
-    margin-bottom: var(--spacing-unit);
-    flex-shrink: 0; /* Impede que os gráficos encolham verticalmente demais */
+    margin-bottom: var(--spacing-unit); /* Adiciona margem abaixo do grupo de gráficos */
 }
 
 .grafico-meio {
-    flex: 1 1 calc(50% - var(--spacing-unit) / 2); /* Ajusta para 2 gráficos por linha */
+    flex: 1 1 calc(50% - var(--spacing-unit) / 2); /* Ajusta para 2 gráficos por linha, considerando o gap */
     min-width: 280px; /* Largura mínima para o gráfico individual antes de quebrar */
     background: var(--bg-color-medium);
     padding: var(--spacing-unit);
@@ -239,12 +228,13 @@ table.estoque-table input:focus {
     color: var(--secondary-text-color);
 }
 
+/* Separando o gráfico de valores para que ele possa ficar em sua própria "faixa" ou abaixo dos dois primeiros */
 #graficoValores-container {
     flex: 1 1 100%; /* Ocupa a largura total para ficar em uma linha separada */
-    max-width: 600px; /* Limita a largura máxima para não esticar demais */
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0;
+    max-width: 600px; /* Limita a largura máxima para não esticar demais em telas muito grandes */
+    margin-left: auto; /* Centraliza o gráfico de valores se max-width for ativado */
+    margin-right: auto; /* Centraliza o gráfico de valores se max-width for ativado */
+    margin-top: 0; /* Remove margem superior se estiver no mesmo contêiner flex */
     background: var(--bg-color-medium);
     padding: var(--spacing-unit);
     border-radius: 8px;
@@ -253,7 +243,6 @@ table.estoque-table input:focus {
     align-items: center;
     position: relative;
     height: 280px; /* Mantém a altura consistente */
-    min-width: 280px; /* Mantém largura mínima antes de quebrar */
 }
 
 
@@ -279,15 +268,14 @@ table.estoque-table input:focus {
     margin-top: var(--spacing-unit);
     border-radius: 8px;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow result items to wrap */
     justify-content: space-around;
     gap: 0.5rem;
-    flex-shrink: 0; /* Impede que os resultados encolham verticalmente */
 }
 
 #resultadoFinal p {
-    flex: 1 1 auto;
-    min-width: 120px;
+    flex: 1 1 auto; /* Allow paragraphs to take space and wrap */
+    min-width: 120px; /* Ensure each result has a minimum width */
     font-size: 1rem;
     padding: 5px 0;
 }
@@ -301,7 +289,6 @@ table.estoque-table input:focus {
     font-family: monospace;
     margin-top: var(--spacing-unit);
     margin-bottom: var(--spacing-unit);
-    flex-shrink: 0; /* Impede que o registro de operações encolha verticalmente */
 }
 
 #registroOperacoes h3 {
@@ -312,18 +299,17 @@ table.estoque-table input:focus {
 #registroOperacoes ul {
     list-style: none;
     padding-left: 0;
-    max-height: 200px; /* Define uma altura máxima */
-    overflow-y: auto; /* IMPORTANTE: Adiciona rolagem vertical APENAS para a lista de histórico */
+    max-height: 200px;
+    overflow-y: auto;
     border: 1px solid #333;
     padding: 10px;
     border-radius: 4px;
-    -webkit-overflow-scrolling: touch; /* Suaviza a rolagem em iOS */
 }
 
 #registroOperacoes ul li {
     padding: 4px 0;
     border-bottom: 1px dashed #2a2a2a;
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* Adjust font size for history */
 }
 
 #registroOperacoes ul li:last-child {
@@ -341,7 +327,7 @@ table.estoque-table input:focus {
     cursor: pointer;
     transition: color 0.3s ease;
     padding: 0;
-    z-index: 10;
+    z-index: 10; /* Ensure button is above other content */
 }
 
 #btnLimparHistorico:hover {
@@ -351,10 +337,10 @@ table.estoque-table input:focus {
 
 /* --- Media Queries --- */
 
-/* Para dispositivos até 768px (tablets e telefones) */
+/* For devices up to 768px (tablets and phones) */
 @media screen and (max-width: 768px) {
     body {
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* Slightly smaller base font size */
     }
 
     .video-container {
@@ -364,8 +350,8 @@ table.estoque-table input:focus {
 
     .month-navigation,
     .stock-actions {
-        flex-direction: row;
-        justify-content: space-around;
+        flex-direction: row; /* Keep as row, but allow wrapping */
+        justify-content: space-around; /* Distribute space more evenly */
         padding: 0 0.5rem;
         gap: 0.5rem;
     }
@@ -373,13 +359,13 @@ table.estoque-table input:focus {
     .month-navigation button,
     .stock-actions button {
         padding: 6px 10px;
-        font-size: 0.8rem;
-        flex: 1 1 auto;
-        min-width: 80px;
+        font-size: 0.8rem; /* Smaller button text */
+        flex: 1 1 auto; /* Allow buttons to grow/shrink */
+        min-width: 80px; /* Minimum width for buttons */
     }
 
     #mesAtual {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* Smaller month display */
         margin: 0 5px;
         flex-grow: 1;
         min-width: 100px;
@@ -389,71 +375,70 @@ table.estoque-table input:focus {
         flex-grow: 1;
         max-width: none;
         width: auto;
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* Smaller input font */
         margin: 0 5px;
-        padding: 8px;
+        padding: 8px; /* Slightly more padding for input */
     }
 
     .stock-actions .nav-button {
         width: 35px;
         height: 35px;
-        font-size: 1.1rem;
+        font-size: 1.1rem; /* Smaller +/- buttons */
     }
 
     main,
     #resultadoFinal,
     #registroOperacoes {
-        padding: 0 0.5rem;
+        padding: 0 0.5rem; /* Reduced horizontal padding */
     }
 
-    /* Ajustes específicos da tabela para telas pequenas */
+    /* Table specific adjustments for small screens */
     .table-responsive {
-        overflow-x: auto; /* Mantém a rolagem horizontal para a tabela */
+        overflow-x: auto; /* Ensure horizontal scrolling is enabled for the table */
     }
 
     table.estoque-table {
-        min-width: 400px; /* Mantém uma largura mínima para a tabela em telas pequenas */
+        min-width: 400px; /* Maintain a minimum width for the table itself */
     }
 
     table.estoque-table th,
     table.estoque-table td {
-        padding: 5px;
-        font-size: 0.7rem;
+        padding: 5px; /* Reduced padding */
+        font-size: 0.7rem; /* Smaller font size for table cells */
     }
     table.estoque-table input {
-        font-size: 0.7rem;
-        padding: 0px;
+        font-size: 0.7rem; /* Reduced font size for inputs */
+        padding: 0px; /* Minimal padding for inputs */
     }
 
     .graficos-top {
-        flex-direction: column; /* Empilha os gráficos verticalmente */
+        flex-direction: column; /* Stack charts vertically */
         align-items: stretch;
         padding: 0 0.5rem;
     }
 
     .grafico-meio {
-        min-width: 100%;
-        margin-bottom: 0.5rem;
-        height: 230px; /* Diminui a altura em telas menores */
+        min-width: 100%; /* Charts take full width */
+        margin-bottom: 0.5rem; /* Space between stacked charts */
+        height: 230px; /* Diminuindo a altura em telas menores */
     }
 
     #graficoValores-container {
-        padding: 0.5rem;
-        margin-top: 0.5rem;
-        height: 230px; /* Diminui a altura em telas menores */
-        max-width: none;
+        padding: 0.5rem; /* Ajusta padding para consistência */
+        margin-top: 0.5rem; /* Adiciona margem entre o gráfico de valor e os outros, já que agora ele vai empilhar */
+        height: 230px; /* Diminuindo a altura em telas menores */
+        max-width: none; /* Remove a limitação de largura em telas pequenas para que ocupe 100% */
         margin-left: 0;
         margin-right: 0;
     }
 
     #resultadoFinal p {
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* Adjust result font size */
         min-width: 100px;
     }
 
     #registroOperacoes ul {
-        max-height: 150px; /* Altura do histórico ligeiramente menor */
-        overflow-y: auto; /* Mantém a rolagem para o histórico */
+        max-height: 150px; /* Slightly smaller history height */
         padding: 8px;
     }
 
@@ -462,7 +447,7 @@ table.estoque-table input:focus {
     }
 }
 
-/* Orientação paisagem para telas menores (ex: telefones) */
+/* Landscape orientation for smaller screens (e.g., phones) */
 @media screen and (max-height: 450px) and (orientation: landscape) {
     header {
         padding: 0.5rem;
@@ -476,19 +461,19 @@ table.estoque-table input:focus {
         justify-content: space-between;
         padding: 0 0.5rem;
         margin-bottom: 5px;
-        flex-wrap: nowrap; /* Tenta evitar quebra em paisagem para layout mais compacto */
-        gap: 0.3rem;
+        flex-wrap: nowrap; /* Prevent wrapping in landscape for more compact layout */
+        gap: 0.3rem; /* Even smaller gap */
     }
     .month-navigation button,
     .stock-actions button {
-        padding: 3px 6px;
-        font-size: 0.7rem;
-        min-width: unset;
+        padding: 3px 6px; /* Even smaller padding */
+        font-size: 0.7rem; /* Even smaller font size */
+        min-width: unset; /* Remove min-width to allow more compression */
     }
     #mesAtual, #nomeEstoqueInput {
-        margin: 0 3px;
-        font-size: 0.9rem;
-        max-width: 100px;
+        margin: 0 3px; /* Smaller margins */
+        font-size: 0.9rem; /* Smaller font size */
+        max-width: 100px; /* Limit width */
         padding: 5px;
     }
     .stock-actions .nav-button {
@@ -499,16 +484,16 @@ table.estoque-table input:focus {
     main,
     #resultadoFinal,
     #registroOperacoes {
-        padding: 0 0.3rem;
+        padding: 0 0.3rem; /* Very little horizontal padding */
     }
     table.estoque-table th,
     table.estoque-table td {
-        padding: 2px;
-        font-size: 0.65rem;
+        padding: 2px; /* Very small padding */
+        font-size: 0.65rem; /* Smallest font size for table */
     }
     table.estoque-table input {
         font-size: 0.65rem;
-        padding: 0px;
+        padding: 0px; /* No padding for inputs in landscape */
     }
     .graficos-top {
         flex-direction: row; /* Tenta manter em linha em paisagem */
@@ -517,33 +502,31 @@ table.estoque-table input:focus {
         gap: 0.5rem;
         margin-top: 0.5rem;
         padding: 0 0.3rem;
-        overflow-x: auto; /* Permite rolagem horizontal se necessário para os 3 gráficos na mesma linha */
+        overflow-x: auto; /* Adiciona rolagem horizontal se necessário para caber os 3 gráficos na mesma linha */
         -webkit-overflow-scrolling: touch;
         align-items: flex-start;
     }
     .grafico-meio {
         flex: 0 0 calc(33.33% - var(--spacing-unit) / 2); /* Tenta forçar 3 gráficos por linha */
-        min-width: 140px; /* Largura mínima para cada gráfico */
+        min-width: 140px; /* Largura mínima para cada gráfico, pode ser necessário ajustar */
         padding: 0.5rem;
         height: 180px; /* Mantém a altura reduzida */
     }
     #graficoValores-container {
         flex: 0 0 calc(33.33% - var(--spacing-unit) / 2); /* Aplica a mesma lógica para o terceiro gráfico */
-        margin-top: 0;
+        margin-top: 0; /* Remove a margem superior já que está na mesma linha */
         padding: 0.5rem;
         height: 180px; /* Mantém a altura reduzida */
-        max-width: none;
+        max-width: none; /* Remove a limitação de largura */
         margin-left: 0;
         margin-right: 0;
-        min-width: 140px; /* Mantém largura mínima */
     }
     #registroOperacoes ul {
-        max-height: 70px; /* Altura do histórico ainda menor */
-        overflow-y: auto; /* Mantém a rolagem para o histórico */
+        max-height: 70px; /* Even smaller history height */
         padding: 5px;
     }
     #resultadoFinal p {
-        font-size: 0.75rem;
+        font-size: 0.75rem; /* Smaller result font size */
         min-width: 80px;
     }
 }
