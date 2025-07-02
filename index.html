@@ -31,8 +31,8 @@
         body {
             width: 100%;
             height: 100%;
-            font-family: 'Poppins', Arial, sans-serif; 
-            background-color: var(--bg-color-dark);
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #000 !important;
             color: var(--text-color);
         }
 
@@ -84,41 +84,118 @@
             margin-bottom: var(--spacing-unit);
         }
 
+        /* --- Botões Dark com Contorno Branco --- */
         .month-navigation button,
-        .stock-actions button {
-            background-color: var(--button-bg);
-            color: var(--text-color);
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
+        .stock-actions button,
+        #btnLimparHistorico {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            box-shadow: none !important;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 1rem;
+            transition: background 0.2s, color 0.2s, border 0.2s;
         }
-        
+        .month-navigation button:hover,
+        .stock-actions button:hover,
+        #btnLimparHistorico:hover {
+            background: #222 !important;
+            color: #fff !important;
+            border-color: #fff !important;
+        }
         .stock-actions .nav-button {
-            width: 40px;
-            height: 40px;
-            padding: 0;
+            min-width: 40px;
+            min-height: 40px;
             font-size: 1.5rem;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0;
         }
 
-        .month-navigation button:hover,
-        .stock-actions button:hover {
-            background-color: var(--button-hover-bg);
+        /* --- Responsividade dos Botões e Navegação --- */
+        .month-navigation {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: nowrap;
+            width: 100%;
+            margin-bottom: 10px;
         }
-
+        .month-navigation button {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
         #mesAtual {
-            font-size: 2rem;
-            font-style: italic;
-            color: var(--secondary-text-color);
+            flex: 1 1 auto;
+            min-width: 0;
             text-align: center;
-            flex-grow: 1;
-            margin: 0 10px;
+            font-size: 1.5rem;
+            color: var(--secondary-text-color);
+            margin: 0 8px;
+        }
+        .stock-actions {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: var(--spacing-unit);
+        }
+        #nomeEstoqueInput {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 400px;
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            border-radius: 6px;
+            box-shadow: none !important;
+            padding: 10px 16px;
+            font-size: 1rem;
+            transition: border 0.2s, background 0.2s, color 0.2s;
+        }
+        #nomeEstoqueInput:focus {
+            outline: none !important;
+            border-color: #fff !important;
+            background: #111 !important;
+        }
+
+        @media (max-width: 600px) {
+            .month-navigation {
+                gap: 6px;
+            }
+            .month-navigation button,
+            .stock-actions button {
+                font-size: 0.9rem;
+                padding: 7px 10px;
+            }
+            #mesAtual {
+                font-size: 1.1rem;
+                margin: 0 4px;
+            }
+            .stock-actions .nav-button {
+                min-width: 32px;
+                min-height: 32px;
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .month-navigation {
+                gap: 2px;
+            }
+            .month-navigation button,
+            .stock-actions button {
+                font-size: 0.8rem;
+                padding: 5px 6px;
+            }
+            #mesAtual {
+                font-size: 0.9rem;
+            }
         }
 
         /* --- Main Content & Table --- */
@@ -167,7 +244,8 @@
 
         table.estoque-table th,
         table.estoque-table td {
-            border: 1px solid var(--border-color);
+            border: 1px solid #fff !important;
+            background: transparent !important;
             padding: 8px;
             text-align: center;
             font-size: 0.9rem;
@@ -242,6 +320,46 @@
             margin-bottom: var(--spacing-unit);
         }
 
+        /* Alinhamento do header do histórico */
+        .historico-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .historico-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        #btnLimparHistorico {
+            margin: 0;
+        }
+
+        #registroOperacoes h3 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        #btnLimparHistorico {
+            position: static !important;
+            margin-left: auto;
+            margin-right: 0;
+            font-size: 0.85rem !important;
+            padding: 4px 10px !important;
+            height: 28px;
+            min-width: 0;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #registroOperacoes ul {
             list-style: none;
             padding-left: 0;
@@ -261,22 +379,108 @@
             border-bottom: none;
         }
 
-        #btnLimparHistorico {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: transparent;
-            border: none;
-            color: #aaa;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
+        /* --- Histórico de Operações Duplo --- */
+        .historico-duplo {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+        }
+        .historico-coluna {
+            flex: 1 1 0;
+            background: #000 !important;
+            border-radius: 6px;
+            padding: 10px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .historico-coluna h4 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            color: #fff;
+            text-align: center;
+            font-weight: 600;
+        }
+        .historico-coluna ul {
+            list-style: none;
             padding: 0;
+            margin: 0;
+            flex: 1 1 auto;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .historico-coluna li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #222;
+            font-size: 0.95rem;
+        }
+        .historico-coluna li:last-child {
+            border-bottom: none;
+        }
+        .historico-coluna .data-edit {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            padding: 2px 6px;
+            width: 120px;
+            transition: border 0.2s, background 0.2s, color 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        .historico-coluna .data-edit:focus {
+            outline: none !important;
+            border-color: #fff !important;
+            background: #111 !important;
+        }
+        /* Força cor do ícone do calendário (Webkit/Blink) */
+        .historico-coluna .data-edit::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+        /* Placeholder escuro para datas inválidas */
+        .historico-coluna .data-edit:invalid {
+            color: #888 !important;
         }
 
-        #btnLimparHistorico:hover {
-            color: var(--text-color);
-            text-decoration: underline;
+        /* --- Video Banner Topo --- */
+        .video-banner-topo {
+            position: relative;
+            width: 100vw;
+            max-width: 100vw;
+            height: 150px;
+            overflow: hidden;
+            display: block;
+            background: transparent;
+        }
+        .video-banner-move {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            will-change: transform;
+            display: block;
+        }
+        .video-banner-move video {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px #000a;
+            display: block;
+        }
+        .dcode-logo-banner {
+            display: none;
+        }
+        @keyframes video-move-x-dynamic {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(var(--move-x, 0px)); }
         }
 
         /* --- Media Queries --- */
@@ -401,16 +605,61 @@
                 font-size: 0.8rem; /* Smaller result font size */
             }
         }
+
+        /* --- Video Background Styles --- */
+        .video-background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .video-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: static;
+        }
+        .video-container .video {
+            min-width: 100vw;
+            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+        .playstation-stripe {
+            display: none;
+        }
+        body > *:not(.video-background-container) {
+            position: relative;
+            z-index: 1;
+        }
+        header, main, #resultadoFinal, #registroOperacoes, .graficos-top, #graficoValores-container {
+            background: #000 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        #registroOperacoes, #resultadoFinal, .table-responsive, .graficos-top, #graficoValores-container {
+            border: none !important;
+        }
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <video class="video" autoplay muted loop playsinline>
-            <source src="Dcodeanimation.mp4" type="video/mp4">
-            
-        </video>
+    <div class="video-banner-topo">
+        <div class="video-banner-move">
+            <video autoplay muted loop playsinline>
+                <source src="Dcodeanimation.mp4" type="video/mp4">
+                Seu navegador não suporta vídeo HTML5.
+            </video>
+        </div>
     </div>
 
+    <!-- Conteúdo do app continua normalmente abaixo -->
     <header>
         <div class="month-navigation">
             <button id="btnMesAnterior">Mês Anterior</button>
@@ -464,9 +713,20 @@
     </div>
 
     <div id="registroOperacoes">
-        <button id="btnLimparHistorico" title="Apagar histórico">Apagar Histórico</button>
-        <h3>Histórico de Operações</h3>
-        <ul id="listaOperacoes"></ul>
+        <div class="historico-header">
+            <h3>Histórico de Operações</h3>
+            <button id="btnLimparHistorico" title="Apagar histórico">Apagar Histórico</button>
+        </div>
+        <div class="historico-duplo">
+            <div class="historico-coluna" id="historico-entradas">
+                <h4>Entradas</h4>
+                <ul id="listaEntradas"></ul>
+            </div>
+            <div class="historico-coluna" id="historico-saidas">
+                <h4>Saídas</h4>
+                <ul id="listaSaidas"></ul>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -488,6 +748,10 @@
             const tabelaBody = document.querySelector('table.estoque-table tbody');
             const listaOperacoes = document.getElementById('listaOperacoes');
             const btnLimparHistorico = document.getElementById('btnLimparHistorico');
+
+            // Substitui listaOperacoes por listas separadas
+            const listaEntradas = document.getElementById('listaEntradas');
+            const listaSaidas = document.getElementById('listaSaidas');
 
             // --- Month Navigation ---
             const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -655,56 +919,82 @@
             }
 
             function atualizarGraficos() {
+                // Filtra apenas linhas com nome válido (não vazio, não undefined, não só espaços)
+                const linhas = Array.from(tabelaBody.querySelectorAll('tr')).filter(linha => {
+                    const nome = linha.querySelector('.item').value.trim();
+                    return nome && nome.toLowerCase() !== 'undefined';
+                });
+
                 const labels = [], entradas = [], valores = [], cores = [];
                 const dataSaida = {}, corSaidaPorItem = {};
-                const linhas = tabelaBody.querySelectorAll('tr');
 
                 linhas.forEach(linha => {
                     const nome = linha.querySelector('.item').value.trim();
+                    if (!nome || nome.toLowerCase() === 'undefined') return; // filtro extra de segurança
                     const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
                     const sai = parseFloat(linha.querySelector('.saida').value) || 0;
                     const val = parseFloat(linha.querySelector('.valor').value) || 0;
-
-                    if (nome) {
-                        const cor = gerarCor(nome);
-                        if (ent > 0) {
-                            const existingIndex = labels.indexOf(nome);
-                            if (existingIndex > -1) {
-                                entradas[existingIndex] += ent;
-                                valores[existingIndex] += val;
-                            } else {
-                                labels.push(nome);
-                                entradas.push(ent);
-                                valores.push(val);
-                                cores.push(cor);
-                            }
+                    const cor = gerarCor(nome);
+                    // Só adiciona se o nome for válido
+                    if (ent > 0) {
+                        const existingIndex = labels.indexOf(nome);
+                        if (existingIndex > -1) {
+                            entradas[existingIndex] += ent;
+                            valores[existingIndex] += val;
+                        } else {
+                            labels.push(nome);
+                            entradas.push(ent);
+                            valores.push(val);
+                            cores.push(cor);
                         }
-                        if (sai > 0) {
+                    }
+                    if (sai > 0) {
+                        if (nome && nome.toLowerCase() !== 'undefined') { // filtro extra
                             dataSaida[nome] = (dataSaida[nome] || 0) + sai;
                             corSaidaPorItem[nome] = cor;
                         }
                     }
                 });
 
-                chartPizza.data.labels = labels;
-                chartPizza.data.datasets[0].data = entradas;
-                chartPizza.data.datasets[0].backgroundColor = cores;
+                // Se não houver labels válidas, limpa os gráficos
+                if (labels.length === 0) {
+                    chartPizza.data.labels = [];
+                    chartPizza.data.datasets[0].data = [];
+                    chartPizza.data.datasets[0].backgroundColor = [];
+                } else {
+                    chartPizza.data.labels = labels;
+                    chartPizza.data.datasets[0].data = entradas;
+                    chartPizza.data.datasets[0].backgroundColor = cores;
+                }
                 chartPizza.update();
 
-                chartBarras.data.labels = labels;
-                chartBarras.data.datasets[0].data = valores;
-                chartBarras.data.datasets[0].backgroundColor = cores;
+                if (labels.length === 0) {
+                    chartBarras.data.labels = [];
+                    chartBarras.data.datasets[0].data = [];
+                    chartBarras.data.datasets[0].backgroundColor = [];
+                } else {
+                    chartBarras.data.labels = labels;
+                    chartBarras.data.datasets[0].data = valores;
+                    chartBarras.data.datasets[0].backgroundColor = cores;
+                }
                 chartBarras.update();
 
-                const saidaLabels = Object.keys(dataSaida);
-                chartSaidas.data.labels = saidaLabels;
-                chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
-                chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+                // Só inclui itens de saída com nome válido
+                const saidaLabels = Object.keys(dataSaida).filter(l => l && l.toLowerCase() !== 'undefined');
+                if (saidaLabels.length === 0) {
+                    chartSaidas.data.labels = [];
+                    chartSaidas.data.datasets[0].data = [];
+                    chartSaidas.data.datasets[0].backgroundColor = [];
+                } else {
+                    chartSaidas.data.labels = saidaLabels;
+                    chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
+                    chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+                }
                 chartSaidas.update();
             }
 
             // --- Salvamento de Dados ---
-            function salvarDadosDoMesAtual(index, dateToSave) {
+            function salvarDadosDoMesAtual(index, dateToSave, historicoOverride) {
                 const linhasVisiveis = [...tabelaBody.querySelectorAll('tr')].filter(row => !isRowEmpty(row));
                 const dadosParaSalvar = linhasVisiveis.map(linha => ({
                     item: linha.querySelector('.item').value,
@@ -712,32 +1002,90 @@
                     saida: linha.querySelector('.saida').value,
                     valor: linha.querySelector('.valor').value
                 }));
-                
                 const monthYearKey = getMonthYearKey(dateToSave);
                 const currentName = nomeEstoqueInput.value.trim();
-                
-                // Salva o nome personalizado do estoque para o mês e ano específicos
                 allStocksMeta[index].namesByMonth[monthYearKey] = currentName || `Estoque ${index + 1}`;
                 localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
-
                 const stockDataForMonth = {
                     tableData: dadosParaSalvar,
-                    history: [...listaOperacoes.children].map(li => li.textContent)
+                    historico: historicoOverride || getHistoricoAtual()
                 };
-                
                 localStorage.setItem(getStorageKey(index, dateToSave), JSON.stringify(stockDataForMonth));
             }
             
-            function registrarOperacao(tipo, item, quantidade) {
-                const data = new Date();
-                const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
-                const texto = `[${dataFormatada}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
-                
+            // --- Função para criar elemento de histórico ---
+            function criarItemHistorico(tipo, item, quantidade, dataMov) {
                 const li = document.createElement('li');
-                li.textContent = texto;
-                listaOperacoes.prepend(li);
+                // Campo de data editável (apenas texto, sem calendário)
+                const inputData = document.createElement('input');
+                inputData.type = 'text';
+                inputData.className = 'data-edit';
+                inputData.value = dataMov;
+                inputData.placeholder = 'AAAA-MM-DD';
+                inputData.title = 'Editar data do movimento';
+                // Descrição
+                const desc = document.createElement('span');
+                desc.className = 'descricao-op';
+                desc.textContent = `${item} - ${quantidade}`;
+                li.appendChild(inputData);
+                li.appendChild(desc);
+                // Atualiza data ao editar
+                inputData.addEventListener('input', () => {
+                    salvarHistorico();
+                });
+                return li;
+            }
 
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+            // --- Função para salvar histórico ---
+            function salvarHistorico() {
+                // Salva o histórico atual das duas listas
+                const entradas = Array.from(listaEntradas.children).map(li => ({
+                    tipo: 'entrada',
+                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
+                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                    data: li.querySelector('.data-edit').value
+                }));
+                const saidas = Array.from(listaSaidas.children).map(li => ({
+                    tipo: 'saida',
+                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
+                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                    data: li.querySelector('.data-edit').value
+                }));
+                const historico = [...entradas, ...saidas];
+                // Salva junto com os dados do mês
+                salvarDadosDoMesAtual(currentStockIndex, displayedDate, historico);
+            }
+
+            // --- Função para obter histórico atual ---
+            function getHistoricoAtual() {
+                const entradas = Array.from(listaEntradas.children).map(li => ({
+                    tipo: 'entrada',
+                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
+                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                    data: li.querySelector('.data-edit').value
+                }));
+                const saídas = Array.from(listaSaidas.children).map(li => ({
+                    tipo: 'saida',
+                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
+                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                    data: li.querySelector('.data-edit').value
+                }));
+                return [...entradas, ...saídas];
+            }
+
+            // --- Registrar operação com data ---
+            function registrarOperacao(tipo, item, quantidade) {
+                // Usa data do campo de entrada, se disponível, senão data de hoje
+                let dataMov = new Date();
+                let dataStr = dataMov.toISOString().slice(0,10);
+                // Adiciona ao histórico correto
+                const li = criarItemHistorico(tipo, item, quantidade, dataStr);
+                if (tipo === 'entrada') {
+                    listaEntradas.prepend(li);
+                } else {
+                    listaSaidas.prepend(li);
+                }
+                salvarHistorico();
             }
 
             // --- Carregamento de Estoque ---
@@ -763,25 +1111,26 @@
                 const storageKey = getStorageKey(currentStockIndex, displayedDate); 
                 let stockDataForMonth = {};
                 try {
-                    stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], history: [] };
+                    stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], historico: [] };
                 } catch (e) {
-                    console.error("Erro ao carregar dados do mês para a chave:", storageKey, e);
-                    stockDataForMonth = { tableData: [], history: [] };
+                    stockDataForMonth = { tableData: [], historico: [] };
                 }
-
-                tabelaBody.innerHTML = ''; 
+                tabelaBody.innerHTML = '';
                 (stockDataForMonth.tableData || []).forEach(data => {
                     adicionarLinha(data);
                 });
-                adicionarLinha(); 
-
-                listaOperacoes.innerHTML = ''; 
-                (stockDataForMonth.history || []).reverse().forEach(txt => { 
-                    const li = document.createElement('li');
-                    li.textContent = txt;
-                    listaOperacoes.appendChild(li); 
+                adicionarLinha();
+                // Carrega histórico separado
+                listaEntradas.innerHTML = '';
+                listaSaidas.innerHTML = '';
+                (stockDataForMonth.historico || []).forEach(op => {
+                    const li = criarItemHistorico(op.tipo, op.item, op.quantidade, op.data);
+                    if (op.tipo === 'entrada') {
+                        listaEntradas.appendChild(li);
+                    } else {
+                        listaSaidas.appendChild(li);
+                    }
                 });
-
                 atualizarResumo();
                 atualizarGraficos();
             }
@@ -815,8 +1164,9 @@
 
             btnLimparHistorico.addEventListener('click', () => {
                 if (confirm('Tem certeza que deseja limpar o histórico de operações para este mês e estoque? Esta ação não pode ser desfeita.')) {
-                    listaOperacoes.innerHTML = '';
-                    salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+                    listaEntradas.innerHTML = '';
+                    listaSaidas.innerHTML = '';
+                    salvarHistorico();
                 }
             });
 
@@ -832,6 +1182,77 @@
             updateMonthDisplay();
             loadStock(currentStockIndex);
         });
+
+        // --- Banner Video Animation (ajuste final) ---
+        (function() {
+            const banner = document.querySelector('.video-banner-topo');
+            const moveDiv = document.querySelector('.video-banner-move');
+            const video = moveDiv && moveDiv.querySelector('video');
+            if (!banner || !moveDiv || !video) return;
+
+            let animationId = null;
+            let direction = 1; // 1: direita, -1: esquerda
+            let pos = 0;
+            let maxMove = 0;
+            let duration = 8000; // ms para ir de ponta a ponta
+            let lastTimestamp = null;
+
+            function updateSizes() {
+                // Mede a largura real renderizada do vídeo
+                video.style.height = '100%';
+                video.style.width = 'auto';
+                const videoW = video.getBoundingClientRect().width;
+                const bannerW = banner.offsetWidth;
+                // Ajusta a largura do container para o vídeo
+                moveDiv.style.width = videoW + 'px';
+                // Se o vídeo for menor ou igual ao banner, não anima
+                if (videoW <= bannerW + 1) {
+                    maxMove = 0;
+                    moveDiv.style.transform = 'translateX(0)';
+                    return;
+                }
+                maxMove = videoW - bannerW;
+            }
+
+            function animateBannerVideo(ts) {
+                if (!lastTimestamp) lastTimestamp = ts;
+                const elapsed = ts - lastTimestamp;
+                lastTimestamp = ts;
+                if (maxMove > 0) {
+                    // Calcula quanto mover baseado no tempo e direção
+                    const pxPerMs = maxMove / (duration / 2); // ida e volta
+                    pos += direction * pxPerMs * elapsed;
+                    if (pos > maxMove) {
+                        pos = maxMove;
+                        direction = -1;
+                    } else if (pos < 0) {
+                        pos = 0;
+                        direction = 1;
+                    }
+                    moveDiv.style.transform = `translateX(${-pos}px)`;
+                } else {
+                    moveDiv.style.transform = 'translateX(0)';
+                }
+                animationId = requestAnimationFrame(animateBannerVideo);
+            }
+
+            function startAnimation() {
+                cancelAnimationFrame(animationId);
+                pos = 0;
+                direction = 1;
+                lastTimestamp = null;
+                updateSizes();
+                animationId = requestAnimationFrame(animateBannerVideo);
+            }
+
+            video.addEventListener('loadedmetadata', startAnimation);
+            window.addEventListener('resize', () => {
+                updateSizes();
+            });
+            if (video.readyState >= 1) {
+                startAnimation();
+            }
+        })();
     </script>
 </body>
 </html>
