@@ -282,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = new Date();
         const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
         const displayedMonthYear = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
-        const texto = `[${dataFormatada} - ${displayedMonthYear}] ${tipo.toUpperCase()}: ${item} - ${quantidade}`;
+        // Novo formato: [DATA - MÊS] ITEM: NOME - ENTRADA/SAÍDA: QTD
+        const texto = `[${dataFormatada} - ${displayedMonthYear}] ITEM: ${item} - ${tipo.toUpperCase()}: ${quantidade}`;
 
         const li = document.createElement('li');
         li.textContent = texto;
