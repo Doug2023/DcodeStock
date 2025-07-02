@@ -457,54 +457,96 @@
             border-bottom: none;
         }
         .historico-coluna .data-edit {
-            width: 90px !important;
-            max-width: 100% !important;
-            min-width: 60px !important;
-            font-size: 0.95rem !important;
-            min-height: 28px !important;
-            padding: 2px 4px !important;
-            text-align: center !important;
-            margin: 0 2px 0 0 !important;
-            display: inline-block !important;
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            padding: 2px 6px;
+            width: 120px;
+            transition: border 0.2s, background 0.2s, color 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
-        @media (max-width: 400px) {
-            .historico-coluna .data-edit {
-                width: 70px !important;
-                font-size: 0.8rem !important;
-                min-height: 22px !important;
-            }
+        .historico-coluna .data-edit:focus {
+            outline: none !important;
+            border-color: #fff !important;
+            background: #111 !important;
         }
-        @media (max-width: 320px) {
-            .historico-coluna .data-edit {
-                width: 60px !important;
-                font-size: 0.7rem !important;
-                min-height: 18px !important;
-            }
+        /* Força cor do ícone do calendário (Webkit/Blink) */
+        .historico-coluna .data-edit::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+        /* Placeholder escuro para datas inválidas */
+        .historico-coluna .data-edit:invalid {
+            color: #888 !important;
         }
 
-        /* --- Gráfico Pizza maior e responsivo --- */
-        #graficoPizza {
-            width: 100% !important;
-            max-width: 300px !important;
-            height: 300px !important;
-            max-height: 300px !important;
-            min-width: 0 !important;
-            min-height: 0 !important;
-            margin: 0 auto !important;
-            display: block !important;
+        /* --- Video Banner Topo: restaurado, impecável e responsivo --- */
+        .video-banner-topo {
+            position: relative;
+            width: 100vw;
+            max-width: 100vw;
+            height: 250px !important;
+            max-height: 250px !important;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #181818 0%, #232323 100%);
+            box-shadow: 0 4px 24px #000a;
         }
-        @media (max-width: 400px), (max-width: 600px) and (orientation: landscape) {
-            #graficoPizza {
-                max-width: 98vw !important;
-                height: 180px !important;
-                max-height: 180px !important;
+        .video-banner-move {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+        }
+        .video-banner-move video {
+            height: 250px !important;
+            max-height: 250px !important;
+            min-height: 80px !important;
+            width: auto !important;
+            min-width: 100vw;
+            max-width: none;
+            object-fit: contain !important;
+            border-radius: 18px;
+            box-shadow: 0 2px 24px #000a;
+            background: #000;
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            .video-banner-topo {
+                height: 160px !important;
+                max-height: 160px !important;
+            }
+            .video-banner-move video {
+                height: 160px !important;
+                max-height: 160px !important;
             }
         }
-        @media (max-width: 320px) {
-            #graficoPizza {
-                max-width: 98vw !important;
-                height: 120px !important;
-                max-height: 120px !important;
+        @media (max-width: 400px) {
+            .video-banner-topo {
+                height: 110px !important;
+                max-height: 110px !important;
+            }
+            .video-banner-move video {
+                height: 110px !important;
+                max-height: 110px !important;
+            }
+        }
+        @media (max-width: 600px) and (orientation: landscape) {
+            .video-banner-topo {
+                height: 80px !important;
+                max-height: 80px !important;
+            }
+            .video-banner-move video {
+                height: 80px !important;
+                max-height: 80px !important;
             }
         }
 
@@ -775,17 +817,47 @@
         .grafico-meio, #graficoValores-container {
             min-width: 0 !important;
             width: 100% !important;
-            max-width: 420px;
             margin-left: auto;
             margin-right: auto;
         }
-        .grafico-meio canvas, #graficoValores-container canvas {
-            display: block;
-            width: 100% !important;
+        .grafico-meio:not(:first-child), #graficoValores-container {
+            max-width: 420px;
+        }
+        .grafico-meio:not(:first-child) canvas, #graficoValores-container canvas {
             max-width: 400px !important;
+            width: 100% !important;
             height: 220px !important;
             max-height: 220px !important;
             margin: 0 auto;
+            display: block;
+        }
+        .graficos-top .grafico-meio:first-child {
+            height: 530px !important; /* um pouco maior que o canvas */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            max-width: 600px !important;
+        }
+        .graficos-top .grafico-meio:first-child canvas {
+            height: 500px !important;
+            max-height: 500px !important;
+            width: 100% !important;
+            max-width: 540px !important;
+            margin: 0 auto;
+            display: block;
+            z-index: 2;
+            position: relative;
+        }
+        @media (max-width: 900px) {
+            .grafico-meio, #graficoValores-container {
+                max-width: 98vw;
+            }
+            .grafico-meio canvas, #graficoValores-container canvas {
+                max-width: 98vw !important;
+                height: 240px !important;
+                max-height: 240px !important;
+            }
         }
         @media (max-width: 600px) {
             .grafico-meio, #graficoValores-container {
@@ -793,62 +865,72 @@
             }
             .grafico-meio canvas, #graficoValores-container canvas {
                 max-width: 98vw !important;
-                height: 160px !important;
-                max-height: 160px !important;
+                height: 180px !important;
+                max-height: 180px !important;
             }
         }
         @media (max-width: 400px) {
             .grafico-meio canvas, #graficoValores-container canvas {
-                height: 120px !important;
-                max-height: 120px !important;
+                height: 130px !important;
+                max-height: 130px !important;
             }
         }
-        /* Remove min-width dos gráficos para nunca estourar */
-        .grafico-meio, #graficoValores-container {
-            min-width: 0 !important;
+
+        /* --- Gráfico de Pizza (ajustes específicos) --- */
+        .graficos-top .grafico-meio:first-child canvas {
+            max-width: 540px !important;
+            width: 100% !important;
+            height: 340px !important;
+            max-height: 340px !important;
+            margin: 0 auto;
+            display: block;
+        }
+        @media (max-width: 900px) {
+            .graficos-top .grafico-meio:first-child canvas {
+                max-width: 98vw !important;
+                height: 240px !important;
+                max-height: 240px !important;
+            }
+        }
+        @media (max-width: 600px) {
+            .graficos-top .grafico-meio:first-child canvas {
+                max-width: 98vw !important;
+                height: 180px !important;
+                max-height: 180px !important;
+            }
+        }
+        @media (max-width: 400px) {
+            .graficos-top .grafico-meio:first-child canvas {
+                height: 130px !important;
+                max-height: 130px !important;
+            }
         }
 
-        /* --- Garantia máxima: todos os botões dark, inclusive de terceiros ou dinâmicos --- */
-        button, input[type="button"], input[type="submit"], input[type="reset"],
-        a.button, .btn, [role="button"], [class*="button"], [class*="btn"],
-        table button, table input[type="button"], table .btn,
-        .historico-coluna button, .historico-coluna .btn,
-        #registroOperacoes button, #registroOperacoes .btn {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
-            box-shadow: none !important;
-            border-radius: 6px !important;
-            transition: background 0.2s, color 0.2s, border 0.2s;
+        /* Histórico de operações: mostrar tudo, sem barra de rolagem e sem corte */
+        .historico-coluna ul {
+            max-height: none !important;
+            overflow-y: visible !important;
+            padding: 0 !important;
         }
-        button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover,
-        a.button:hover, .btn:hover, [role="button"]:hover, [class*="button"]:hover, [class*="btn"]:hover,
-        table button:hover, table input[type="button"]:hover, table .btn:hover,
-        .historico-coluna button:hover, .historico-coluna .btn:hover,
-        #registroOperacoes button:hover, #registroOperacoes .btn:hover,
-        button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active,
-        a.button:active, .btn:active, [role="button"]:active, [class*="button"]:active, [class*="btn"]:active,
-        table button:active, table input[type="button"]:active, table .btn:active,
-        .historico-coluna button:active, .historico-coluna .btn:active,
-        #registroOperacoes button:active, #registroOperacoes .btn:active {
-            background: #222 !important;
-            color: #fff !important;
-            border-color: #fff !important;
+        .historico-coluna {
+            max-height: none !important;
+            overflow: visible !important;
+        }
+        #registroOperacoes {
+            max-height: none !important;
+            overflow: visible !important;
         }
 
-        /* --- Garantir texto branco no histórico de operações --- */
-        .historico-coluna li,
-        .historico-coluna li span,
-        .historico-coluna .descricao-op,
-        #registroOperacoes ul li,
-        #registroOperacoes ul li span {
-            color: #fff !important;
-            background: transparent !important;
+        /* Remove as setas dos inputs type="number" em todos os navegadores */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
-        .historico-coluna li {
-            background: #000 !important;
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+            appearance: textfield;
         }
-        /* Fim do reforço dark no histórico */
     </style>
 </head>
 <body>
@@ -894,7 +976,7 @@
     <div class="graficos-top">
         <div class="grafico-meio">
             <h3>Entrada</h3>
-            <canvas id="graficoPizza"></canvas>
+            <canvas id="graficoPizza" width="540" height="340"></canvas>
         </div>
         <div class="grafico-meio">
             <h3>Saídas</h3>
@@ -987,7 +1069,11 @@
             const chartPizza = new Chart(ctxPizza, {
                 type: 'pie',
                 data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-                options: { plugins: { legend: { position: 'bottom' } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Adicione esta linha!
+                    plugins: { legend: { position: 'bottom' } }
+                }
             });
 
             const chartBarras = new Chart(ctxBarras, {
