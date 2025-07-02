@@ -34,6 +34,9 @@
             font-family: 'Poppins', Arial, sans-serif;
             background-color: #000 !important;
             color: var(--text-color);
+            max-width: 100vw;
+            overflow-x: hidden !important;
+            overscroll-behavior-x: contain;
         }
 
         /* --- Header & Navigation --- */
@@ -42,18 +45,16 @@
             flex-direction: column;
             align-items: center;
             padding: var(--spacing-unit);
-            background: var(--bg-color-medium);
+            background: #000 !important;
         }
-
         .video-container {
             width: 100%;
             display: flex;
             justify-content: center;
             padding: var(--spacing-unit);
-            background: var(--bg-color-medium);
+            background: #000 !important;
             margin-bottom: var(--spacing-unit);
         }
-
         .video-container .video {
             width: 200px;
             height: auto;
@@ -74,124 +75,63 @@
             align-items: center;
             width: 100%;
             padding: 0 var(--spacing-unit);
+            background: #000 !important;
         }
-
         .month-navigation {
             margin-bottom: 10px;
         }
-
         .stock-actions {
             margin-bottom: var(--spacing-unit);
         }
-
-        /* --- Botões Dark com Contorno Branco --- */
-        .month-navigation button,
-        .stock-actions button,
-        #btnLimparHistorico {
+        /* --- Botões totalmente dark em todo o app --- */
+        button, input[type="button"], input[type="submit"], input[type="reset"] {
             background: #000 !important;
             color: #fff !important;
             border: 2px solid #fff !important;
             box-shadow: none !important;
             border-radius: 6px;
-            padding: 10px 16px;
-            font-size: 1rem;
             transition: background 0.2s, color 0.2s, border 0.2s;
         }
-        .month-navigation button:hover,
-        .stock-actions button:hover,
-        #btnLimparHistorico:hover {
+        button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover,
+        button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active {
             background: #222 !important;
             color: #fff !important;
             border-color: #fff !important;
         }
-        .stock-actions .nav-button {
-            min-width: 40px;
-            min-height: 40px;
-            font-size: 1.5rem;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Ajuste para botões de navegação de mês e ações ficarem menores, mas dark */
+        .month-navigation button, .stock-actions button, #btnLimparHistorico {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            box-shadow: none !important;
+            border-radius: 6px;
+            padding: 4px 8px !important;
+            font-size: 0.9rem !important;
+            min-width: 28px !important;
+            min-height: 28px !important;
         }
-
-        /* --- Responsividade dos Botões e Navegação --- */
-        .month-navigation {
-            display: flex;
-            flex-direction: row !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            gap: 4px !important;
-            padding: 0 2px !important;
-            flex-wrap: nowrap !important;
-            min-width: 0 !important;
-            width: 100%;
-            margin-bottom: 10px;
+        .month-navigation button:hover, .stock-actions button:hover, #btnLimparHistorico:hover {
+            background: #222 !important;
         }
-        .month-navigation button {
-            flex: 0 0 auto;
-            min-width: 0 !important;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            padding: 7px 8px;
-        }
-        #mesAtual {
-            flex: 1 1 auto;
-            min-width: 0;
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--secondary-text-color);
-            margin: 0 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: auto !important;
-        }
+        /* Ajuste para mobile ainda menor */
         @media (max-width: 400px) {
-            .month-navigation {
-                gap: 2px !important;
-            }
             .month-navigation button {
-                font-size: 0.8rem;
-                padding: 4px 4px;
-            }
-            #mesAtual {
-                font-size: 0.85rem;
-                margin: 0 2px;
+                font-size: 0.8rem !important;
+                padding: 2px 4px !important;
+                min-width: 20px !important;
+                min-height: 20px !important;
             }
         }
-        @media (max-width: 350px) {
-            html, body {
-                font-size: 11px;
-            }
-            .month-navigation {
-                gap: 1px !important;
-                padding: 0 1px !important;
-            }
-            .month-navigation button {
-                font-size: 0.7rem !important;
-                padding: 2px 2px !important;
-                min-width: 18px !important;
-                min-height: 18px !important;
-            }
-            #mesAtual {
-                font-size: 0.7rem !important;
-                margin: 0 1px !important;
-                max-width: 60px !important;
-            }
+        /* --- Containers escuros --- */
+        #resultadoFinal, #registroOperacoes, .historico-coluna, .graficos-top, #graficoValores-container {
+            background: #000 !important;
+            box-shadow: none !important;
+            border: none !important;
         }
-        /* --- Banner Animation sempre 200px --- */
-        .video-banner-topo {
-            height: 200px !important;
-            max-height: 200px !important;
+        /* --- Remove qualquer fundo acinzentado --- */
+        body, html {
+            background: #000 !important;
         }
-        .video-banner-move video {
-            height: 200px !important;
-            max-height: 200px !important;
-            min-height: 80px !important;
-            width: auto !important;
-            object-fit: contain !important;
-        }
-
         /* --- Ultra Small Devices (até 350px) --- */
         @media (max-width: 350px) {
             html, body {
@@ -305,17 +245,35 @@
             margin: 0 10px;
         }
 
+        /* --- Input do nome do estoque totalmente dark --- */
+        #nomeEstoqueInput {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            border-radius: 6px;
+            box-shadow: none !important;
+            padding: 10px 16px;
+            font-size: 1rem;
+            transition: border 0.2s, background 0.2s, color 0.2s;
+        }
+        #nomeEstoqueInput:focus {
+            outline: none !important;
+            border-color: #fff !important;
+            background: #111 !important;
+        }
+
         /* Responsive table container */
         .table-responsive {
             width: 100%;
-            /* Removed overflow-x to prevent horizontal scrollbar */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             margin-bottom: var(--spacing-unit);
         }
 
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
-            /* Removed min-width to allow the table to shrink */
+            min-width: 0 !important;
             table-layout: fixed; /* Keep column widths fixed based on percentages */
         }
 
@@ -525,39 +483,71 @@
             color: #888 !important;
         }
 
-        /* --- Video Banner Topo --- */
+        /* --- Video Banner Topo: restaurado, impecável e responsivo --- */
         .video-banner-topo {
             position: relative;
             width: 100vw;
             max-width: 100vw;
-            height: 150px;
+            height: 250px !important;
+            max-height: 250px !important;
             overflow: hidden;
-            display: block;
-            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #181818 0%, #232323 100%);
+            box-shadow: 0 4px 24px #000a;
         }
         .video-banner-move {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
             height: 100%;
-            will-change: transform;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
         }
         .video-banner-move video {
-            height: 100%;
-            width: auto;
-            object-fit: contain;
+            height: 250px !important;
+            max-height: 250px !important;
+            min-height: 80px !important;
+            width: auto !important;
+            min-width: 100vw;
+            max-width: none;
+            object-fit: contain !important;
+            border-radius: 18px;
+            box-shadow: 0 2px 24px #000a;
             background: #000;
-            border-radius: 12px;
-            box-shadow: 0 2px 16px #000a;
             display: block;
+            margin: 0 auto;
         }
-        .dcode-logo-banner {
-            display: none;
+        @media (max-width: 600px) {
+            .video-banner-topo {
+                height: 160px !important;
+                max-height: 160px !important;
+            }
+            .video-banner-move video {
+                height: 160px !important;
+                max-height: 160px !important;
+            }
         }
-        @keyframes video-move-x-dynamic {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(var(--move-x, 0px)); }
+        @media (max-width: 400px) {
+            .video-banner-topo {
+                height: 110px !important;
+                max-height: 110px !important;
+            }
+            .video-banner-move video {
+                height: 110px !important;
+                max-height: 110px !important;
+            }
+        }
+        @media (max-width: 600px) and (orientation: landscape) {
+            .video-banner-topo {
+                height: 80px !important;
+                max-height: 80px !important;
+            }
+            .video-banner-move video {
+                height: 80px !important;
+                max-height: 80px !important;
+            }
         }
 
         /* --- Media Queries --- */
@@ -683,67 +673,181 @@
             }
         }
 
-        /* --- Video Background Styles --- */
-        .video-background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            z-index: -1;
+        /* --- Melhorias de Responsividade Universal Mobile --- */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden !important;
+            overscroll-behavior-x: contain;
         }
-        .video-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: static;
+        body {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
-        .video-container .video {
-            min-width: 100vw;
-            min-height: 100vh;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
+        /* Ajuste para evitar rolagem lateral em qualquer elemento */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            max-width: 100vw;
         }
-        .playstation-stripe {
-            display: none;
+        /* Ajustes extras para dispositivos entre 480px e 600px */
+        @media (max-width: 600px) {
+            #mesAtual {
+                font-size: 1rem;
+                max-width: 100px !important;
+            }
+            .month-navigation button {
+                font-size: 1rem;
+                padding: 7px 10px;
+            }
+            .stock-actions .nav-button {
+                font-size: 1.1rem;
+                min-width: 32px;
+                min-height: 32px;
+            }
+            #nomeEstoqueInput {
+                font-size: 1rem;
+                padding: 8px 10px;
+            }
         }
-        body > *:not(.video-background-container) {
-            position: relative;
-            z-index: 1;
+        @media (max-width: 480px) {
+            #mesAtual {
+                font-size: 0.85rem;
+                max-width: 70px !important;
+            }
+            .month-navigation button {
+                font-size: 0.85rem;
+                padding: 5px 7px;
+            }
+            .stock-actions .nav-button {
+                font-size: 0.95rem;
+                min-width: 26px;
+                min-height: 26px;
+            }
+            #nomeEstoqueInput {
+                font-size: 0.85rem;
+                padding: 6px 6px;
+            }
         }
+        /* Ajuste para paisagem em celulares pequenos */
+        @media (max-width: 600px) and (orientation: landscape) {
+            .video-banner-topo {
+                height: 120px !important;
+                max-height: 120px !important;
+            }
+            .video-banner-move video {
+                height: 120px !important;
+                max-height: 120px !important;
+            }
+            #mesAtual {
+                font-size: 0.8rem;
+                max-width: 60px !important;
+            }
+        }
+        /* Ajuste para tablets e celulares grandes */
+        @media (min-width: 601px) and (max-width: 900px) {
+            #mesAtual {
+                font-size: 1.3rem;
+                max-width: 140px !important;
+            }
+            .month-navigation button {
+                font-size: 1.1rem;
+                padding: 10px 16px;
+            }
+            #nomeEstoqueInput {
+                font-size: 1.1rem;
+                padding: 12px 18px;
+            }
+        }
+        /* Ajuste para garantir centralização e espaçamento confortável em todos os tamanhos */
         header, main, #resultadoFinal, #registroOperacoes, .graficos-top, #graficoValores-container {
-            background: #000 !important;
-            box-shadow: none !important;
-            border: none !important;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100vw;
         }
-
-        #registroOperacoes, #resultadoFinal, .table-responsive, .graficos-top, #graficoValores-container {
-            border: none !important;
+        /* Ajuste para tabelas nunca causarem rolagem lateral */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-
-        #nomeEstoqueInput {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
-            border-radius: 6px;
-            box-shadow: none !important;
-            padding: 10px 16px;
+        table.estoque-table {
+            min-width: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+        /* Ajuste para inputs e botões ficarem sempre grandes o suficiente para toque confortável */
+        input, button {
+            min-height: 40px;
             font-size: 1rem;
-            transition: border 0.2s, background 0.2s, color 0.2s;
         }
-        #nomeEstoqueInput:focus {
-            outline: none !important;
-            border-color: #fff !important;
-            background: #111 !important;
+        @media (max-width: 400px) {
+            input, button {
+                min-height: 32px;
+                font-size: 0.85rem;
+            }
         }
-        .nome-estoque-container input {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
+        @media (max-width: 350px) {
+            input, button {
+                min-height: 24px;
+                font-size: 0.7rem;
+            }
+        }
+        /* Ajuste para histórico nunca estourar largura */
+        .historico-coluna ul, #registroOperacoes ul {
+            max-width: 100vw;
+            overflow-x: auto;
+        }
+        /* Ajuste para garantir que o banner nunca cause rolagem lateral */
+        .video-banner-topo, .video-banner-move, .video-banner-move video {
+            max-width: 100vw !important;
+        }
+        /* Ajuste para garantir que o app nunca tenha barra de rolagem horizontal */
+        ::-webkit-scrollbar {
+            height: 6px;
+            background: #222;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+
+        /* --- Gráficos: tamanho padrão compacto universal --- */
+        .graficos-top, #graficoValores-container {
+            max-width: 100vw;
+            padding: 0 8px;
+        }
+        .grafico-meio, #graficoValores-container {
+            min-width: 0 !important;
+            width: 100% !important;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .grafico-meio canvas, #graficoValores-container canvas {
+            display: block;
+            width: 100% !important;
+            max-width: 400px !important;
+            height: 220px !important;
+            max-height: 220px !important;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            .grafico-meio, #graficoValores-container {
+                max-width: 98vw;
+            }
+            .grafico-meio canvas, #graficoValores-container canvas {
+                max-width: 98vw !important;
+                height: 160px !important;
+                max-height: 160px !important;
+            }
+        }
+        @media (max-width: 400px) {
+            .grafico-meio canvas, #graficoValores-container canvas {
+                height: 120px !important;
+                max-height: 120px !important;
+            }
+        }
+        /* Remove min-width dos gráficos para nunca estourar */
+        .grafico-meio, #graficoValores-container {
+            min-width: 0 !important;
         }
     </style>
 </head>
@@ -852,12 +956,28 @@
             const listaSaidas = document.getElementById('listaSaidas');
 
             // --- Month Navigation ---
-            const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            // Meses completos em minúsculo para exibição tipo "julho de 2025"
+            const mesesFullLower = [
+                "janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+            ];
             let displayedDate = new Date();
-
             function updateMonthDisplay() {
-                mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
+                // Exibe no formato "julho de 2025"
+                const nomeMes = mesesFullLower[displayedDate.getMonth()];
+                const ano = displayedDate.getFullYear();
+                mesAtualEl.textContent = `${nomeMes} de ${ano}`;
+                // Ajusta tamanho se necessário
+                mesAtualEl.style.fontSize = '';
+                setTimeout(() => {
+                    let fontSize = parseFloat(window.getComputedStyle(mesAtualEl).fontSize);
+                    const maxWidth = mesAtualEl.offsetWidth || 70;
+                    while (mesAtualEl.scrollWidth > maxWidth && fontSize > 8) {
+                        fontSize -= 1;
+                        mesAtualEl.style.fontSize = fontSize + 'px';
+                    }
+                }, 10);
             }
+            window.addEventListener('resize', updateMonthDisplay);
 
             // --- Chart Setup ---
             const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
@@ -1114,12 +1234,12 @@
             // --- Função para criar elemento de histórico ---
             function criarItemHistorico(tipo, item, quantidade, dataMov) {
                 const li = document.createElement('li');
-                // Campo de data editável (apenas texto, sem calendário)
+                // Campo de data editável (formato dd/mm/aaaa)
                 const inputData = document.createElement('input');
                 inputData.type = 'text';
                 inputData.className = 'data-edit';
-                inputData.value = dataMov;
-                inputData.placeholder = 'AAAA-MM-DD';
+                inputData.value = formatarDataParaBR(dataMov);
+                inputData.placeholder = 'dd/mm/aaaa';
                 inputData.title = 'Editar data do movimento';
                 // Descrição
                 const desc = document.createElement('span');
@@ -1133,6 +1253,24 @@
                 });
                 return li;
             }
+            // Função para converter yyyy-mm-dd para dd/mm/aaaa
+            function formatarDataParaBR(dataISO) {
+                if (!dataISO) return '';
+                const partes = dataISO.split('-');
+                if (partes.length === 3) {
+                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+                }
+                return dataISO;
+            }
+            // Função para converter dd/mm/aaaa para yyyy-mm-dd
+            function formatarDataParaISO(dataBR) {
+                if (!dataBR) return '';
+                const partes = dataBR.split('/');
+                if (partes.length === 3) {
+                    return `${partes[2]}-${partes[1]}-${partes[0]}`;
+                }
+                return dataBR;
+            }
 
             // --- Função para salvar histórico ---
             function salvarHistorico() {
@@ -1141,13 +1279,13 @@
                     tipo: 'entrada',
                     item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
                     quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: li.querySelector('.data-edit').value
+                    data: formatarDataParaISO(li.querySelector('.data-edit').value)
                 }));
                 const saidas = Array.from(listaSaidas.children).map(li => ({
                     tipo: 'saida',
                     item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
                     quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: li.querySelector('.data-edit').value
+                    data: formatarDataParaISO(li.querySelector('.data-edit').value)
                 }));
                 const historico = [...entradas, ...saidas];
                 // Salva junto com os dados do mês
@@ -1175,7 +1313,7 @@
             function registrarOperacao(tipo, item, quantidade) {
                 // Usa data do campo de entrada, se disponível, senão data de hoje
                 let dataMov = new Date();
-                let dataStr = dataMov.toISOString().slice(0,10);
+                let dataStr = dataMov.toISOString().slice(0,10); // yyyy-mm-dd
                 // Adiciona ao histórico correto
                 const li = criarItemHistorico(tipo, item, quantidade, dataStr);
                 if (tipo === 'entrada') {
@@ -1296,14 +1434,15 @@
             let lastTimestamp = null;
 
             function updateSizes() {
-                // Mede a largura real renderizada do vídeo
-                video.style.height = '100%';
+                // Força altura e largura para mobile retrato
+                video.style.height = '250px';
+                video.style.maxHeight = '250px';
                 video.style.width = 'auto';
+                video.style.minWidth = '100vw';
+                video.style.objectFit = 'contain';
                 const videoW = video.getBoundingClientRect().width;
                 const bannerW = banner.offsetWidth;
-                // Ajusta a largura do container para o vídeo
                 moveDiv.style.width = videoW + 'px';
-                // Se o vídeo for menor ou igual ao banner, não anima
                 if (videoW <= bannerW + 1) {
                     maxMove = 0;
                     moveDiv.style.transform = 'translateX(0)';
