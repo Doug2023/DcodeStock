@@ -14,11 +14,53 @@
             --bg-color-medium: #1f1f1f;
             --bg-color-light: #2a2a2a;
             --text-color: #fff;
-            --secondary-text-color: #ccc;
+            --secondary-text-color: #fff; /* Força textos secundários a branco puro */
             --border-color: #444;
             --button-bg: #333;
             --button-hover-bg: #555;
             --spacing-unit: 1rem;
+        }
+        /* Garante que todos os textos secundários fiquem brancos */
+        #mesAtual,
+        .historico-header h3,
+        .historico-coluna h4,
+        #resultadoFinal p,
+        #registroOperacoes h3,
+        .descricao-op {
+            color: var(--text-color) !important;
+        }
+        /* Mantém fundo escuro e contraste alto */
+        body, header, main, #resultadoFinal, #registroOperacoes, .graficos-top, #graficoValores-container, .historico-coluna {
+            background: #000 !important;
+        }
+        /* Mantém bordas e elementos em tons escuros */
+        table.estoque-table th, table.estoque-table td {
+            border: 1px solid #222 !important;
+            background: #000 !important;
+        }
+        /* Corrige fundo de campos de input e áreas do histórico para preto absoluto */
+        .nome-estoque-container input,
+        #nomeEstoqueInput,
+        .historico-coluna .data-edit {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+        }
+        .historico-coluna {
+            background: #000 !important;
+        }
+        #registroOperacoes {
+            background: #000 !important;
+        }
+        #resultadoFinal {
+            background: #000 !important;
+        }
+        .graficos-top, #graficoValores-container {
+            background: #000 !important;
+        }
+        /* Remove qualquer cor de fundo intermediária */
+        header, .video-container {
+            background: #000 !important;
         }
 
         * {
@@ -34,9 +76,17 @@
             font-family: 'Poppins', Arial, sans-serif;
             background-color: #000 !important;
             color: var(--text-color);
-            max-width: 100vw;
-            overflow-x: hidden !important;
-            overscroll-behavior-x: contain;
+            min-width: 100vw;
+            min-height: 100vh;
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            touch-action: manipulation;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
+        }
+        body {
+            -webkit-tap-highlight-color: rgba(255,255,255,0.1);
         }
 
         /* --- Header & Navigation --- */
@@ -45,16 +95,18 @@
             flex-direction: column;
             align-items: center;
             padding: var(--spacing-unit);
-            background: #000 !important;
+            background: var(--bg-color-medium);
         }
+
         .video-container {
             width: 100%;
             display: flex;
             justify-content: center;
             padding: var(--spacing-unit);
-            background: #000 !important;
+            background: var(--bg-color-medium);
             margin-bottom: var(--spacing-unit);
         }
+
         .video-container .video {
             width: 200px;
             height: auto;
@@ -75,63 +127,165 @@
             align-items: center;
             width: 100%;
             padding: 0 var(--spacing-unit);
-            background: #000 !important;
         }
+
         .month-navigation {
             margin-bottom: 10px;
         }
+
         .stock-actions {
             margin-bottom: var(--spacing-unit);
         }
-        /* --- Botões totalmente dark em todo o app --- */
-        button, input[type="button"], input[type="submit"], input[type="reset"] {
+
+        /* --- Botões Dark com Contorno Branco --- */
+        .month-navigation button,
+        .stock-actions button,
+        #btnLimparHistorico {
             background: #000 !important;
             color: #fff !important;
             border: 2px solid #fff !important;
             box-shadow: none !important;
             border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 1rem;
             transition: background 0.2s, color 0.2s, border 0.2s;
         }
-        button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover,
-        button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active {
+        .month-navigation button:hover,
+        .stock-actions button:hover,
+        #btnLimparHistorico:hover {
             background: #222 !important;
             color: #fff !important;
             border-color: #fff !important;
         }
-        /* Ajuste para botões de navegação de mês e ações ficarem menores, mas dark */
-        .month-navigation button, .stock-actions button, #btnLimparHistorico {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
-            box-shadow: none !important;
-            border-radius: 6px;
-            padding: 4px 8px !important;
-            font-size: 0.9rem !important;
-            min-width: 28px !important;
-            min-height: 28px !important;
+        .stock-actions .nav-button {
+            min-width: 40px;
+            min-height: 40px;
+            font-size: 1.5rem;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .month-navigation button:hover, .stock-actions button:hover, #btnLimparHistorico:hover {
-            background: #222 !important;
+
+        /* --- Responsividade dos Botões e Navegação --- */
+        .month-navigation {
+            display: flex;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 4px !important;
+            padding: 0 2px !important;
+            flex-wrap: nowrap !important;
+            min-width: 0 !important;
+            width: 100%;
+            margin-bottom: 10px;
         }
-        /* Ajuste para mobile ainda menor */
+        .month-navigation button {
+            flex: 0 0 auto;
+            min-width: 0 !important;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            padding: 7px 8px;
+        }
+        #mesAtual {
+            flex: 1 1 auto;
+            min-width: 0;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-color) !important;
+            margin: 0 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto !important;
+        }
         @media (max-width: 400px) {
+            .month-navigation {
+                gap: 2px !important;
+            }
             .month-navigation button {
-                font-size: 0.8rem !important;
-                padding: 2px 4px !important;
-                min-width: 20px !important;
-                min-height: 20px !important;
+                font-size: 0.8rem;
+                padding: 4px 4px;
+            }
+            #mesAtual {
+                font-size: 0.85rem;
+                margin: 0 2px;
             }
         }
-        /* --- Containers escuros --- */
-        #resultadoFinal, #registroOperacoes, .historico-coluna, .graficos-top, #graficoValores-container {
-            background: #000 !important;
-            box-shadow: none !important;
-            border: none !important;
+        @media (max-width: 350px) {
+            html, body {
+                font-size: 11px;
+            }
+            .month-navigation {
+                gap: 1px !important;
+                padding: 0 1px !important;
+            }
+            .month-navigation button {
+                font-size: 0.7rem !important;
+                padding: 2px 2px !important;
+                min-width: 18px !important;
+                min-height: 18px !important;
+            }
+            #mesAtual {
+                font-size: 0.7rem !important;
+                margin: 0 1px !important;
+                max-width: 60px !important;
+            }
         }
-        /* --- Remove qualquer fundo acinzentado --- */
-        body, html {
-            background: #000 !important;
+        /* --- Banner Animation sempre 200px --- */
+        .video-banner-topo {
+            position: relative;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-width: 100vw !important;
+            height: 200px;
+            overflow: visible !important;
+            display: block;
+            background: transparent;
+            margin: 56px auto 0 auto; /* Margem superior reduzida para aproximar do topo/botões */
         }
+        @media (orientation: landscape) {
+            .video-banner-topo {
+                height: 150px !important;
+            }
+        }
+        .video-banner-move {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 150vw;
+            will-change: transform;
+            display: flex;
+            align-items: center;
+            animation: video-move-x-infinite 18s linear infinite normal;
+        }
+        @keyframes video-move-x-infinite {
+            0% { transform: translateX(-50vw); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+        .video-banner-move video {
+            height: 100% !important;
+            width: auto !important;
+            max-width: 100vw !important;
+            min-width: 0 !important;
+            object-fit: contain !important;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px #000a;
+            display: block;
+            margin: 0 auto;
+        }
+        .dcode-logo-banner {
+            display: none;
+        }
+        @keyframes video-move-x-dynamic {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(var(--move-x, 0px)); }
+        }
+
         /* --- Ultra Small Devices (até 350px) --- */
         @media (max-width: 350px) {
             html, body {
@@ -245,35 +399,17 @@
             margin: 0 10px;
         }
 
-        /* --- Input do nome do estoque totalmente dark --- */
-        #nomeEstoqueInput {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
-            border-radius: 6px;
-            box-shadow: none !important;
-            padding: 10px 16px;
-            font-size: 1rem;
-            transition: border 0.2s, background 0.2s, color 0.2s;
-        }
-        #nomeEstoqueInput:focus {
-            outline: none !important;
-            border-color: #fff !important;
-            background: #111 !important;
-        }
-
         /* Responsive table container */
         .table-responsive {
             width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            /* Removed overflow-x to prevent horizontal scrollbar */
             margin-bottom: var(--spacing-unit);
         }
 
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 0 !important;
+            /* Removed min-width to allow the table to shrink */
             table-layout: fixed; /* Keep column widths fixed based on percentages */
         }
 
@@ -307,6 +443,17 @@
             padding: 0; /* Remove default input padding */
         }
 
+        /* Remove spinners dos inputs type="number" */
+        table.estoque-table input[type="number"]::-webkit-inner-spin-button,
+        table.estoque-table input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        table.estoque-table input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
         table.estoque-table input:focus {
             outline: 1px solid #888;
             background: var(--button-bg);
@@ -315,7 +462,8 @@
         /* --- Charts --- */
         .graficos-top {
             display: flex;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
+            flex-direction: row !important;
             justify-content: center;
             gap: var(--spacing-unit);
             padding: 0 var(--spacing-unit);
@@ -323,8 +471,41 @@
         }
 
         .grafico-meio {
-            flex: 1 1 45%; /* Allow two charts per row, with some flex for responsiveness */
-            min-width: 280px;
+            flex: 1 1 45%;
+            min-width: 550px;
+            max-width: 550px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #graficoPizza, #graficoSaidas {
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 1/1 !important;
+            max-width: 550px;
+            max-height: 550px;
+            display: block;
+        }
+
+        @media (max-width: 1100px) {
+            #graficoPizza, #graficoSaidas {
+                max-width: 450px;
+                max-height: 450px;
+            }
+        }
+        @media (max-width: 900px) {
+            #graficoPizza, #graficoSaidas {
+                max-width: 370px;
+                max-height: 370px;
+            }
+        }
+        @media (max-width: 600px) {
+            #graficoPizza, #graficoSaidas {
+                max-width: 270px;
+                max-height: 270px;
+            }
         }
 
         #graficoValores-container { /* New container for the 'Valor' chart */
@@ -483,71 +664,58 @@
             color: #888 !important;
         }
 
-        /* --- Video Banner Topo: restaurado, impecável e responsivo --- */
+        /* --- Video Banner Topo --- */
         .video-banner-topo {
             position: relative;
-            width: 100vw;
-            max-width: 100vw;
-            height: 250px !important;
-            max-height: 250px !important;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(90deg, #181818 0%, #232323 100%);
-            box-shadow: 0 4px 24px #000a;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-width: 100vw !important;
+            height: 200px;
+            overflow: visible !important;
+            display: block;
+            background: transparent;
+            margin: 56px auto 0 auto; /* Margem superior reduzida para aproximar do topo/botões */
+        }
+        @media (orientation: landscape) {
+            .video-banner-topo {
+                height: 150px !important;
+            }
         }
         .video-banner-move {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             height: 100%;
+            width: 150vw;
+            will-change: transform;
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 100vw;
+            animation: video-move-x-infinite 18s linear infinite normal;
+        }
+        @keyframes video-move-x-infinite {
+            0% { transform: translateX(-50vw); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
         }
         .video-banner-move video {
-            height: 250px !important;
-            max-height: 250px !important;
-            min-height: 80px !important;
+            height: 100% !important;
             width: auto !important;
-            min-width: 100vw;
-            max-width: none;
+            max-width: 100vw !important;
+            min-width: 0 !important;
             object-fit: contain !important;
-            border-radius: 18px;
-            box-shadow: 0 2px 24px #000a;
             background: #000;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px #000a;
             display: block;
             margin: 0 auto;
         }
-        @media (max-width: 600px) {
-            .video-banner-topo {
-                height: 160px !important;
-                max-height: 160px !important;
-            }
-            .video-banner-move video {
-                height: 160px !important;
-                max-height: 160px !important;
-            }
+        .dcode-logo-banner {
+            display: none;
         }
-        @media (max-width: 400px) {
-            .video-banner-topo {
-                height: 110px !important;
-                max-height: 110px !important;
-            }
-            .video-banner-move video {
-                height: 110px !important;
-                max-height: 110px !important;
-            }
-        }
-        @media (max-width: 600px) and (orientation: landscape) {
-            .video-banner-topo {
-                height: 80px !important;
-                max-height: 80px !important;
-            }
-            .video-banner-move video {
-                height: 80px !important;
-                max-height: 80px !important;
-            }
+        @keyframes video-move-x-dynamic {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(var(--move-x, 0px)); }
         }
 
         /* --- Media Queries --- */
@@ -673,270 +841,164 @@
             }
         }
 
-        /* --- Melhorias de Responsividade Universal Mobile --- */
+        /* --- Universal Mobile Optimization --- */
         html, body {
-            max-width: 100vw;
-            overflow-x: hidden !important;
-            overscroll-behavior-x: contain;
+            min-width: 100vw;
+            min-height: 100vh;
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            touch-action: manipulation;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
         }
         body {
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(255,255,255,0.1);
         }
-        /* Ajuste para evitar rolagem lateral em qualquer elemento */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            max-width: 100vw;
+        /* Viewport for all devices, including tablets, foldables, desktops */
+        @viewport {
+            width: device-width;
+            zoom: 1.0;
         }
-        /* Ajustes extras para dispositivos entre 480px e 600px */
+        @-ms-viewport {
+            width: device-width;
+        }
+        /* Prevent zoom on input focus for iOS */
+        input, select, textarea, button {
+            font-size: 16px !important;
+        }
+        /* Responsive font scaling for all screens */
         @media (max-width: 600px) {
-            #mesAtual {
-                font-size: 1rem;
-                max-width: 100px !important;
-            }
-            .month-navigation button {
-                font-size: 1rem;
-                padding: 7px 10px;
-            }
-            .stock-actions .nav-button {
-                font-size: 1.1rem;
-                min-width: 32px;
-                min-height: 32px;
-            }
-            #nomeEstoqueInput {
-                font-size: 1rem;
-                padding: 8px 10px;
-            }
+            html, body { font-size: 14px; }
         }
-        @media (max-width: 480px) {
-            #mesAtual {
-                font-size: 0.85rem;
-                max-width: 70px !important;
-            }
-            .month-navigation button {
-                font-size: 0.85rem;
-                padding: 5px 7px;
-            }
-            .stock-actions .nav-button {
-                font-size: 0.95rem;
-                min-width: 26px;
-                min-height: 26px;
-            }
-            #nomeEstoqueInput {
-                font-size: 0.85rem;
-                padding: 6px 6px;
-            }
+        @media (max-width: 400px) {
+            html, body { font-size: 12px; }
         }
-        /* Ajuste para paisagem em celulares pequenos */
-        @media (max-width: 600px) and (orientation: landscape) {
-            .video-banner-topo {
-                height: 120px !important;
-                max-height: 120px !important;
-            }
-            .video-banner-move video {
-                height: 120px !important;
-                max-height: 120px !important;
-            }
-            #mesAtual {
-                font-size: 0.8rem;
-                max-width: 60px !important;
-            }
+        @media (max-width: 350px) {
+            html, body { font-size: 11px; }
         }
-        /* Ajuste para tablets e celulares grandes */
-        @media (min-width: 601px) and (max-width: 900px) {
-            #mesAtual {
-                font-size: 1.3rem;
-                max-width: 140px !important;
-            }
-            .month-navigation button {
-                font-size: 1.1rem;
-                padding: 10px 16px;
-            }
-            #nomeEstoqueInput {
-                font-size: 1.1rem;
-                padding: 12px 18px;
-            }
+        @media (max-width: 320px) {
+            html, body { font-size: 10px; }
         }
-        /* Ajuste para garantir centralização e espaçamento confortável em todos os tamanhos */
-        header, main, #resultadoFinal, #registroOperacoes, .graficos-top, #graficoValores-container {
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 100vw;
+        /* Landscape/Portrait universal adjustments */
+        @media (orientation: landscape) {
+            .video-banner-topo { height: 120px !important; }
+            .grafico-meio { min-width: 220px !important; max-width: 320px !important; }
+            #graficoPizza, #graficoSaidas { max-width: 320px !important; max-height: 320px !important; }
         }
-        /* Ajuste para tabelas nunca causarem rolagem lateral */
+        @media (orientation: portrait) {
+            .video-banner-topo { height: 200px !important; }
+        }
+        /* Ensure all touch targets are large enough */
+        /* Removido min-height/min-width 44px para inputs/botões compactos */
+        /* button, .nav-button, input, select, textarea {
+            min-height: 44px;
+            min-width: 44px;
+        } */
+        /* Prevent accidental data loss: never auto-clear or auto-delete */
+        /* (No destructive code in JS, only user-confirmed actions) */
+        /* Accessibility: high contrast for all elements */
+        *:focus {
+            outline: 2px solid #fff !important;
+            outline-offset: 2px;
+        }
+        /* Hide scrollbars for a cleaner look on mobile */
+        ::-webkit-scrollbar { width: 0; background: transparent; }
+        /* Ensure charts always keep square aspect and never overflow */
+        .grafico-meio, #graficoPizza, #graficoSaidas {
+            aspect-ratio: 1/1 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            max-height: 80vw !important;
+        }
+        /* Table: allow horizontal scroll on overflow for extreme cases */
         .table-responsive {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
-        table.estoque-table {
-            min-width: 0 !important;
-            width: 100% !important;
+        /* Banner: always visible, never cropped */
+        .video-banner-topo, .video-banner-move video {
+            width: 100vw !important;
             max-width: 100vw !important;
         }
-        /* Ajuste para inputs e botões ficarem sempre grandes o suficiente para toque confortável */
-        input, button {
-            min-height: 40px;
-            font-size: 1rem;
+        /* Prevent double-tap zoom on iOS */
+        html {
+            touch-action: manipulation;
         }
-        @media (max-width: 400px) {
-            input, button {
-                min-height: 32px;
-                font-size: 0.85rem;
-            }
-        }
-        @media (max-width: 350px) {
-            input, button {
-                min-height: 24px;
-                font-size: 0.7rem;
-            }
-        }
-        /* Ajuste para histórico nunca estourar largura */
-        .historico-coluna ul, #registroOperacoes ul {
-            max-width: 100vw;
-            overflow-x: auto;
-        }
-        /* Ajuste para garantir que o banner nunca cause rolagem lateral */
-        .video-banner-topo, .video-banner-move, .video-banner-move video {
-            max-width: 100vw !important;
-        }
-        /* Ajuste para garantir que o app nunca tenha barra de rolagem horizontal */
-        ::-webkit-scrollbar {
-            height: 6px;
-            background: #222;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 3px;
+        /* Universal safe area for notches and rounded corners */
+        body, header, main, .video-banner-topo {
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
-        /* --- Gráficos: tamanho padrão compacto universal --- */
-        .graficos-top, #graficoValores-container {
-            max-width: 100vw;
-            padding: 0 8px;
+        /* Estilo para data livre no histórico */
+        .data-livre {
+            color: #fff;
+            font-size: 0.95em;
+            margin-right: 10px;
+            font-family: monospace;
+            opacity: 0.85;
         }
-        .grafico-meio, #graficoValores-container {
-            min-width: 0 !important;
-            width: 100% !important;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .grafico-meio:not(:first-child), #graficoValores-container {
-            max-width: 420px;
-        }
-        .grafico-meio:not(:first-child) canvas, #graficoValores-container canvas {
-            max-width: 400px !important;
-            width: 100% !important;
-            height: 220px !important;
-            max-height: 220px !important;
-            margin: 0 auto;
-            display: block;
-        }
-        .graficos-top .grafico-meio:first-child {
-            height: 530px !important; /* um pouco maior que o canvas */
+
+        /* --- Barra superior fixa para botões --- */
+        .top-bar-app {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            width: 100vw;
+            padding: 8px 0 0 0;
+            gap: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background: #000;
+        }
+        .top-bar-left {
+            display: flex;
             align-items: center;
             justify-content: flex-start;
-            max-width: 600px !important;
+            flex: 0 0 auto;
+            padding-left: 12px;
         }
-        .graficos-top .grafico-meio:first-child canvas {
-            height: 500px !important;
-            max-height: 500px !important;
-            width: 100% !important;
-            max-width: 540px !important;
-            margin: 0 auto;
-            display: block;
-            z-index: 2;
-            position: relative;
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 0 0 auto;
+            padding-right: 12px;
         }
-        @media (max-width: 900px) {
-            .grafico-meio, #graficoValores-container {
-                max-width: 98vw;
-            }
-            .grafico-meio canvas, #graficoValores-container canvas {
-                max-width: 98vw !important;
-                height: 240px !important;
-                max-height: 240px !important;
-            }
+        #btnNotify {
+            margin-left: 0;
+            margin-right: 0;
         }
-        @media (max-width: 600px) {
-            .grafico-meio, #graficoValores-container {
-                max-width: 98vw;
-            }
-            .grafico-meio canvas, #graficoValores-container canvas {
-                max-width: 98vw !important;
-                height: 180px !important;
-                max-height: 180px !important;
-            }
-        }
-        @media (max-width: 400px) {
-            .grafico-meio canvas, #graficoValores-container canvas {
-                height: 130px !important;
-                max-height: 130px !important;
-            }
-        }
-
-        /* --- Gráfico de Pizza (ajustes específicos) --- */
-        .graficos-top .grafico-meio:first-child canvas {
-            max-width: 540px !important;
-            width: 100% !important;
-            height: 340px !important;
-            max-height: 340px !important;
-            margin: 0 auto;
-            display: block;
-        }
-        @media (max-width: 900px) {
-            .graficos-top .grafico-meio:first-child canvas {
-                max-width: 98vw !important;
-                height: 240px !important;
-                max-height: 240px !important;
-            }
-        }
-        @media (max-width: 600px) {
-            .graficos-top .grafico-meio:first-child canvas {
-                max-width: 98vw !important;
-                height: 180px !important;
-                max-height: 180px !important;
-            }
-        }
-        @media (max-width: 400px) {
-            .graficos-top .grafico-meio:first-child canvas {
-                height: 130px !important;
-                max-height: 130px !important;
-            }
-        }
-
-        /* Histórico de operações: mostrar tudo, sem barra de rolagem e sem corte */
-        .historico-coluna ul {
-            max-height: none !important;
-            overflow-y: visible !important;
-            padding: 0 !important;
-        }
-        .historico-coluna {
-            max-height: none !important;
-            overflow: visible !important;
-        }
-        #registroOperacoes {
-            max-height: none !important;
-            overflow: visible !important;
-        }
-
-        /* Remove as setas dos inputs type="number" em todos os navegadores */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield; /* Firefox */
-            appearance: textfield;
+        #btnShare {
+            margin-left: 0;
+            margin-right: 0;
         }
     </style>
 </head>
 <body>
+    <div class="top-bar-app">
+        <div class="top-bar-left">
+            <button id="btnNotify" title="Notificações" style="background:none;border:none;cursor:pointer;padding:4px;outline:none;position:relative;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span id="notifyBadge" style="display:none;position:absolute;top:2px;right:2px;background:#f00;color:#fff;font-size:0.7em;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">0</span>
+            </button>
+        </div>
+        <div style="flex:1"></div>
+        <div class="top-bar-right">
+            <button id="btnShare" title="Compartilhar estoque" style="background:none;border:none;cursor:pointer;padding:4px;outline:none;position:relative;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8"/><path d="M8 12l4-4 4 4"/></svg>
+            </button>
+        </div>
+    </div>
+
     <div class="video-banner-topo">
         <div class="video-banner-move">
-            <video autoplay muted loop playsinline>
+            <video autoplay muted loop playsinline style="width:500px !important;max-width:500px !important;min-width:500px !important;height:100% !important;object-fit:contain !important;">
                 <source src="Dcodeanimation.mp4" type="video/mp4">
                 Seu navegador não suporta vídeo HTML5.
             </video>
@@ -976,7 +1038,7 @@
     <div class="graficos-top">
         <div class="grafico-meio">
             <h3>Entrada</h3>
-            <canvas id="graficoPizza" width="540" height="340"></canvas>
+            <canvas id="graficoPizza"></canvas>
         </div>
         <div class="grafico-meio">
             <h3>Saídas</h3>
@@ -1013,6 +1075,24 @@
         </div>
     </div>
 
+    <!-- Menu de compartilhamento moderno -->
+    <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:#111;border-radius:16px;padding:18px 18px 10px 18px;box-shadow:0 4px 24px #000b;gap:18px;flex-direction:row;align-items:center;min-width:220px;">
+        <div style="display:flex;gap:18px;justify-content:center;align-items:center;">
+            <button class="share-icon-btn" id="shareWhatsapp" title="WhatsApp" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" style="width:36px;height:36px;filter:invert(1);">
+            </button>
+            <button class="share-icon-btn" id="shareInstagram" title="Instagram" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" style="width:36px;height:36px;filter:invert(1);">
+            </button>
+            <button class="share-icon-btn" id="shareFacebook" title="Facebook" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" style="width:36px;height:36px;filter:invert(1);">
+            </button>
+            <button class="share-icon-btn" id="shareEmail" title="E-mail" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="E-mail" style="width:36px;height:36px;filter:invert(1);">
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -1038,28 +1118,15 @@
             const listaSaidas = document.getElementById('listaSaidas');
 
             // --- Month Navigation ---
-            // Meses completos em minúsculo para exibição tipo "julho de 2025"
-            const mesesFullLower = [
-                "janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-            ];
+            const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
             let displayedDate = new Date();
+
             function updateMonthDisplay() {
-                // Exibe no formato "julho de 2025"
-                const nomeMes = mesesFullLower[displayedDate.getMonth()];
-                const ano = displayedDate.getFullYear();
-                mesAtualEl.textContent = `${nomeMes} de ${ano}`;
-                // Ajusta tamanho se necessário
-                mesAtualEl.style.fontSize = '';
-                setTimeout(() => {
-                    let fontSize = parseFloat(window.getComputedStyle(mesAtualEl).fontSize);
-                    const maxWidth = mesAtualEl.offsetWidth || 70;
-                    while (mesAtualEl.scrollWidth > maxWidth && fontSize > 8) {
-                        fontSize -= 1;
-                        mesAtualEl.style.fontSize = fontSize + 'px';
-                    }
-                }, 10);
+                // Garante que nunca exiba undefined
+                const mes = meses[displayedDate.getMonth()] || '';
+                const ano = displayedDate.getFullYear() || '';
+                mesAtualEl.textContent = mes && ano ? `${mes} de ${ano}` : '';
             }
-            window.addEventListener('resize', updateMonthDisplay);
 
             // --- Chart Setup ---
             const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
@@ -1069,11 +1136,7 @@
             const chartPizza = new Chart(ctxPizza, {
                 type: 'pie',
                 data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Adicione esta linha!
-                    plugins: { legend: { position: 'bottom' } }
-                }
+                options: { plugins: { legend: { position: 'bottom' } } }
             });
 
             const chartBarras = new Chart(ctxBarras, {
@@ -1102,8 +1165,7 @@
             }
 
             // --- Stock Management Variables ---
-            const MAX_STOCKS = 10;
-            let allStocksMeta = []; 
+            let allStocksMeta = [];
             try {
                 const storedMeta = JSON.parse(localStorage.getItem('allStocksMeta'));
                 if (Array.isArray(storedMeta)) {
@@ -1112,8 +1174,8 @@
             } catch (e) {
                 console.error("Erro ao parsear allStocksMeta do localStorage. Inicializando como array vazio.", e);
             }
-            // Ensure allStocksMeta has MAX_STOCKS entries, each with a 'namesByMonth' object
-            for (let i = 0; i < MAX_STOCKS; i++) {
+            // Não limita mais o número de estoques
+            for (let i = 0; i < allStocksMeta.length; i++) {
                 if (!allStocksMeta[i] || typeof allStocksMeta[i] !== 'object' || allStocksMeta[i] === null) {
                     allStocksMeta[i] = { namesByMonth: {} };
                 } else {
@@ -1122,12 +1184,9 @@
                     }
                 }
             }
-            if (allStocksMeta.length > MAX_STOCKS) {
-                allStocksMeta = allStocksMeta.slice(0, MAX_STOCKS);
-            }
             
             let currentStockIndex = parseInt(localStorage.getItem('currentStockIndex') || '0');
-            if (currentStockIndex < 0 || currentStockIndex >= MAX_STOCKS) {
+            if (isNaN(currentStockIndex) || currentStockIndex < 0) {
                 currentStockIndex = 0;
             }
 
@@ -1153,6 +1212,8 @@
             }
 
             function adicionarLinha(data = {}) {
+                // Permite adicionar quantas linhas quiser, inclusive com item vazio (só filtra undefined explícito)
+                if (data.item !== undefined && String(data.item).toLowerCase() === 'undefined') return;
                 const linha = document.createElement('tr');
                 linha.innerHTML = `
                     <td><input type="text" class="item" value="${data.item || ''}" autocomplete="off" /></td>
@@ -1164,6 +1225,20 @@
                 adicionarEventosLinha(linha);
             }
 
+            function adicionarLinhaSeNecessario() {
+                // Só adiciona linha vazia se a última linha estiver preenchida
+                const linhas = tabelaBody.querySelectorAll('tr');
+                if (linhas.length === 0 || !isRowEmpty(linhas[linhas.length - 1])) {
+                    adicionarLinha();
+                }
+                // Remove linhas vazias extras (deixa só uma no final)
+                for (let i = linhas.length - 2; i >= 0; i--) {
+                    if (isRowEmpty(linhas[i])) {
+                        linhas[i].remove();
+                    }
+                }
+            }
+
             function adicionarEventosLinha(linha) {
                 const inputs = linha.querySelectorAll('input');
                 inputs.forEach(input => {
@@ -1171,8 +1246,8 @@
                         atualizarResumo();
                         atualizarGraficos();
                         salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
-                        verificarLinhaFinal();
-                        removerLinhasVazias();
+                        adicionarLinhaSeNecessario();
+                        removerLinhasUndefined();
                     });
                 });
 
@@ -1188,20 +1263,16 @@
                 });
             }
 
-            function verificarLinhaFinal() {
+            function removerLinhasUndefined() {
+                // Remove apenas linhas explicitamente com item 'undefined'
                 const linhas = tabelaBody.querySelectorAll('tr');
-                if (linhas.length === 0 || !isRowEmpty(linhas[linhas.length - 1])) {
-                    adicionarLinha();
-                }
-            }
-
-            function removerLinhasVazias() {
-                const linhas = tabelaBody.querySelectorAll('tr');
-                for (let i = linhas.length - 2; i >= 0; i--) { 
-                    if (isRowEmpty(linhas[i])) {
+                for (let i = linhas.length - 2; i >= 0; i--) {
+                    const item = linhas[i].querySelector('.item').value;
+                    if (item && String(item).toLowerCase() === 'undefined') {
                         linhas[i].remove();
                     }
                 }
+                garantirLinhaVisivel();
             }
 
             function atualizarResumo() {
@@ -1229,12 +1300,13 @@
                     return nome && nome.toLowerCase() !== 'undefined';
                 });
 
-                const labels = [], entradas = [], valores = [], cores = [];
-                const dataSaida = {}, corSaidaPorItem = {};
+                // Monta arrays SEM labels/valores/cor undefined
+                let labels = [], entradas = [], valores = [], cores = [];
+                let dataSaida = {}, corSaidaPorItem = {};
 
                 linhas.forEach(linha => {
                     const nome = linha.querySelector('.item').value.trim();
-                    if (!nome || nome.toLowerCase() === 'undefined') return; // filtro extra de segurança
+                    if (!nome || nome.toLowerCase() === 'undefined') return;
                     const ent = parseFloat(linha.querySelector('.entrada').value) || 0;
                     const sai = parseFloat(linha.querySelector('.saida').value) || 0;
                     const val = parseFloat(linha.querySelector('.valor').value) || 0;
@@ -1253,37 +1325,52 @@
                         }
                     }
                     if (sai > 0) {
-                        if (nome && nome.toLowerCase() !== 'undefined') { // filtro extra
+                        if (nome && nome.toLowerCase() !== 'undefined') {
                             dataSaida[nome] = (dataSaida[nome] || 0) + sai;
                             corSaidaPorItem[nome] = cor;
                         }
                     }
                 });
 
-                // Se não houver labels válidas, limpa os gráficos
-                if (labels.length === 0) {
+                // Remove qualquer label/cor/valor undefined dos arrays finais
+                function filtrarValidos(arrLabels, arrValores, arrCores) {
+                    const result = { labels: [], valores: [], cores: [] };
+                    arrLabels.forEach((l, i) => {
+                        if (l && l.toLowerCase() !== 'undefined') {
+                            result.labels.push(l);
+                            result.valores.push(arrValores[i]);
+                            result.cores.push(arrCores[i]);
+                        }
+                    });
+                    return result;
+                }
+                const filtrado = filtrarValidos(labels, valores, cores);
+
+                // Gráfico de Entrada (Pizza)
+                if (filtrado.labels.length === 0) {
                     chartPizza.data.labels = [];
                     chartPizza.data.datasets[0].data = [];
                     chartPizza.data.datasets[0].backgroundColor = [];
                 } else {
-                    chartPizza.data.labels = labels;
-                    chartPizza.data.datasets[0].data = entradas;
-                    chartPizza.data.datasets[0].backgroundColor = cores;
+                    chartPizza.data.labels = filtrado.labels;
+                    chartPizza.data.datasets[0].data = entradas.filter((_, i) => filtrado.labels.includes(labels[i]));
+                    chartPizza.data.datasets[0].backgroundColor = filtrado.cores;
                 }
                 chartPizza.update();
 
-                if (labels.length === 0) {
+                // Gráfico de Valor (Barras)
+                if (filtrado.labels.length === 0) {
                     chartBarras.data.labels = [];
                     chartBarras.data.datasets[0].data = [];
                     chartBarras.data.datasets[0].backgroundColor = [];
                 } else {
-                    chartBarras.data.labels = labels;
-                    chartBarras.data.datasets[0].data = valores;
-                    chartBarras.data.datasets[0].backgroundColor = cores;
+                    chartBarras.data.labels = filtrado.labels;
+                    chartBarras.data.datasets[0].data = filtrado.valores;
+                    chartBarras.data.datasets[0].backgroundColor = filtrado.cores;
                 }
                 chartBarras.update();
 
-                // Só inclui itens de saída com nome válido
+                // Gráfico de Saída (Barras horizontais)
                 const saidaLabels = Object.keys(dataSaida).filter(l => l && l.toLowerCase() !== 'undefined');
                 if (saidaLabels.length === 0) {
                     chartSaidas.data.labels = [];
@@ -1319,62 +1406,104 @@
             
             // --- Função para criar elemento de histórico ---
             function criarItemHistorico(tipo, item, quantidade, dataMov) {
+                if (!item || String(item).toLowerCase() === 'undefined') return document.createComment('item inválido');
                 const li = document.createElement('li');
-                // Campo de data editável (formato dd/mm/aaaa)
-                const inputData = document.createElement('input');
-                inputData.type = 'text';
-                inputData.className = 'data-edit';
-                inputData.value = formatarDataParaBR(dataMov);
-                inputData.placeholder = 'dd/mm/aaaa';
-                inputData.title = 'Editar data do movimento';
-                // Descrição
+                // Data
+                const dataSpan = document.createElement('span');
+                dataSpan.className = 'data-livre';
+                let dataFormatada = dataMov;
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dataMov)) {
+                    const [ano, mes, dia] = dataMov.split('-');
+                    dataFormatada = `${dia}/${mes}/${ano}`;
+                }
+                dataSpan.textContent = dataFormatada;
+                dataSpan.tabIndex = 0;
+                dataSpan.style.cursor = 'pointer';
+                dataSpan.title = 'Clique para editar a data';
+                dataSpan.addEventListener('click', function() {
+                    const input = document.createElement('input');
+                    input.type = 'date';
+                    input.className = 'data-edit';
+                    let val = dataMov;
+                    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dataSpan.textContent)) {
+                        const [d, m, a] = dataSpan.textContent.split('/');
+                        val = `${a}-${m}-${d}`;
+                    }
+                    input.value = val;
+                    input.style.width = '110px';
+                    input.addEventListener('blur', salvarData);
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') input.blur();
+                    });
+                    function salvarData() {
+                        let novaData = input.value;
+                    }
+                    dataSpan.replaceWith(input);
+                    input.focus();
+                });
+                // Descrição e quantidade editável
                 const desc = document.createElement('span');
                 desc.className = 'descricao-op';
-                desc.textContent = `${item} - ${quantidade}`;
-                li.appendChild(inputData);
-                li.appendChild(desc);
-                // Atualiza data ao editar
-                inputData.addEventListener('input', () => {
-                    salvarHistorico();
+                desc.textContent = `${item} - `;
+                // Quantidade editável
+                const qtdSpan = document.createElement('span');
+                qtdSpan.className = 'qtd-livre';
+                qtdSpan.textContent = quantidade;
+                qtdSpan.tabIndex = 0;
+                qtdSpan.style.cursor = 'pointer';
+                qtdSpan.title = 'Clique para editar a quantidade';
+                qtdSpan.addEventListener('click', function() {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'qtd-edit';
+                    input.value = qtdSpan.textContent;
+                    input.style.width = '60px';
+                    input.addEventListener('blur', salvarQtd);
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') input.blur();
+                    });
+                    function salvarQtd() {
+                        let novaQtd = input.value;
+                        if (novaQtd !== '' && !isNaN(novaQtd)) {
+                            qtdSpan.textContent = novaQtd;
+                        }
+                        input.replaceWith(qtdSpan);
+                        salvarHistorico();
+                    }
+                    qtdSpan.replaceWith(input);
+                    input.focus();
                 });
+                desc.appendChild(qtdSpan);
+                li.appendChild(dataSpan);
+                li.appendChild(desc);
                 return li;
-            }
-            // Função para converter yyyy-mm-dd para dd/mm/aaaa
-            function formatarDataParaBR(dataISO) {
-                if (!dataISO) return '';
-                const partes = dataISO.split('-');
-                if (partes.length === 3) {
-                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-                }
-                return dataISO;
-            }
-            // Função para converter dd/mm/aaaa para yyyy-mm-dd
-            function formatarDataParaISO(dataBR) {
-                if (!dataBR) return '';
-                const partes = dataBR.split('/');
-                if (partes.length === 3) {
-                    return `${partes[2]}-${partes[1]}-${partes[0]}`;
-                }
-                return dataBR;
             }
 
             // --- Função para salvar histórico ---
             function salvarHistorico() {
-                // Salva o histórico atual das duas listas
-                const entradas = Array.from(listaEntradas.children).map(li => ({
-                    tipo: 'entrada',
-                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
-                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: formatarDataParaISO(li.querySelector('.data-edit').value)
-                }));
-                const saidas = Array.from(listaSaidas.children).map(li => ({
-                    tipo: 'saida',
-                    item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
-                    quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: formatarDataParaISO(li.querySelector('.data-edit').value)
-                }));
+                const entradas = Array.from(listaEntradas.children).map(li => {
+                    if (!li.querySelector('.descricao-op')) return null;
+                    const nome = li.querySelector('.descricao-op').textContent.split(' - ')[0];
+                    if (!nome || nome.trim() === '' || nome.toLowerCase() === 'undefined') return null;
+                    return {
+                        tipo: 'entrada',
+                        item: nome,
+                        quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                        data: li.querySelector('.data-livre') ? li.querySelector('.data-livre').textContent : ''
+                    };
+                }).filter(Boolean);
+                const saidas = Array.from(listaSaidas.children).map(li => {
+                    if (!li.querySelector('.descricao-op')) return null;
+                    const nome = li.querySelector('.descricao-op').textContent.split(' - ')[0];
+                    if (!nome || nome.trim() === '' || nome.toLowerCase() === 'undefined') return null;
+                    return {
+                        tipo: 'saida',
+                        item: nome,
+                        quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
+                        data: li.querySelector('.data-livre') ? li.querySelector('.data-livre').textContent : ''
+                    };
+                }).filter(Boolean);
                 const historico = [...entradas, ...saidas];
-                // Salva junto com os dados do mês
                 salvarDadosDoMesAtual(currentStockIndex, displayedDate, historico);
             }
 
@@ -1384,24 +1513,24 @@
                     tipo: 'entrada',
                     item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
                     quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: li.querySelector('.data-edit').value
+                    data: li.querySelector('.data-livre') ? li.querySelector('.data-livre').textContent : ''
                 }));
-                const saídas = Array.from(listaSaidas.children).map(li => ({
+                const saidas = Array.from(listaSaidas.children).map(li => ({
                     tipo: 'saida',
                     item: li.querySelector('.descricao-op').textContent.split(' - ')[0],
                     quantidade: li.querySelector('.descricao-op').textContent.split(' - ')[1],
-                    data: li.querySelector('.data-edit').value
+                    data: li.querySelector('.data-livre') ? li.querySelector('.data-livre').textContent : ''
                 }));
-                return [...entradas, ...saídas];
+                return [...entradas, ...saidas];
             }
 
             // --- Registrar operação com data ---
             function registrarOperacao(tipo, item, quantidade) {
-                // Usa data do campo de entrada, se disponível, senão data de hoje
+                if (!item || String(item).toLowerCase() === 'undefined') return;
                 let dataMov = new Date();
-                let dataStr = dataMov.toISOString().slice(0,10); // yyyy-mm-dd
-                // Adiciona ao histórico correto
+                let dataStr = dataMov.toISOString().slice(0,10);
                 const li = criarItemHistorico(tipo, item, quantidade, dataStr);
+                if (!li) return;
                 if (tipo === 'entrada') {
                     listaEntradas.prepend(li);
                 } else {
@@ -1412,170 +1541,282 @@
 
             // --- Carregamento de Estoque ---
             function loadStock(indexToLoad, previousDateForSave = null) {
-                // 1. Salva o estoque anterior antes de carregar o novo (se aplicável)
+                // Salva o contexto anterior, se necessário
                 if (previousDateForSave) {
                     salvarDadosDoMesAtual(currentStockIndex, previousDateForSave);
                 } else {
-                    // Caso contrário, salva o estado atual antes de carregar outro estoque (mesmo mês)
                     salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                 }
-
-                // 2. Atualiza o índice do estoque atual
-                currentStockIndex = (indexToLoad + MAX_STOCKS) % MAX_STOCKS; 
+                if (indexToLoad < 0) indexToLoad = 0;
+                currentStockIndex = indexToLoad;
                 localStorage.setItem('currentStockIndex', currentStockIndex);
-
-                // 3. Carrega o nome personalizado para o estoque e mês ATUAIS
-                const monthYearKey = getMonthYearKey(displayedDate);
-                const defaultName = `Estoque ${currentStockIndex + 1}`;
-                nomeEstoqueInput.value = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
-                
-                // 4. Carrega os dados da tabela e histórico para o estoque e mês ATUAIS
-                const storageKey = getStorageKey(currentStockIndex, displayedDate); 
-                let stockDataForMonth = {};
-                try {
-                    stockDataForMonth = JSON.parse(localStorage.getItem(storageKey)) || { tableData: [], historico: [] };
-                } catch (e) {
-                    stockDataForMonth = { tableData: [], historico: [] };
+                while (allStocksMeta.length <= currentStockIndex) {
+                    allStocksMeta.push({ namesByMonth: {} });
                 }
+                const monthYearKey = getMonthYearKey(displayedDate);
+                // Limpa tabela, histórico e gráficos
                 tabelaBody.innerHTML = '';
-                (stockDataForMonth.tableData || []).forEach(data => {
-                    adicionarLinha(data);
-                });
-                adicionarLinha();
-                // Carrega histórico separado
                 listaEntradas.innerHTML = '';
                 listaSaidas.innerHTML = '';
-                (stockDataForMonth.historico || []).forEach(op => {
-                    const li = criarItemHistorico(op.tipo, op.item, op.quantidade, op.data);
-                    if (op.tipo === 'entrada') {
-                        listaEntradas.appendChild(li);
-                    } else {
-                        listaSaidas.appendChild(li);
+                chartPizza.data.labels = [];
+                chartPizza.data.datasets[0].data = [];
+                chartPizza.data.datasets[0].backgroundColor = [];
+                chartPizza.update();
+                chartBarras.data.labels = [];
+                chartBarras.data.datasets[0].data = [];
+                chartBarras.data.datasets[0].backgroundColor = [];
+                chartBarras.update();
+                chartSaidas.data.labels = [];
+                chartSaidas.data.datasets[0].data = [];
+                chartSaidas.data.datasets[0].backgroundColor = [];
+                chartSaidas.update();
+                // Carrega dados do estoque/mês, se houver
+                const dadosSalvos = localStorage.getItem(getStorageKey(currentStockIndex, displayedDate));
+                let nomeEstoque = '';
+                if (allStocksMeta[currentStockIndex] && allStocksMeta[currentStockIndex].namesByMonth) {
+                    nomeEstoque = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || '';
+                }
+                nomeEstoqueInput.value = nomeEstoque;
+                if (dadosSalvos) {
+                    try {
+                        const dados = JSON.parse(dadosSalvos);
+                        if (Array.isArray(dados.tableData)) {
+                            dados.tableData.forEach(linha => adicionarLinha(linha));
+                        }
+                        if (Array.isArray(dados.historico)) {
+                            // Limpa histórico antes de adicionar
+                            listaEntradas.innerHTML = '';
+                            listaSaidas.innerHTML = '';
+                            dados.historico.forEach(op => {
+                                if (op.tipo === 'entrada') {
+                                    const li = criarItemHistorico('entrada', op.item, op.quantidade, op.data);
+                                    if (li) listaEntradas.appendChild(li);
+                                } else if (op.tipo === 'saida') {
+                                    const li = criarItemHistorico('saida', op.item, op.quantidade, op.data);
+                                    if (li) listaSaidas.appendChild(li);
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        // Se erro, inicia vazio
+                        tabelaBody.innerHTML = '';
+                        listaEntradas.innerHTML = '';
+                        listaSaidas.innerHTML = '';
                     }
-                });
+                }
+                adicionarLinhaSeNecessario();
                 atualizarResumo();
                 atualizarGraficos();
             }
 
             // --- Event Listeners ---
             btnMesAnterior.addEventListener('click', () => {
-                const dateBeforeChange = new Date(displayedDate); 
+                const dateBeforeChange = new Date(displayedDate);
                 displayedDate.setMonth(displayedDate.getMonth() - 1);
                 updateMonthDisplay();
-                loadStock(currentStockIndex, dateBeforeChange); 
+                loadStock(currentStockIndex, dateBeforeChange);
             });
-
             btnProximoMes.addEventListener('click', () => {
                 const dateBeforeChange = new Date(displayedDate);
                 displayedDate.setMonth(displayedDate.getMonth() + 1);
                 updateMonthDisplay();
-                loadStock(currentStockIndex, dateBeforeChange); 
+                loadStock(currentStockIndex, dateBeforeChange);
             });
-
             btnNovoEstoque.addEventListener('click', () => {
                 loadStock(currentStockIndex + 1);
             });
-
             btnVoltarEstoque.addEventListener('click', () => {
-                loadStock(currentStockIndex - 1);
-            });
-
-            nomeEstoqueInput.addEventListener('change', () => {
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
-            });
-
-            btnLimparHistorico.addEventListener('click', () => {
-                if (confirm('Tem certeza que deseja limpar o histórico de operações para este mês e estoque? Esta ação não pode ser desfeita.')) {
-                    listaEntradas.innerHTML = '';
-                    listaSaidas.innerHTML = '';
-                    salvarHistorico();
+                if (currentStockIndex > 0) {
+                    loadStock(currentStockIndex - 1);
                 }
             });
 
-            // Make table rows sortable
-            new Sortable(tabelaBody, {
-                animation: 150,
-                onEnd: function (evt) {
-                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
-                }
-            });
+            // Carrega o estoque/mês inicial ao abrir a página
+            loadStock(currentStockIndex, displayedDate);
 
-            // Initial load
-            updateMonthDisplay();
-            loadStock(currentStockIndex);
-        });
+            // --- Banner de vídeo animado (ida e volta estilo game) ---
+            (function() {
+                const banner = document.querySelector('.video-banner-topo');
+                const moveDiv = document.querySelector('.video-banner-move');
+                const video = moveDiv && moveDiv.querySelector('video');
+                if (!banner || !moveDiv || !video) return;
 
-        // --- Banner Video Animation (ajuste final) ---
-        (function() {
-            const banner = document.querySelector('.video-banner-topo');
-            const moveDiv = document.querySelector('.video-banner-move');
-            const video = moveDiv && moveDiv.querySelector('video');
-            if (!banner || !moveDiv || !video) return;
+                let pos = 0;
+                let direction = 1; // 1: direita, -1: esquerda
+                const speed = 6; // px por frame (aumentado para mais rápido)
 
-            let animationId = null;
-            let direction = 1; // 1: direita, -1: esquerda
-            let pos = 0;
-            let maxMove = 0;
-            let duration = 8000; // ms para ir de ponta a ponta
-            let lastTimestamp = null;
-
-            function updateSizes() {
-                // Força altura e largura para mobile retrato
-                video.style.height = '250px';
-                video.style.maxHeight = '250px';
-                video.style.width = 'auto';
-                video.style.minWidth = '100vw';
-                video.style.objectFit = 'contain';
-                const videoW = video.getBoundingClientRect().width;
-                const bannerW = banner.offsetWidth;
-                moveDiv.style.width = videoW + 'px';
-                if (videoW <= bannerW + 1) {
-                    maxMove = 0;
-                    moveDiv.style.transform = 'translateX(0)';
-                    return;
-                }
-                maxMove = videoW - bannerW;
-            }
-
-            function animateBannerVideo(ts) {
-                if (!lastTimestamp) lastTimestamp = ts;
-                const elapsed = ts - lastTimestamp;
-                lastTimestamp = ts;
-                if (maxMove > 0) {
-                    // Calcula quanto mover baseado no tempo e direção
-                    const pxPerMs = maxMove / (duration / 2); // ida e volta
-                    pos += direction * pxPerMs * elapsed;
-                    if (pos > maxMove) {
+                function animate() {
+                    const bannerW = banner.offsetWidth;
+                    const videoW = 500; // largura fixa
+                    const maxMove = Math.max(0, bannerW - videoW);
+                    pos += direction * speed;
+                    if (pos >= maxMove) {
                         pos = maxMove;
                         direction = -1;
-                    } else if (pos < 0) {
+                    } else if (pos <= 0) {
                         pos = 0;
                         direction = 1;
                     }
-                    moveDiv.style.transform = `translateX(${-pos}px)`;
-                } else {
-                    moveDiv.style.transform = 'translateX(0)';
+                    moveDiv.style.transform = `translateX(${pos}px)`;
+                    requestAnimationFrame(animate);
                 }
-                animationId = requestAnimationFrame(animateBannerVideo);
-            }
 
-            function startAnimation() {
-                cancelAnimationFrame(animationId);
-                pos = 0;
-                direction = 1;
-                lastTimestamp = null;
-                updateSizes();
-                animationId = requestAnimationFrame(animateBannerVideo);
-            }
+                function ajustarVideo() {
+                    video.style.width = '500px';
+                    video.style.maxWidth = '500px';
+                    video.style.minWidth = '500px';
+                    video.style.height = '100%';
+                    moveDiv.style.width = '500px';
+                    moveDiv.style.left = '0';
+                }
+                window.addEventListener('resize', () => {
+                    ajustarVideo();
+                    pos = Math.min(pos, Math.max(0, banner.offsetWidth - 500));
+                });
+                ajustarVideo();
+                animate();
+            })();
 
-            video.addEventListener('loadedmetadata', startAnimation);
-            window.addEventListener('resize', () => {
-                updateSizes();
+            // --- Ajuste visual dos botões topo direito ---
+            const topoBotoes = document.querySelector('body > div[style*="display:flex"]');
+            if (topoBotoes) {
+                topoBotoes.style.justifyContent = 'flex-end';
+                topoBotoes.style.gap = '0px';
+                topoBotoes.style.columnGap = '0px';
+                topoBotoes.style.alignItems = 'center';
+                // Garante ordem: sino à esquerda, compartilhar à direita
+                const btnNotify = document.getElementById('btnNotify');
+                const btnShare = document.getElementById('btnShare');
+                if (btnNotify && btnShare && btnNotify.nextElementSibling !== btnShare) {
+                    btnNotify.parentNode.insertBefore(btnShare, btnNotify.nextSibling);
+                }
+                btnShare.style.marginLeft = '2px';
+                btnShare.style.marginRight = '0';
+                btnNotify.style.marginRight = '0';
+            }
+            // Fim do ajuste visual dos botões topo direito
+
+            // --- Compartilhamento ---
+            const btnShare = document.getElementById('btnShare');
+            const shareMenu = document.getElementById('shareMenu');
+            let shareMenuOpen = false;
+            btnShare.addEventListener('click', function(e) {
+                e.stopPropagation();
+                shareMenu.style.display = shareMenuOpen ? 'none' : 'flex';
+                shareMenuOpen = !shareMenuOpen;
             });
-            if (video.readyState >= 1) {
-                startAnimation();
+            // Fecha o menu ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (shareMenuOpen && !shareMenu.contains(e.target) && e.target !== btnShare) {
+                    shareMenu.style.display = 'none';
+                    shareMenuOpen = false;
+                }
+            });
+            shareMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+
+            // --- Função para gerar texto do estoque atual para compartilhamento ---
+            function gerarTextoCompartilhamento() {
+                // Pega dados do estoque/mês atual
+                const monthYearKey = getMonthYearKey(displayedDate);
+                const nomeEstoque = nomeEstoqueInput.value.trim() || (allStocksMeta[currentStockIndex]?.namesByMonth?.[monthYearKey] || `Estoque ${currentStockIndex + 1}`);
+                let texto = `Estoque: ${nomeEstoque}\nMês: ${mesAtualEl.textContent}\n\nItens:\n`;
+                const linhas = tabelaBody.querySelectorAll('tr');
+                linhas.forEach(linha => {
+                    const item = linha.querySelector('.item').value.trim();
+                    const entrada = linha.querySelector('.entrada').value;
+                    const saida = linha.querySelector('.saida').value;
+                    const valor = linha.querySelector('.valor').value;
+                    if (item) {
+                        texto += `- ${item} | Entrada: ${entrada || 0} | Saída: ${saida || 0} | Valor: R$ ${valor || '0.00'}\n`;
+                    }
+                });
+                texto += `\nEntradas: ${entradaTotalEl.textContent} | Saídas: ${saidaTotalEl.textContent} | Saldo: ${saldoTotalEl.textContent} | Valor Total: R$ ${valorFinalEl.textContent}\n`;
+                // Histórico
+                texto += '\nHistórico de Operações:';
+                const entradas = Array.from(listaEntradas.children).map(li => li.textContent.trim()).filter(Boolean);
+                const saidas = Array.from(listaSaidas.children).map(li => li.textContent.trim()).filter(Boolean);
+                if (entradas.length) texto += `\nEntradas:\n${entradas.join('\n')}`;
+                if (saidas.length) texto += `\nSaídas:\n${saidas.join('\n')}`;
+                return texto;
             }
-        })();
+
+            // --- Compartilhamento Moderno ---
+            function compartilharEstoqueAtual(tipo) {
+                const texto = gerarTextoCompartilhamento();
+                let url = '';
+                if (tipo === 'whatsapp') {
+                    url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+                } else if (tipo === 'instagram') {
+                    alert('O Instagram não permite compartilhamento direto de texto. Copie o texto e cole manualmente.');
+                    navigator.clipboard.writeText(texto);
+                    return;
+                } else if (tipo === 'facebook') {
+                    url = `https://www.facebook.com/sharer/sharer.php?u=&quote=${encodeURIComponent(texto)}`;
+                } else if (tipo === 'email') {
+                    url = `mailto:?subject=Estoque%20${encodeURIComponent(nomeEstoqueInput.value.trim())}&body=${encodeURIComponent(texto)}`;
+                }
+                if (url) window.open(url, '_blank');
+            }
+
+            document.getElementById('shareWhatsapp').onclick = () => compartilharEstoqueAtual('whatsapp');
+            document.getElementById('shareInstagram').onclick = () => compartilharEstoqueAtual('instagram');
+            document.getElementById('shareFacebook').onclick = () => compartilharEstoqueAtual('facebook');
+            document.getElementById('shareEmail').onclick = () => compartilharEstoqueAtual('email');
+
+            // --- Navegação e criação de até 10 estoques independentes (nunca mais que 10) ---
+            function atualizarBotoesEstoque() {
+                // Só permite criar novo estoque se houver menos de 10
+                btnNovoEstoque.disabled = (allStocksMeta.length >= 10 && currentStockIndex === 9);
+            }
+
+            btnNovoEstoque.addEventListener('click', () => {
+                if (allStocksMeta.length < 10) {
+                    if (currentStockIndex < allStocksMeta.length - 1) {
+                        // Navega para o próximo estoque existente
+                        currentStockIndex++;
+                    } else {
+                        // Cria novo estoque vazio
+                        allStocksMeta.push({ namesByMonth: {} });
+                        currentStockIndex = allStocksMeta.length - 1;
+                        localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
+                    }
+                    localStorage.setItem('currentStockIndex', currentStockIndex);
+                    loadStock(currentStockIndex, displayedDate);
+                    atualizarBotoesEstoque();
+                } else if (allStocksMeta.length === 10) {
+                    // Se já tem 10, só navega ciclicamente
+                    currentStockIndex = (currentStockIndex + 1) % 10;
+                    localStorage.setItem('currentStockIndex', currentStockIndex);
+                    loadStock(currentStockIndex, displayedDate);
+                    atualizarBotoesEstoque();
+                }
+            });
+
+            btnVoltarEstoque.addEventListener('click', () => {
+                if (allStocksMeta.length === 0) return;
+                if (currentStockIndex === 0) {
+                    // Vai para o último estoque existente
+                    currentStockIndex = allStocksMeta.length - 1;
+                } else {
+                    currentStockIndex--;
+                }
+                localStorage.setItem('currentStockIndex', currentStockIndex);
+                loadStock(currentStockIndex, displayedDate);
+                atualizarBotoesEstoque();
+            });
+
+            // Ao iniciar, garante que há pelo menos 1 estoque
+            if (allStocksMeta.length === 0) {
+                allStocksMeta.push({ namesByMonth: {} });
+                localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
+            }
+            if (currentStockIndex >= allStocksMeta.length) {
+                currentStockIndex = allStocksMeta.length - 1;
+                localStorage.setItem('currentStockIndex', currentStockIndex);
+            }
+            loadStock(currentStockIndex, displayedDate);
+            atualizarBotoesEstoque();
+        });
     </script>
 </body>
 </html>
