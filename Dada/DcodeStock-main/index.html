@@ -397,20 +397,29 @@
             text-align: center;
             flex-grow: 1;
             margin: 0 10px;
-        }
-
-        /* Responsive table container */
+        }        /* Responsive table container */
         .table-responsive {
             width: 100%;
             /* Removed overflow-x to prevent horizontal scrollbar */
             margin-bottom: var(--spacing-unit);
         }
-
         table.estoque-table {
             width: 100%;
             border-collapse: collapse;
             /* Removed min-width to allow the table to shrink */
             table-layout: fixed; /* Keep column widths fixed based on percentages */
+        }
+        
+        /* Garantir que a tabela sempre tenha pelo menos uma linha visível */
+        table.estoque-table tbody {
+            min-height: 60px;
+        }
+        
+        /* Força linha de inserção sempre visível */
+        .linha-insercao {
+            opacity: 1 !important;
+            display: table-row !important;
+            visibility: visible !important;
         }
 
         table.estoque-table th,
@@ -440,7 +449,13 @@
             color: var(--text-color);
             font-size: 0.9rem;
             text-align: center;
-            padding: 0; /* Remove default input padding */
+            padding: 4px 2px; /* Padding mínimo para iOS */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0;
+            min-height: 32px;
+            line-height: 1.2;
         }
 
         /* Remove spinners dos inputs type="number" */
@@ -716,23 +731,18 @@
         @keyframes video-move-x-dynamic {
             0% { transform: translateX(0); }
             100% { transform: translateX(var(--move-x, 0px)); }
-        }
-
-        /* --- Media Queries --- */
+        }        /* --- Media Queries --- */
         @media screen and (max-width: 768px) {
             .graficos-top {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .grafico-meio {
                 min-width: 100%;
             }
-
             #graficoValores-container {
                 padding: 0;
             }
-
             .month-navigation {
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -740,19 +750,16 @@
                 gap: 5px;
                 padding: 0 0.5rem;
             }
-
             .month-navigation button {
                 width: auto;
                 padding: 6px 10px;
                 font-size: 0.85rem;
             }
-
             #mesAtual {
                 flex-grow: 1;
                 font-size: 1.5rem;
                 margin: 0 5px;
             }
-
             .stock-actions {
                 flex-direction: row;
                 justify-content: space-between;
@@ -760,7 +767,6 @@
                 padding: 0 0.5rem;
                 gap: 5px;
             }
-
             #nomeEstoqueInput {
                 flex-grow: 1;
                 max-width: none;
@@ -768,13 +774,11 @@
                 font-size: 1rem;
                 margin: 0 5px;
             }
-
             .stock-actions .nav-button {
                 width: 35px;
                 height: 35px;
                 font-size: 1.2rem;
             }
-
             /* Responsive table for smaller screens */
             table.estoque-table th,
             table.estoque-table td {
@@ -784,6 +788,16 @@
             table.estoque-table input {
                 font-size: 0.75rem; /* Reduced font size for inputs */
                 padding: 1px; /* Minimal padding for inputs */
+                min-height: 36px !important;
+            }
+        }
+        
+        /* Específico para iPhone/iOS */
+        @supports (-webkit-touch-callout: none) {
+            table.estoque-table input {
+                min-height: 40px !important;
+                padding: 8px 4px !important;
+                -webkit-text-size-adjust: 100%;
             }
         }
 
@@ -1200,9 +1214,7 @@
             // --- Helper para obter a chave do nome do mês/ano ---
             function getMonthYearKey(date) {
                 return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-            }
-
-            // --- Table & Data Manipulation Functions ---
+            }            // --- Table & Data Manipulation Functions ---
             function isRowEmpty(row) {
                 const inputs = row.querySelectorAll('input');
                 return [...inputs].every(input => 
@@ -1210,10 +1222,41 @@
                     (input.type === 'number' && (isNaN(parseFloat(input.value)) || parseFloat(input.value) === 0))
                 );
             }
-
+            
+            // Função melhorada para garantir linha de inserção
+            function garantirLinhaVisivel() {
+                const linhas = tabelaBody.querySelectorAll('tr');
+                let temLinhaVazia = false;
+                
+                // Verifica se já existe uma linha vazia
+                linhas.forEach(linha => {
+                    if (isRowEmpty(linha)) {
+                        temLinhaVazia = true;
+                        linha.classList.add('linha-insercao');
+                    }
+                });
+                
+                // Se não há linha vazia, adiciona uma
+                if (!temLinhaVazia) {
+                    const novaLinha = adicionarLinha();
+                    if (novaLinha) {
+                        novaLinha.classList.add('linha-insercao');
+                    }
+                }
+                
+                // Remove linhas vazias extras (mantém apenas a última)
+                const linhasVazias = Array.from(linhas).filter(linha => isRowEmpty(linha));
+                if (linhasVazias.length > 1) {
+                    for (let i = 0; i < linhasVazias.length - 1; i++) {
+                        linhasVazias[i].remove();
+                    }
+                }
+            }
+            
             function adicionarLinha(data = {}) {
                 // Permite adicionar quantas linhas quiser, inclusive com item vazio (só filtra undefined explícito)
-                if (data.item !== undefined && String(data.item).toLowerCase() === 'undefined') return;
+                if (data.item !== undefined && String(data.item).toLowerCase() === 'undefined') return null;
+                
                 const linha = document.createElement('tr');
                 linha.innerHTML = `
                     <td><input type="text" class="item" value="${data.item || ''}" autocomplete="off" /></td>
@@ -1221,33 +1264,71 @@
                     <td><input type="number" class="saida" min="0" step="any" value="${data.saida || ''}" autocomplete="off"/></td>
                     <td><input type="number" class="valor" min="0" step="0.01" value="${data.valor || ''}" autocomplete="off"/></td>
                 `;
+                
                 tabelaBody.appendChild(linha);
                 adicionarEventosLinha(linha);
-            }
-
-            function adicionarLinhaSeNecessario() {
-                // Só adiciona linha vazia se a última linha estiver preenchida
+                
+                return linha;
+            }            function adicionarLinhaSeNecessario() {
+                // Mantém o comportamento original: só adiciona linha vazia se a última linha estiver preenchida
                 const linhas = tabelaBody.querySelectorAll('tr');
                 if (linhas.length === 0 || !isRowEmpty(linhas[linhas.length - 1])) {
-                    adicionarLinha();
+                    const novaLinha = adicionarLinha();
+                    if (novaLinha) {
+                        novaLinha.classList.add('linha-insercao');
+                    }
                 }
-                // Remove linhas vazias extras (deixa só uma no final)
+                // Remove linhas vazias extras (deixa só uma no final) - comportamento original
                 for (let i = linhas.length - 2; i >= 0; i--) {
                     if (isRowEmpty(linhas[i])) {
                         linhas[i].remove();
                     }
                 }
+                // Backup: garante pelo menos uma linha sempre
+                setTimeout(() => {
+                    const linhasAtuais = tabelaBody.querySelectorAll('tr');
+                    if (linhasAtuais.length === 0) {
+                        const linhaBackup = adicionarLinha();
+                        if (linhaBackup) {
+                            linhaBackup.classList.add('linha-insercao');
+                        }
+                    }
+                }, 10);
             }
-
+            
             function adicionarEventosLinha(linha) {
                 const inputs = linha.querySelectorAll('input');
                 inputs.forEach(input => {
+                    // Eventos para mobile/touch
+                    input.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                    });
+                    
+                    input.addEventListener('focus', () => {
+                        // Garante que o input seja visível no mobile
+                        setTimeout(() => {
+                            input.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                        }, 300);
+                    });
+                    
                     input.addEventListener('input', () => {
                         atualizarResumo();
                         atualizarGraficos();
                         salvarDadosDoMesAtual(currentStockIndex, displayedDate); 
+                        
+                        // Mantém comportamento original + backup para mobile
                         adicionarLinhaSeNecessario();
                         removerLinhasUndefined();
+                    });
+
+                    // Eventos específicos para validação de iOS/Mac
+                    input.addEventListener('blur', () => {
+                        setTimeout(() => {
+                            garantirLinhaVisivel();
+                        }, 100);
                     });
                 });
 
@@ -1256,6 +1337,7 @@
                     const valor = parseFloat(linha.querySelector('.entrada').value) || 0;
                     if (item && valor > 0) registrarOperacao('entrada', item, valor);
                 });
+                
                 linha.querySelector('.saida').addEventListener('change', () => {
                     const item = linha.querySelector('.item').value.trim();
                     const valor = parseFloat(linha.querySelector('.saida').value) || 0;
@@ -1272,7 +1354,13 @@
                         linhas[i].remove();
                     }
                 }
-                garantirLinhaVisivel();
+                // Backup suave para garantir linha em mobile
+                const linhasRestantes = tabelaBody.querySelectorAll('tr');
+                if (linhasRestantes.length === 0) {
+                    setTimeout(() => {
+                        garantirLinhaVisivel();
+                    }, 20);
+                }
             }
 
             function atualizarResumo() {
@@ -1556,7 +1644,7 @@
                 const monthYearKey = getMonthYearKey(displayedDate);
                 // Limpa tabela, histórico e gráficos
                 tabelaBody.innerHTML = '';
-                adicionarLinha(); // <-- Força sempre uma linha vazia
+                adicionarLinha(); // <-- Mantém comportamento original: força sempre uma linha vazia
                 listaEntradas.innerHTML = '';
                 listaSaidas.innerHTML = '';
                 chartPizza.data.labels = [];
@@ -1600,13 +1688,19 @@
                     } catch (e) {
                         // Se erro, inicia vazio e garante linha de inserção
                         tabelaBody.innerHTML = '';
-                        adicionarLinha(); // <-- Garante a linha de inserção mesmo em erro
+                        adicionarLinha(); // <-- Mantém comportamento original mesmo em erro
                     }
                 }
-                // Sempre garante pelo menos uma linha de inserção
+                
+                // Sempre garante pelo menos uma linha de inserção (comportamento original + backup mobile)
                 if (tabelaBody.querySelectorAll('tr').length === 0) {
                     adicionarLinha();
                 }
+                // Backup adicional para mobile/dispositivos específicos
+                setTimeout(() => {
+                    garantirLinhaVisivel();
+                }, 50);
+                
                 atualizarResumo();
                 atualizarGraficos();
             }
@@ -1635,6 +1729,40 @@
 
             // Carrega o estoque/mês inicial ao abrir a página
             loadStock(currentStockIndex, displayedDate);
+            
+            // Observer para detectar mudanças na tabela (backup)
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        setTimeout(() => {
+                            garantirLinhaVisivel();
+                        }, 50);
+                    }
+                });
+            });
+
+            observer.observe(tabelaBody, {
+                childList: true,
+                subtree: true
+            });
+
+            // Força verificação inicial após carregamento completo
+            setTimeout(() => {
+                garantirLinhaVisivel();
+            }, 500);
+
+            // Evento para garantir linha ao redimensionar/orientar
+            window.addEventListener('resize', () => {
+                setTimeout(() => {
+                    garantirLinhaVisivel();
+                }, 200);
+            });
+
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    garantirLinhaVisivel();
+                }, 300);
+            });
 
             // --- Banner de vídeo animado (ida e volta estilo game) ---
             (function() {
