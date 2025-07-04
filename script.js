@@ -687,9 +687,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnShare = document.getElementById('btnShare');
     const shareMenu = document.getElementById('shareMenu');
     const shareWhatsapp = document.getElementById('shareWhatsapp');
-    const shareInstagram = document.getElementById('shareInstagram');
-    const shareFacebook = document.getElementById('shareFacebook');
     const shareEmail = document.getElementById('shareEmail');
+    const sharePdf = document.getElementById('sharePdf');
+    const sharePrint = document.getElementById('sharePrint');
 
     let shareMenuOpen = false;
 
@@ -737,6 +737,137 @@ document.addEventListener('DOMContentLoaded', () => {
         return texto;
     }
 
+    // Função para gerar PDF
+    function gerarPDF(texto) {
+        try {
+            // Criar uma nova janela para impressão
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}</title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                padding: 20px; 
+                                color: #000; 
+                                background: #fff; 
+                                line-height: 1.6;
+                            }
+                            h1, h2, h3 { color: #333; margin-bottom: 10px; }
+                            pre { 
+                                white-space: pre-wrap; 
+                                font-family: Arial, sans-serif; 
+                                font-size: 14px;
+                                margin: 10px 0;
+                            }
+                            @media print { 
+                                body { margin: 0; padding: 15px; }
+                                h1 { font-size: 18px; }
+                                pre { font-size: 12px; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>📊 Relatório de Estoque</h1>
+                        <p><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+                        <pre>${texto.replace(/\n/g, '<br>')}</pre>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                setTimeout(function() { window.close(); }, 1000);
+                            }
+                        </script>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            } else {
+                throw new Error('Popup bloqueado');
+            }
+        } catch (error) {
+            // Fallback: copiar para clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('📋 Dados copiados! Cole em um documento para gerar PDF.');
+                }).catch(() => {
+                    prompt('📋 Copie estes dados para gerar PDF:', texto);
+                });
+            } else {
+                prompt('📋 Copie estes dados para gerar PDF:', texto);
+            }
+        }
+    }
+
+    // Função para imprimir estoque
+    function imprimirEstoque(texto) {
+        try {
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Impressão - Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`}</title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                padding: 20px; 
+                                color: #000; 
+                                background: #fff;
+                                line-height: 1.5;
+                            }
+                            h1, h2, h3 { color: #333; margin-bottom: 15px; }
+                            pre { 
+                                white-space: pre-wrap; 
+                                font-family: Arial, sans-serif; 
+                                font-size: 13px;
+                                margin: 15px 0;
+                            }
+                            @media print { 
+                                body { margin: 0; padding: 15px; }
+                                h1 { font-size: 16px; }
+                                pre { font-size: 11px; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>📊 Relatório de Estoque - ${new Date().toLocaleDateString('pt-BR')}</h1>
+                        <pre>${texto.replace(/\n/g, '<br>')}</pre>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                setTimeout(function() { window.close(); }, 1000);
+                            }
+                        </script>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            } else {
+                throw new Error('Popup bloqueado');
+            }
+        } catch (error) {
+            // Fallback: usar window.print na página atual
+            const originalContent = document.body.innerHTML;
+            const printContent = `
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #000; background: #fff;">
+                    <h1>📊 Relatório de Estoque - ${new Date().toLocaleDateString('pt-BR')}</h1>
+                    <pre style="white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 13px;">${texto}</pre>
+                </div>
+            `;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            
+            // Recarregar a página para restaurar funcionalidades
+            setTimeout(() => window.location.reload(), 500);
+        }
+    }
+
     // Função para compartilhar estoque atual
     function compartilharEstoqueAtual(tipo) {
         const texto = gerarTextoCompartilhamento();
@@ -746,25 +877,20 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'whatsapp':
                 url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
                 break;
-            case 'instagram':
-                // Instagram não permite compartilhamento direto de texto
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(texto).then(() => {
-                        alert('📋 Texto copiado! Cole no Instagram manualmente.');
-                    }).catch(() => {
-                        prompt('📋 Copie este texto para o Instagram:', texto);
-                    });
-                } else {
-                    prompt('📋 Copie este texto para o Instagram:', texto);
-                }
-                return;
-            case 'facebook':
-                url = `https://www.facebook.com/sharer/sharer.php?u=&quote=${encodeURIComponent(texto)}`;
-                break;
             case 'email':
                 const subject = `Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}`;
                 url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(texto)}`;
                 break;
+            case 'pdf':
+                gerarPDF(texto);
+                shareMenu.style.display = 'none';
+                shareMenuOpen = false;
+                return;
+            case 'print':
+                imprimirEstoque(texto);
+                shareMenu.style.display = 'none';
+                shareMenuOpen = false;
+                return;
         }
         
         if (url) {
@@ -811,24 +937,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (shareInstagram) {
-        shareInstagram.addEventListener('click', () => {
-            console.log('📸 Compartilhando no Instagram');
-            compartilharEstoqueAtual('instagram');
-        });
-    }
-
-    if (shareFacebook) {
-        shareFacebook.addEventListener('click', () => {
-            console.log('👥 Compartilhando no Facebook');
-            compartilharEstoqueAtual('facebook');
-        });
-    }
-
     if (shareEmail) {
         shareEmail.addEventListener('click', () => {
             console.log('📧 Compartilhando por email');
             compartilharEstoqueAtual('email');
+        });
+    }
+
+    if (sharePdf) {
+        sharePdf.addEventListener('click', () => {
+            console.log('📄 Gerando PDF');
+            compartilharEstoqueAtual('pdf');
+        });
+    }
+
+    if (sharePrint) {
+        sharePrint.addEventListener('click', () => {
+            console.log('🖨️ Imprimindo estoque');
+            compartilharEstoqueAtual('print');
         });
     }
 

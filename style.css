@@ -9,8 +9,8 @@ html, body {
     width: 100%;
     height: 100%;
     font-family: 'Poppins', Arial, sans-serif;
-    background-color: #121212;
-    color: #fff;
+    background-color: var(--bg-color-dark);
+    color: var(--text-color);
     position: relative;
     z-index: 0;
     overflow-x: hidden; /* Garante que não haja barra de rolagem horizontal */
@@ -28,7 +28,7 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5); /* máscara escura */
+    background: var(--bg-color-dark); /* Fundo dinâmico baseado no tema */
     z-index: -1;
 }
 
@@ -44,16 +44,16 @@ input, textarea, select {
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-/* --- Variáveis CSS (Adicionei de volta, pois estavam faltando) --- */
+/* --- Variáveis CSS (Padrão Dark Theme) --- */
 :root {
-    --bg-color-dark: #121212;
-    --bg-color-medium: #1f1f1f;
-    --bg-color-light: #2a2a2a;
-    --text-color: #fff;
-    --secondary-text-color: #ccc;
-    --border-color: #444;
-    --button-bg: #333;
-    --button-hover-bg: #555;
+    --bg-color-dark: #000000;
+    --bg-color-medium: #000000;
+    --bg-color-light: #000000;
+    --text-color: #ffffff;
+    --secondary-text-color: #ffffff;
+    --border-color: #ffffff;
+    --button-bg: #000000;
+    --button-hover-bg: #111111;
     --spacing-unit: 1rem;
 }
 
@@ -69,7 +69,7 @@ input, textarea, select {
     background-image: url('https://i.imgur.com/your-tech-pattern.jpg'); 
     background-repeat: repeat;
     background-size: contain; /* Ajusta o tamanho da imagem para cobrir o contêiner */
-    background-color: #1a1a1a; /* Cor de fundo caso a imagem não carregue ou seja transparente */
+    background-color: #000000; /* Cor de fundo preto absoluto */
 }
 
 /* --- Contêiner do Vídeo Dcodeanimation e Faixa PlayStation --- */
@@ -265,7 +265,7 @@ table.estoque-table input {
 }
 
 table.estoque-table input:focus {
-    outline: 1px solid #888;
+    outline: 1px solid #ffffff;
     background: var(--button-bg);
 }
 
@@ -326,14 +326,18 @@ table.estoque-table input:focus {
     padding-left: 0;
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #333;
+    border: 1px solid #ffffff;
     padding: 10px;
     border-radius: 4px;
+    background: #000000 !important;
+    color: #ffffff !important;
 }
 
 #registroOperacoes ul li {
     padding: 4px 0;
-    border-bottom: 1px dashed #2a2a2a;
+    border-bottom: 1px dashed #ffffff;
+    background: #000000 !important;
+    color: #ffffff !important;
 }
 
 #registroOperacoes ul li:last-child {
@@ -430,76 +434,124 @@ table.estoque-table input:focus {
     }
 }
 
-/* --- Dark Theme (Default) --- */
+/* --- Validação de Input --- */
+.input-erro {
+    border-color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+}
+
+/* TEMA DARK (padrão) */
 :root,
 :root[data-theme="dark"],
 body[data-theme="dark"] {
-    --bg-color-dark: #121212;
-    --bg-color-medium: #1f1f1f;
-    --bg-color-light: #2a2a2a;
-    --text-color: #fff;
-    --secondary-text-color: #ccc;
-    --border-color: #444;
-    --button-bg: #333;
-    --button-hover-bg: #555;
+    --bg-color-dark: #000000;
+    --bg-color-medium: #000000;
+    --bg-color-light: #000000;
+    --text-color: #ffffff;
+    --secondary-text-color: #ffffff;
+    --border-color: #ffffff;
+    --button-bg: #000000;
+    --button-hover-bg: #111111;
 }
 
-:root[data-theme="dark"] body,
-body[data-theme="dark"],
-body {
-    background-color: var(--bg-color-dark) !important;
-    color: var(--text-color) !important;
-}
-
-/* --- Light Theme Variables --- */
+/* TEMA LIGHT */
 :root[data-theme="light"],
 body[data-theme="light"] {
-    --bg-color-dark: #f5f5f5;
-    --bg-color-medium: #ffffff;
-    --bg-color-light: #f9f9f9;
-    --text-color: #333;
-    --secondary-text-color: #666;
-    --border-color: #ddd;
-    --button-bg: #e0e0e0;
-    --button-hover-bg: #d0d0d0;
+    --bg-color-dark: #ffffff;
+    --bg-color-medium: #f8f9fa;
+    --bg-color-light: #ffffff;
+    --text-color: #000000;
+    --secondary-text-color: #333333;
+    --border-color: #cccccc;
+    --button-bg: #f8f9fa;
+    --button-hover-bg: #e9ecef;
 }
 
-:root[data-theme="light"] body,
-body[data-theme="light"] {
-    background-color: var(--bg-color-dark) !important;
+/* Elementos principais - DARK */
+:root header,
+:root[data-theme="dark"] header,
+:root main,
+:root[data-theme="dark"] main,
+:root #resultadoFinal,
+:root[data-theme="dark"] #resultadoFinal,
+:root #registroOperacoes,
+:root[data-theme="dark"] #registroOperacoes,
+:root .graficos-top,
+:root[data-theme="dark"] .graficos-top,
+:root #graficoValores-container,
+:root[data-theme="dark"] #graficoValores-container,
+:root table.estoque-table th,
+:root[data-theme="dark"] table.estoque-table th,
+:root table.estoque-table td,
+:root[data-theme="dark"] table.estoque-table td {
+    background: var(--bg-color-dark) !important;
     color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
 }
 
-:root[data-theme="light"] .input-erro,
-body[data-theme="light"] .input-erro {
-    border-color: #ff6b6b !important;
-    background-color: rgba(255, 107, 107, 0.1) !important;
-}
-
-/* Força aplicação do tema claro em elementos específicos */
+/* Elementos principais - LIGHT */
 :root[data-theme="light"] header,
 :root[data-theme="light"] main,
 :root[data-theme="light"] #resultadoFinal,
 :root[data-theme="light"] #registroOperacoes,
 :root[data-theme="light"] .graficos-top,
 :root[data-theme="light"] #graficoValores-container,
-body[data-theme="light"] header,
-body[data-theme="light"] main,
-body[data-theme="light"] #resultadoFinal,
-body[data-theme="light"] #registroOperacoes,
-body[data-theme="light"] .graficos-top,
-body[data-theme="light"] #graficoValores-container {
-    background: var(--bg-color-medium) !important;
-    color: var(--text-color) !important;
-}
-
 :root[data-theme="light"] table.estoque-table th,
-:root[data-theme="light"] table.estoque-table td,
-body[data-theme="light"] table.estoque-table th,
-body[data-theme="light"] table.estoque-table td {
-    background: var(--bg-color-light) !important;
+:root[data-theme="light"] table.estoque-table td {
+    background: var(--bg-color-dark) !important;
     color: var(--text-color) !important;
     border-color: var(--border-color) !important;
+}
+
+/* Inputs - DARK */
+:root input,
+:root[data-theme="dark"] input,
+:root input[type="text"],
+:root[data-theme="dark"] input[type="text"],
+:root input[type="number"],
+:root[data-theme="dark"] input[type="number"],
+:root input[type="date"],
+:root[data-theme="dark"] input[type="date"],
+:root input[type="email"],
+:root[data-theme="dark"] input[type="email"],
+:root input[type="search"],
+:root[data-theme="dark"] input[type="search"],
+:root textarea,
+:root[data-theme="dark"] textarea,
+:root select,
+:root[data-theme="dark"] select {
+    background: var(--bg-color-dark) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Inputs - LIGHT */
+:root[data-theme="light"] input,
+:root[data-theme="light"] input[type="text"],
+:root[data-theme="light"] input[type="number"],
+:root[data-theme="light"] input[type="date"],
+:root[data-theme="light"] input[type="email"],
+:root[data-theme="light"] input[type="search"],
+:root[data-theme="light"] textarea,
+:root[data-theme="light"] select {
+    background: var(--bg-color-dark) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Focus states */
+input:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+    background: var(--button-hover-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    outline: 1px solid var(--border-color) !important;
 }
 
 /* --- Media Queries (Ajustadas para remover duplicações e garantir que as novas estruturas sejam responsivas) --- */

@@ -2,14 +2,15 @@
   "name": "Dcode Stock",
   "short_name": "DcodeStock",
   "description": "Aplicativo para controle de estoque",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#ffffff",
-  "orientation": "portrait",
+  "theme_color": "#000000",
+  "orientation": "any",
   "scope": "./",
   "lang": "pt-BR",
   "categories": ["productivity", "business"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "Dcodelogo.png",

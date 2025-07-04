@@ -11,17 +11,42 @@
     <style>
         /* --- General Styles --- */
         :root {
-            --bg-color-dark: #121212;
-            --bg-color-medium: #1f1f1f;
-            --bg-color-light: #2a2a2a;
+            --bg-color-dark: #000000;
+            --bg-color-medium: #000000;
+            --bg-color-light: #000000;
             --text-color: #fff;
-            --secondary-text-color: #fff; /* Força textos secundários a branco puro */
+            --secondary-text-color: #fff;
             --border-color: #444;
-            --button-bg: #333;
-            --button-hover-bg: #555;
+            --button-bg: #000000;
+            --button-hover-bg: #111111;
             --spacing-unit: 1rem;
         }
-        /* Garante que todos os textos secundários fiquem brancos */
+
+        /* TEMA LIGHT */
+        :root[data-theme="light"] {
+            --bg-color-dark: #ffffff !important;
+            --bg-color-medium: #ffffff !important;
+            --bg-color-light: #ffffff !important;
+            --text-color: #000000 !important;
+            --secondary-text-color: #000000 !important;
+            --border-color: #000000 !important;
+            --button-bg: #ffffff !important;
+            --button-hover-bg: #f0f0f0 !important;
+        }
+
+        /* TEMA DARK */
+        :root[data-theme="dark"] {
+            --bg-color-dark: #000000 !important;
+            --bg-color-medium: #000000 !important;
+            --bg-color-light: #000000 !important;
+            --text-color: #ffffff !important;
+            --secondary-text-color: #ffffff !important;
+            --border-color: #ffffff !important;
+            --button-bg: #000000 !important;
+            --button-hover-bg: #111111 !important;
+        }
+
+        /* Garante que todos os textos secundários sigam o tema */
         #mesAtual,
         .historico-header h3,
         .historico-coluna h4,
@@ -30,38 +55,47 @@
         .descricao-op {
             color: var(--text-color) !important;
         }
-        /* Mantém fundo escuro e contraste alto */
+
+        /* Mantém fundo e contraste baseado no tema */
         body, header, main, #resultadoFinal, #registroOperacoes, .graficos-top, #graficoValores-container, .historico-coluna {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
         }
-        /* Mantém bordas e elementos em tons escuros */
+
+        /* Bordas e elementos seguem o tema */
         table.estoque-table th, table.estoque-table td {
-            border: 1px solid #222 !important;
-            background: #000 !important;
+            border: 1px solid var(--border-color) !important;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
         }
-        /* Corrige fundo de campos de input e áreas do histórico para preto absoluto */
+
+        /* Corrige fundo de campos de input baseado no tema */
         .nome-estoque-container input,
         #nomeEstoqueInput,
-        .historico-coluna .data-edit {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
+        .historico-coluna .data-edit,
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        table.estoque-table input {
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
         }
         .historico-coluna {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
         }
         #registroOperacoes {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
         }
         #resultadoFinal {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
         }
         .graficos-top, #graficoValores-container {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
         }
         /* Remove qualquer cor de fundo intermediária */
         header, .video-container {
-            background: #000 !important;
+            background: var(--bg-color-dark) !important;
         }
 
         * {
@@ -96,7 +130,7 @@
             flex-direction: column;
             align-items: center;
             padding: var(--spacing-unit);
-            background: var(--bg-color-medium);
+            background: #000000;
         }
 
         .video-container {
@@ -104,7 +138,7 @@
             display: flex;
             justify-content: center;
             padding: var(--spacing-unit);
-            background: var(--bg-color-medium);
+            background: #000000;
             margin-bottom: var(--spacing-unit);
         }
 
@@ -138,13 +172,13 @@
             margin-bottom: var(--spacing-unit);
         }
 
-        /* --- Botões Dark com Contorno Branco --- */
+        /* --- Botões seguem o tema --- */
         .month-navigation button,
         .stock-actions button,
         #btnLimparHistorico {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
             box-shadow: none !important;
             border-radius: 6px;
             padding: 10px 16px;
@@ -154,9 +188,9 @@
         .month-navigation button:hover,
         .stock-actions button:hover,
         #btnLimparHistorico:hover {
-            background: #222 !important;
-            color: #fff !important;
-            border-color: #fff !important;
+            background: var(--button-hover-bg) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
         }
         .stock-actions .nav-button {
             min-width: 40px;
@@ -242,7 +276,7 @@
             height: 200px;
             overflow: visible !important;
             display: block;
-            background: transparent;
+            background: #000000 !important;
             margin: 56px auto 0 auto; /* Margem superior reduzida para aproximar do topo/botões */
         }
         @media (orientation: landscape) {
@@ -260,6 +294,7 @@
             display: flex;
             align-items: center;
             animation: video-move-x-infinite 18s linear infinite normal;
+            background: #000000 !important;
         }
         @keyframes video-move-x-infinite {
             0% { transform: translateX(-50vw); opacity: 0; }
@@ -392,7 +427,7 @@
             padding: 10px;
             border-radius: 4px;
             border: none;
-            background: var(--bg-color-light);
+            background: #000000;
             color: var(--text-color);
             font-size: 1rem;
             text-align: center;
@@ -457,7 +492,7 @@
 
         table.estoque-table input:focus {
             outline: 1px solid #888;
-            background: var(--button-bg);
+            background: #000000;
         }
 
         /* --- Charts --- */
@@ -522,14 +557,14 @@
         #resultadoFinal {
             padding: 20px;
             text-align: center;
-            background: var(--bg-color-medium);
+            background: #000000;
             margin-top: var(--spacing-unit);
             border-radius: 8px;
         }
 
         #registroOperacoes {
             position: relative;
-            background: #1a1a1a;
+            background: #000000;
             padding: 20px;
             border-radius: 8px;
             font-family: monospace;
@@ -565,28 +600,22 @@
             align-items: center;
             justify-content: center;
         }
-            padding: 4px 10px !important;
-            height: 28px;
-            min-width: 0;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
 
         #registroOperacoes ul {
             list-style: none;
             padding-left: 0;
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #333;
+            border: 1px solid #fff;
             padding: 10px;
             border-radius: 4px;
+            background: #000000;
         }
 
         #registroOperacoes ul li {
             padding: 4px 0;
-            border-bottom: 1px dashed #2a2a2a;
+            border-bottom: 1px dashed #fff;
+            background: #000000;
         }
 
         #registroOperacoes ul li:last-child {
@@ -629,16 +658,17 @@
             justify-content: space-between;
             gap: 6px;
             padding: 4px 0;
-            border-bottom: 1px dashed #222;
+            border-bottom: 1px dashed var(--border-color);
             font-size: 0.95rem;
+            color: var(--text-color) !important;
         }
         .historico-coluna li:last-child {
             border-bottom: none;
         }
         .historico-coluna .data-edit {
-            background: #000 !important;
-            color: #fff !important;
-            border: 2px solid #fff !important;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
             border-radius: 6px;
             font-size: 0.95rem;
             padding: 2px 6px;
@@ -650,16 +680,37 @@
         }
         .historico-coluna .data-edit:focus {
             outline: none !important;
-            border-color: #fff !important;
-            background: #111 !important;
+            border-color: var(--border-color) !important;
+            background: var(--button-hover-bg) !important;
+            color: var(--text-color) !important;
         }
-        /* Força cor do ícone do calendário (Webkit/Blink) */
-        .historico-coluna .data-edit::-webkit-calendar-picker-indicator {
+        /* Força cor do ícone do calendário baseado no tema */
+        :root[data-theme="dark"] .historico-coluna .data-edit::-webkit-calendar-picker-indicator {
             filter: invert(1);
         }
-        /* Placeholder escuro para datas inválidas */
+        :root[data-theme="light"] .historico-coluna .data-edit::-webkit-calendar-picker-indicator {
+            filter: invert(0);
+        }
+        /* Placeholder segue o tema */
         .historico-coluna .data-edit:invalid {
-            color: #888 !important;
+            color: var(--text-color) !important;
+        }
+
+        /* Força cor baseada no tema em todos os elementos do histórico */
+        .historico-coluna,
+        .historico-coluna h4,
+        .historico-coluna ul,
+        .historico-coluna li,
+        .historico-coluna li *,
+        .historico-duplo,
+        #registroOperacoes,
+        #registroOperacoes h3,
+        #registroOperacoes ul,
+        #registroOperacoes ul li,
+        #registroOperacoes ul li *,
+        .historico-header h3 {
+            color: var(--text-color) !important;
+            background: var(--bg-color-dark) !important;
         }
 
         /* --- Video Banner Topo --- */
@@ -671,7 +722,7 @@
             height: 200px;
             overflow: visible !important;
             display: block;
-            background: transparent;
+            background: #000000 !important;
             margin: 56px auto 0 auto; /* Margem superior reduzida para aproximar do topo/botões */
         }
         @media (orientation: landscape) {
@@ -689,6 +740,7 @@
             display: flex;
             align-items: center;
             animation: video-move-x-infinite 18s linear infinite normal;
+            background: #000000 !important;
         }
         @keyframes video-move-x-infinite {
             0% { transform: translateX(-50vw); opacity: 0; }
@@ -1077,19 +1129,19 @@
     </div>
 
     <!-- Menu de compartilhamento moderno -->
-    <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:#111;border-radius:16px;padding:18px 18px 10px 18px;box-shadow:0 4px 24px #000b;gap:18px;flex-direction:row;align-items:center;min-width:220px;">
+    <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:16px;padding:18px 18px 10px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.8);gap:18px;flex-direction:row;align-items:center;min-width:220px;">
         <div style="display:flex;gap:18px;justify-content:center;align-items:center;">
             <button class="share-icon-btn" id="shareWhatsapp" title="WhatsApp" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" style="width:36px;height:36px;filter:invert(1);">
-            </button>
-            <button class="share-icon-btn" id="shareInstagram" title="Instagram" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" style="width:36px;height:36px;filter:invert(1);">
-            </button>
-            <button class="share-icon-btn" id="shareFacebook" title="Facebook" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" style="width:36px;height:36px;filter:invert(1);">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" style="width:36px;height:36px;filter:var(--icon-filter, invert(1));">
             </button>
             <button class="share-icon-btn" id="shareEmail" title="E-mail" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="E-mail" style="width:36px;height:36px;filter:invert(1);">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="E-mail" style="width:36px;height:36px;filter:var(--icon-filter, invert(1));">
+            </button>
+            <button class="share-icon-btn" id="sharePdf" title="Exportar PDF" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+            </button>
+            <button class="share-icon-btn" id="sharePrint" title="Imprimir" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18h12v-9a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v9z"/><path d="M6 14h12"/></svg>
             </button>
         </div>
     </div>
