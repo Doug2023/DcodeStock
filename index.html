@@ -1228,6 +1228,94 @@
             right: 16px !important;
             z-index: 150 !important;
         }
+
+        /* --- SISTEMA DE PAGAMENTO/ASSINATURA --- */
+        #modalPagamento {
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        /* --- SISTEMA DE LOGIN PREMIUM --- */
+        #modalLogin {
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        #modalLogin input {
+            transition: border-color 0.3s ease;
+        }
+
+        #modalLogin input:focus {
+            outline: none !important;
+            border-color: #4CAF50 !important;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        #modalLogin button:hover {
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+
+        #btnLogin:hover {
+            background: #45a049 !important;
+        }
+
+        #btnRecuperar:hover {
+            background: #f57c00 !important;
+        }
+
+        .login-error {
+            background: #ffebee !important;
+            border-color: #f44336 !important;
+            color: #c62828 !important;
+        }
+
+        .login-success {
+            background: #e8f5e8 !important;
+            border-color: #4CAF50 !important;
+            color: #2e7d32 !important;
+        }
+
+        /* Status de usuário logado */
+        .user-status {
+            position: fixed;
+            top: 12px;
+            left: 16px;
+            background: rgba(76, 175, 80, 0.9);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 160;
+            display: none;
+        }
+
+        .user-status.logado {
+            display: block;
+        }
+
+        /* Botão de logout */
+        .logout-btn {
+            position: fixed;
+            top: 50px;
+            left: 16px;
+            background: rgba(244, 67, 54, 0.9);
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            z-index: 160;
+            display: none;
+        }
+
+        .logout-btn.logado {
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 1);
+        }
     </style>
 </head>
 <body>
@@ -1277,6 +1365,12 @@
 
     <!-- Botão de alternância de tema -->
     <button class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</button>
+
+    <!-- Status do usuário logado -->
+    <div id="userStatus" class="user-status">
+        <span id="nomeUsuario">👤 Usuário Premium</span>
+    </div>
+    <button id="logoutBtn" class="logout-btn">Sair</button>
 
     <main id="abasContainer">
         <div class="table-responsive"> 
@@ -1360,6 +1454,121 @@
             </svg>
         </button>
 
+    </div>
+
+    <!-- Modal de Pagamento/Assinatura -->
+    <div id="modalPagamento" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:300;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-color-dark);color:var(--text-color);padding:30px;border-radius:12px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;border:2px solid var(--border-color);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h2 style="margin:0;color:var(--text-color);">🎯 Desbloqueie Recursos Premium</h2>
+                <button id="fecharModalPagamento" style="background:none;border:none;color:var(--text-color);font-size:24px;cursor:pointer;">&times;</button>
+            </div>
+            
+            <div style="margin-bottom:25px;">
+                <p style="margin-bottom:15px;color:var(--text-color);">Para navegar entre <strong>múltiplos estoques</strong> e <strong>meses diferentes</strong>, escolha um plano:</p>
+                
+                <div style="display:flex;gap:15px;margin-bottom:20px;">
+                    <div id="planoMensal" class="plano-opcao" style="flex:1;padding:15px;border:2px solid var(--border-color);border-radius:8px;cursor:pointer;text-align:center;transition:all 0.3s;">
+                        <h3 style="margin:0 0 8px 0;color:#4CAF50;">💳 Mensal</h3>
+                        <div style="font-size:1.5rem;font-weight:bold;color:var(--text-color);">R$ 19,90</div>
+                        <div style="font-size:0.9rem;color:var(--secondary-text-color);">por mês</div>
+                    </div>
+                    <div id="planoAnual" class="plano-opcao" style="flex:1;padding:15px;border:2px solid var(--border-color);border-radius:8px;cursor:pointer;text-align:center;transition:all 0.3s;">
+                        <h3 style="margin:0 0 8px 0;color:#FF9800;">🏆 Anual</h3>
+                        <div style="font-size:1.5rem;font-weight:bold;color:var(--text-color);">R$ 199,90</div>
+                        <div style="font-size:0.9rem;color:var(--secondary-text-color);">por ano</div>
+                        <div style="background:#4CAF50;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.8rem;margin-top:5px;display:inline-block;">Economize 16%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="metodosPagamento" style="margin-bottom:25px;">
+                <h3 style="margin-bottom:15px;color:var(--text-color);">💰 Escolha o método de pagamento:</h3>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+                    <button class="metodo-pagamento" data-metodo="pix" style="padding:12px;border:2px solid var(--border-color);background:var(--bg-color-dark);color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <span style="font-size:1.2rem;">📱</span> PIX
+                    </button>
+                    <button class="metodo-pagamento" data-metodo="credito" style="padding:12px;border:2px solid var(--border-color);background:var(--bg-color-dark);color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <span style="font-size:1.2rem;">💳</span> Crédito
+                    </button>
+                    <button class="metodo-pagamento" data-metodo="debito" style="padding:12px;border:2px solid var(--border-color);background:var(--bg-color-dark);color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <span style="font-size:1.2rem;">💰</span> Débito
+                    </button>
+                    <button class="metodo-pagamento" data-metodo="transferencia" style="padding:12px;border:2px solid var(--border-color);background:var(--bg-color-dark);color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <span style="font-size:1.2rem;">🏦</span> Transferência
+                    </button>
+                </div>
+            </div>
+
+            <div id="detalhesPagamento" style="display:none;margin-bottom:20px;padding:15px;background:var(--bg-color-medium);border-radius:8px;border:1px solid var(--border-color);">
+                <!-- Conteúdo será preenchido dinamicamente -->
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button id="cancelarPagamento" style="padding:10px 20px;border:2px solid var(--border-color);background:transparent;color:var(--text-color);border-radius:6px;cursor:pointer;">Cancelar</button>
+                <button id="confirmarPagamento" style="padding:10px 20px;border:none;background:#4CAF50;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;" disabled>Confirmar Pagamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div id="modalLogin" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:300;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-color-dark);color:var(--text-color);padding:30px;border-radius:12px;max-width:400px;width:90%;border:2px solid var(--border-color);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h2 style="margin:0;color:var(--text-color);">🔐 Login Premium</h2>
+                <button id="fecharModalLogin" style="background:none;border:none;color:var(--text-color);font-size:24px;cursor:pointer;">&times;</button>
+            </div>
+            
+            <div id="loginForm">
+                <p style="margin-bottom:20px;color:var(--secondary-text-color);">Entre com suas credenciais premium para acessar todos os recursos:</p>
+                
+                <div style="margin-bottom:15px;">
+                    <label style="display:block;margin-bottom:5px;color:var(--text-color);">👤 Login:</label>
+                    <input type="text" id="loginUsuario" placeholder="Digite seu login" style="width:100%;padding:12px;border:2px solid var(--border-color);border-radius:6px;background:var(--bg-color-dark);color:var(--text-color);font-size:1rem;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:5px;color:var(--text-color);">🔑 Senha:</label>
+                    <input type="password" id="loginSenha" placeholder="Digite sua senha" style="width:100%;padding:12px;border:2px solid var(--border-color);border-radius:6px;background:var(--bg-color-dark);color:var(--text-color);font-size:1rem;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <button id="btnLogin" style="width:100%;padding:12px;background:#4CAF50;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:bold;cursor:pointer;">Entrar</button>
+                </div>
+                
+                <div style="text-align:center;">
+                    <button id="btnEsqueciSenha" style="background:none;border:none;color:#2196F3;cursor:pointer;text-decoration:underline;font-size:0.9rem;">Esqueci minha senha</button>
+                </div>
+            </div>
+            
+            <div id="recuperacaoForm" style="display:none;">
+                <p style="margin-bottom:20px;color:var(--secondary-text-color);">📧 Digite seu email para recuperar o acesso:</p>
+                
+                <div style="margin-bottom:15px;">
+                    <label style="display:block;margin-bottom:5px;color:var(--text-color);">📧 Email:</label>
+                    <input type="email" id="emailRecuperacao" placeholder="seu@email.com" style="width:100%;padding:12px;border:2px solid var(--border-color);border-radius:6px;background:var(--bg-color-dark);color:var(--text-color);font-size:1rem;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <button id="btnRecuperar" style="width:100%;padding:12px;background:#FF9800;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:bold;cursor:pointer;">Recuperar Acesso</button>
+                </div>
+                
+                <div style="text-align:center;">
+                    <button id="voltarLogin" style="background:none;border:none;color:#2196F3;cursor:pointer;text-decoration:underline;font-size:0.9rem;">← Voltar ao login</button>
+                </div>
+            </div>
+            
+            <div id="sucessoRecuperacao" style="display:none;text-align:center;padding:20px;">
+                <div style="font-size:3rem;margin-bottom:15px;">✅</div>
+                <h3 style="color:#4CAF50;margin-bottom:10px;">Email Enviado!</h3>
+                <p style="color:var(--secondary-text-color);margin-bottom:20px;">
+                    Suas credenciais foram enviadas para o email informado.
+                    Verifique sua caixa de entrada e spam.
+                </p>
+                <button id="fecharSucesso" style="padding:10px 20px;background:#4CAF50;color:#fff;border:none;border-radius:6px;cursor:pointer;">Fechar</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
