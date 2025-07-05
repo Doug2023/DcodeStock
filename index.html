@@ -1028,20 +1028,128 @@
             margin-left: 0;
             margin-right: 0;
         }
+
+        /* === SISTEMA DE CORES DOS ÍCONES CORRIGIDO === */
+        
+        /* BOTÃO DE ALERTA - Branco, sem caixa */
+        #btnNotify {
+            color: #ffffff !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            outline: none !important;
+            position: relative !important;
+        }
+        
+        #btnNotify svg {
+            fill: none !important;
+            stroke: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* BOTÃO DE COMPARTILHAR - Sempre branco visível, sem caixa */
+        #btnShare {
+            color: #ffffff !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            outline: none !important;
+        }
+        
+        #btnShare svg {
+            fill: none !important;
+            stroke: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* TEMA TOGGLE - Emoji sempre visível, sem caixa */
+        .theme-toggle {
+            color: #ffffff !important;
+            font-size: 20px !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            outline: none !important;
+        }
+
+        /* Força aplicação em todos os estados e temas */
+        [data-theme="dark"] #btnNotify,
+        [data-theme="light"] #btnNotify,
+        [data-theme="dark"] #btnShare,
+        [data-theme="light"] #btnShare {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] #btnNotify svg,
+        [data-theme="light"] #btnNotify svg {
+            fill: none !important;
+            stroke: #ffffff !important;
+        }
+
+        [data-theme="dark"] #btnShare svg,
+        [data-theme="light"] #btnShare svg {
+            fill: none !important;
+            stroke: #ffffff !important;
+        }
+
+        /* ÍCONES DO MENU - Cores fixas nos SVGs */
+        #shareWhatsapp svg {
+            fill: #25D366 !important;
+            stroke: none !important;
+        }
+
+        #shareEmail svg {
+            fill: #1E88E5 !important;
+            stroke: none !important;
+        }
+
+        #sharePdf svg {
+            fill: #E53935 !important;
+            stroke: none !important;
+        }
+
+        /* BOTÕES DO MENU DE COMPARTILHAMENTO - Sem caixa, apenas ícones */
+        .share-icon-btn {
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            outline: none !important;
+            margin: 2px !important;
+        }
+
+        .share-icon-btn:hover {
+            background: none !important;
+            transform: scale(1.1) !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .share-icon-btn:active {
+            transform: scale(0.95) !important;
+        }
     </style>
 </head>
 <body>
     <div class="top-bar-app">
         <div class="top-bar-left">
-            <button id="btnNotify" title="Notificações" style="background:none;border:none;cursor:pointer;padding:4px;outline:none;position:relative;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <button id="btnNotify" title="Notificações">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                 <span id="notifyBadge" style="display:none;position:absolute;top:2px;right:2px;background:#f00;color:#fff;font-size:0.7em;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">0</span>
             </button>
         </div>
         <div style="flex:1"></div>
         <div class="top-bar-right">
-            <button id="btnShare" title="Compartilhar estoque" style="background:none;border:none;cursor:pointer;padding:4px;outline:none;position:relative;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8"/><path d="M8 12l4-4 4 4"/></svg>
+            <button id="btnShare" title="Compartilhar estoque">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
             </button>
         </div>
     </div>
@@ -1126,24 +1234,24 @@
                 <ul id="listaSaidas"></ul>
             </div>
         </div>
-    </div>
+    </div>    <!-- Menu de compartilhamento sem caixinha -->
+    <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;gap:12px;flex-direction:row;align-items:center;">
+        <button class="share-icon-btn" id="shareWhatsapp" title="WhatsApp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#25D366" stroke="none">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.064 3.687"/>
+            </svg>
+        </button>
+        <button class="share-icon-btn" id="shareEmail" title="E-mail">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1E88E5" stroke="none">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+        </button>
+        <button class="share-icon-btn" id="sharePdf" title="Exportar PDF">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#E53935" stroke="none">
+                <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v1h-1.5V7h3v1.5zM9 9.5h1v-1H9v1z"/>
+            </svg>
+        </button>
 
-    <!-- Menu de compartilhamento moderno -->
-    <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:16px;padding:18px 18px 10px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.8);gap:18px;flex-direction:row;align-items:center;min-width:220px;">
-        <div style="display:flex;gap:18px;justify-content:center;align-items:center;">
-            <button class="share-icon-btn" id="shareWhatsapp" title="WhatsApp" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" style="width:36px;height:36px;filter:var(--icon-filter, invert(1));">
-            </button>
-            <button class="share-icon-btn" id="shareEmail" title="E-mail" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="E-mail" style="width:36px;height:36px;filter:var(--icon-filter, invert(1));">
-            </button>
-            <button class="share-icon-btn" id="sharePdf" title="Exportar PDF" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
-            </button>
-            <button class="share-icon-btn" id="sharePrint" title="Imprimir" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18h12v-9a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v9z"/><path d="M6 14h12"/></svg>
-            </button>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -689,7 +689,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareWhatsapp = document.getElementById('shareWhatsapp');
     const shareEmail = document.getElementById('shareEmail');
     const sharePdf = document.getElementById('sharePdf');
-    const sharePrint = document.getElementById('sharePrint');
 
     let shareMenuOpen = false;
 
@@ -801,73 +800,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Função para imprimir estoque
-    function imprimirEstoque(texto) {
-        try {
-            const printWindow = window.open('', '_blank');
-            if (printWindow) {
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Impressão - Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`}</title>
-                        <style>
-                            body { 
-                                font-family: Arial, sans-serif; 
-                                padding: 20px; 
-                                color: #000; 
-                                background: #fff;
-                                line-height: 1.5;
-                            }
-                            h1, h2, h3 { color: #333; margin-bottom: 15px; }
-                            pre { 
-                                white-space: pre-wrap; 
-                                font-family: Arial, sans-serif; 
-                                font-size: 13px;
-                                margin: 15px 0;
-                            }
-                            @media print { 
-                                body { margin: 0; padding: 15px; }
-                                h1 { font-size: 16px; }
-                                pre { font-size: 11px; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>📊 Relatório de Estoque - ${new Date().toLocaleDateString('pt-BR')}</h1>
-                        <pre>${texto.replace(/\n/g, '<br>')}</pre>
-                        <script>
-                            window.onload = function() {
-                                window.print();
-                                setTimeout(function() { window.close(); }, 1000);
-                            }
-                        </script>
-                    </body>
-                    </html>
-                `);
-                printWindow.document.close();
-            } else {
-                throw new Error('Popup bloqueado');
-            }
-        } catch (error) {
-            // Fallback: usar window.print na página atual
-            const originalContent = document.body.innerHTML;
-            const printContent = `
-                <div style="font-family: Arial, sans-serif; padding: 20px; color: #000; background: #fff;">
-                    <h1>📊 Relatório de Estoque - ${new Date().toLocaleDateString('pt-BR')}</h1>
-                    <pre style="white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 13px;">${texto}</pre>
-                </div>
-            `;
-            
-            document.body.innerHTML = printContent;
-            window.print();
-            document.body.innerHTML = originalContent;
-            
-            // Recarregar a página para restaurar funcionalidades
-            setTimeout(() => window.location.reload(), 500);
-        }
-    }
-
     // Função para compartilhar estoque atual
     function compartilharEstoqueAtual(tipo) {
         const texto = gerarTextoCompartilhamento();
@@ -883,11 +815,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'pdf':
                 gerarPDF(texto);
-                shareMenu.style.display = 'none';
-                shareMenuOpen = false;
-                return;
-            case 'print':
-                imprimirEstoque(texto);
                 shareMenu.style.display = 'none';
                 shareMenuOpen = false;
                 return;
@@ -951,12 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (sharePrint) {
-        sharePrint.addEventListener('click', () => {
-            console.log('🖨️ Imprimindo estoque');
-            compartilharEstoqueAtual('print');
-        });
-    }
+
 
     // Função para mostrar feedback visual de navegação
     function mostrarFeedbackNavegacao(stockIndex) {

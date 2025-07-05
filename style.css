@@ -69,7 +69,7 @@ input, textarea, select {
     background-image: url('https://i.imgur.com/your-tech-pattern.jpg'); 
     background-repeat: repeat;
     background-size: contain; /* Ajusta o tamanho da imagem para cobrir o contêiner */
-    background-color: #000000; /* Cor de fundo preto absoluto */
+    background-color: var(--bg-color-dark); /* Cor de fundo dinâmica */
 }
 
 /* --- Contêiner do Vídeo Dcodeanimation e Faixa PlayStation --- */
@@ -82,7 +82,7 @@ input, textarea, select {
     align-items: center; /* Centraliza o vídeo e a faixa horizontalmente */
     padding: 0; /* Remove padding duplicado se houver */
     margin-bottom: 0; /* Remove margin duplicado se houver */
-    background: transparent; /* Certifica-se de que o fundo do vídeo container seja transparente para ver o background-image */
+    background: var(--bg-color-dark); /* Usar cor de fundo do tema ativo */
 }
 
 .video-container .video {
@@ -91,6 +91,9 @@ input, textarea, select {
     object-fit: contain;
     border-radius: 8px;
     margin-bottom: 8px; /* Espaço entre o vídeo e a faixa */
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 /* --- Faixa de cor estilo PlayStation --- */
@@ -265,7 +268,7 @@ table.estoque-table input {
 }
 
 table.estoque-table input:focus {
-    outline: 1px solid #ffffff;
+    outline: 1px solid var(--border-color);
     background: var(--button-bg);
 }
 
@@ -313,7 +316,7 @@ table.estoque-table input:focus {
 
 #registroOperacoes {
     position: relative;
-    background: #1a1a1a;
+    background: var(--bg-color-medium);
     padding: 20px;
     border-radius: 8px;
     font-family: monospace;
@@ -326,18 +329,18 @@ table.estoque-table input:focus {
     padding-left: 0;
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #ffffff;
+    border: 1px solid var(--border-color);
     padding: 10px;
     border-radius: 4px;
-    background: #000000 !important;
-    color: #ffffff !important;
+    background: var(--bg-color-dark);
+    color: var(--text-color);
 }
 
 #registroOperacoes ul li {
     padding: 4px 0;
-    border-bottom: 1px dashed #ffffff;
-    background: #000000 !important;
-    color: #ffffff !important;
+    border-bottom: 1px dashed var(--border-color);
+    background: var(--bg-color-dark);
+    color: var(--text-color);
 }
 
 #registroOperacoes ul li:last-child {
@@ -382,8 +385,8 @@ table.estoque-table input:focus {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #fff;
+    background: var(--button-bg);
+    border: 2px solid var(--border-color);
     border-radius: 50%;
     cursor: pointer;
     padding: 4px;
@@ -395,16 +398,15 @@ table.estoque-table input:focus {
     justify-content: center;
     font-size: 20px;
     transition: all 0.3s ease;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: var(--text-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .theme-toggle:hover {
     transform: translateX(-50%) scale(1.1);
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-    background: rgba(0, 0, 0, 0.9);
-    border-color: #ffd700;
+    background: var(--button-hover-bg);
+    border-color: var(--text-color);
 }
 
 /* --- Responsividade para o botão de tema --- */
@@ -484,9 +486,9 @@ body[data-theme="light"] {
 :root[data-theme="dark"] table.estoque-table th,
 :root table.estoque-table td,
 :root[data-theme="dark"] table.estoque-table td {
-    background: var(--bg-color-dark) !important;
-    color: var(--text-color) !important;
-    border-color: var(--border-color) !important;
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
 /* Elementos principais - LIGHT */
@@ -498,9 +500,9 @@ body[data-theme="light"] {
 :root[data-theme="light"] #graficoValores-container,
 :root[data-theme="light"] table.estoque-table th,
 :root[data-theme="light"] table.estoque-table td {
-    background: var(--bg-color-dark) !important;
-    color: var(--text-color) !important;
-    border-color: var(--border-color) !important;
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
 /* Inputs - DARK */
@@ -520,9 +522,9 @@ body[data-theme="light"] {
 :root[data-theme="dark"] textarea,
 :root select,
 :root[data-theme="dark"] select {
-    background: var(--bg-color-dark) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 /* Inputs - LIGHT */
@@ -534,9 +536,9 @@ body[data-theme="light"] {
 :root[data-theme="light"] input[type="search"],
 :root[data-theme="light"] textarea,
 :root[data-theme="light"] select {
-    background: var(--bg-color-dark) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 /* Focus states */
@@ -548,10 +550,10 @@ input[type="email"]:focus,
 input[type="search"]:focus,
 textarea:focus,
 select:focus {
-    background: var(--button-hover-bg) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-    outline: 1px solid var(--border-color) !important;
+    background: var(--button-hover-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    outline: 1px solid var(--border-color);
 }
 
 /* --- Media Queries (Ajustadas para remover duplicações e garantir que as novas estruturas sejam responsivas) --- */
@@ -743,3 +745,555 @@ html, body {
         min-width: 44px;
     }
 }
+
+/* --- Regras adicionais para forçar tema em todos os elementos --- */
+
+/* Força o tema em elementos específicos */
+body,
+html,
+header,
+main,
+#resultadoFinal,
+#registroOperacoes,
+.graficos-top,
+#graficoValores-container,
+.video-background-container,
+.video-container {
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+}
+
+/* Botões e elementos interativos */
+button,
+.nav-button,
+.month-navigation button,
+.stock-actions button,
+#btnLimparHistorico {
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+button:hover,
+.nav-button:hover,
+.month-navigation button:hover,
+.stock-actions button:hover,
+#btnLimparHistorico:hover {
+    background: var(--button-hover-bg);
+    color: var(--text-color);
+}
+
+/* Inputs e formulários */
+input,
+input[type="text"],
+input[type="number"], 
+input[type="date"],
+input[type="email"],
+input[type="search"],
+textarea,
+select,
+#nomeEstoqueInput {
+    background: var(--bg-color-light);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Tabelas */
+table,
+table.estoque-table,
+table.estoque-table th,
+table.estoque-table td,
+table.estoque-table input {
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Gráficos e containers */
+.graficos,
+.grafico-container,
+.grafico-meio,
+#graficoSaidas-container {
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+}
+
+/* Menu e navegação */
+.mes-centralizado-wrapper,
+.month-navigation,
+.stock-actions {
+    background: transparent;
+    color: var(--text-color);
+}
+
+#mesAtual {
+    color: var(--secondary-text-color);
+}
+
+/* === DEFINIÇÃO DE CORES DOS BOTÕES CORRIGIDO === */
+
+/* BOTÕES PRINCIPAIS - Cores fixas */
+#btnShare,
+#btnNotify {
+    color: #ffffff !important;
+}
+
+#btnNotify svg {
+    fill: none !important;
+    stroke: #ffffff !important;
+}
+
+#btnShare svg {
+    fill: none !important;
+    stroke: #ffffff !important;
+}
+
+.theme-toggle {
+    color: #ffffff !important;
+    font-size: 20px !important;
+}
+
+/* Força aplicação em ambos os temas */
+[data-theme="dark"] #btnShare,
+[data-theme="dark"] #btnNotify,
+[data-theme="light"] #btnShare,
+[data-theme="light"] #btnNotify {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #btnShare svg,
+[data-theme="dark"] #btnNotify svg,
+[data-theme="light"] #btnShare svg,
+[data-theme="light"] #btnNotify svg {
+    fill: none !important;
+    stroke: #ffffff !important;
+}
+
+/* ÍCONES DO MENU - Cores fixas nos SVGs (definidas diretamente nos elementos) */
+
+/* --- Tema específico para data-theme="light" --- */
+[data-theme="light"] body,
+[data-theme="light"] html,
+[data-theme="light"] header,
+[data-theme="light"] main,
+[data-theme="light"] #resultadoFinal,
+[data-theme="light"] #registroOperacoes,
+[data-theme="light"] .graficos-top,
+[data-theme="light"] #graficoValores-container,
+[data-theme="light"] .video-background-container,
+[data-theme="light"] .video-container,
+[data-theme="light"] .graficos,
+[data-theme="light"] .grafico-container,
+[data-theme="light"] .grafico-meio,
+[data-theme="light"] #graficoSaidas-container,
+[data-theme="light"] table,
+[data-theme="light"] table.estoque-table,
+[data-theme="light"] table.estoque-table th,
+[data-theme="light"] table.estoque-table td {
+    background: var(--bg-color-dark) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="number"], 
+[data-theme="light"] input[type="date"],
+[data-theme="light"] input[type="email"],
+[data-theme="light"] input[type="search"],
+[data-theme="light"] textarea,
+[data-theme="light"] select,
+[data-theme="light"] #nomeEstoqueInput,
+[data-theme="light"] table.estoque-table input {
+    background: var(--bg-color-light) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="light"] button,
+[data-theme="light"] .nav-button,
+[data-theme="light"] .month-navigation button,
+[data-theme="light"] .stock-actions button {
+    background: var(--button-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="light"] #mesAtual {
+    color: var(--secondary-text-color) !important;
+}
+
+[data-theme="light"] #registroOperacoes ul,
+[data-theme="light"] #registroOperacoes ul li {
+    background: var(--bg-color-dark) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* --- Correções específicas para dispositivos móveis --- */
+@media screen and (max-width: 768px) {
+    /* Garantir que o video container não tenha faixa cinza */
+    .video-container,
+    .video-background-container {
+        background: var(--bg-color-dark) !important;
+    }
+    
+    /* Forçar tema em todos os elementos para mobile */
+    body, html, header, main, 
+    #resultadoFinal, #registroOperacoes,
+    .graficos-top, #graficoValores-container {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+    }
+    
+    /* Histórico específico para mobile */
+    #registroOperacoes,
+    #registroOperacoes ul,
+    #registroOperacoes ul li {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    /* Inputs para mobile */
+    input, input[type="text"], input[type="number"], 
+    input[type="date"], textarea, select, #nomeEstoqueInput {
+        background: var(--bg-color-light) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    /* Tabelas para mobile */
+    table.estoque-table,
+    table.estoque-table th,
+    table.estoque-table td,
+    table.estoque-table input {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    /* Botões para mobile */
+    button, .nav-button, 
+    .month-navigation button,
+    .stock-actions button {
+        background: var(--button-bg) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+}
+
+/* --- Tema Light específico para mobile --- */
+@media screen and (max-width: 768px) {
+    [data-theme="light"] body,
+    [data-theme="light"] html,
+    [data-theme="light"] header,
+    [data-theme="light"] main,
+    [data-theme="light"] #resultadoFinal,
+    [data-theme="light"] #registroOperacoes,
+    [data-theme="light"] .graficos-top,
+    [data-theme="light"] #graficoValores-container,
+    [data-theme="light"] .video-container,
+    [data-theme="light"] .video-background-container {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+    }
+    
+    [data-theme="light"] #registroOperacoes,
+    [data-theme="light"] #registroOperacoes ul,
+    [data-theme="light"] #registroOperacoes ul li {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="light"] input,
+    [data-theme="light"] input[type="text"],
+    [data-theme="light"] input[type="number"], 
+    [data-theme="light"] input[type="date"],
+    [data-theme="light"] textarea,
+    [data-theme="light"] select,
+    [data-theme="light"] #nomeEstoqueInput {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    [data-theme="light"] table.estoque-table,
+    [data-theme="light"] table.estoque-table th,
+    [data-theme="light"] table.estoque-table td,
+    [data-theme="light"] table.estoque-table input {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="light"] button,
+    [data-theme="light"] .nav-button,
+    [data-theme="light"] .month-navigation button,
+    [data-theme="light"] .stock-actions button {
+        background: var(--button-bg) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+}
+
+/* --- Força aplicação do tema em todas as situações mobile --- */
+@media screen and (max-width: 768px), (pointer: coarse) {
+    /* Force theme application on all elements for mobile */
+    * {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+    }
+    
+    /* Específico para WebKit (Safari mobile) */
+    body, html {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        -webkit-background-clip: padding-box !important;
+        background-clip: padding-box !important;
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+    }
+    
+    /* Força tema em containers principais */
+    .video-background-container,
+    .video-container,
+    header,
+    main,
+    #resultadoFinal,
+    #registroOperacoes {
+        background: var(--bg-color-dark) !important;
+        color: var(--text-color) !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+    
+    /* Força tema em inputs para mobile */
+    input, textarea, select {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        -webkit-background-clip: padding-box !important;
+        background-clip: padding-box !important;
+        background: var(--bg-color-light) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    /* Tema light forçado para mobile */
+    [data-theme="light"] {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    [data-theme="light"] .video-background-container,
+    [data-theme="light"] .video-container,
+    [data-theme="light"] header,
+    [data-theme="light"] main,
+    [data-theme="light"] #resultradoFinal,
+    [data-theme="light"] #registroOperacoes,
+    [data-theme="light"] #registroOperacoes ul,
+    [data-theme="light"] #registroOperacoes ul li {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-color: #cccccc !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+    
+    [data-theme="light"] input,
+    [data-theme="light"] textarea,
+    [data-theme="light"] select,
+    [data-theme="light"] #nomeEstoqueInput {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #cccccc !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+}
+
+/* --- Estilos para botões de compartilhamento SEM CAIXAS --- */
+.share-icon-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px !important;
+    min-height: 24px !important;
+}
+
+.share-icon-btn:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: scale(1.1);
+}
+
+.share-icon-btn:active {
+    transform: scale(0.95);
+}
+
+.share-icon-btn:focus {
+    outline: none !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* SVGs dos botões usam currentColor para herdar a cor do tema */
+.share-icon-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Exceto o WhatsApp que mantém sua cor verde */
+#shareWhatsapp svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* WhatsApp também sem fundo no hover */
+#shareWhatsapp:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Tema light específico para botões de compartilhamento SEM CAIXAS */
+[data-theme="light"] .share-icon-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+[data-theme="light"] .share-icon-btn:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-theme="light"] .share-icon-btn:focus {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+[data-theme="light"] #shareWhatsapp:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* --- Botão principal de compartilhamento SEM CAIXA --- */
+#btnShare {
+    background: none !important;
+    border: none !important;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px !important;
+    min-height: 24px !important;
+}
+
+#btnShare:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: scale(1.1);
+}
+
+#btnShare:active {
+    transform: scale(0.95);
+}
+
+#btnShare:focus {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+#btnShare svg {
+    width: 24px;
+    height: 24px;
+}
+
+[data-theme="light"] #btnShare {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+[data-theme="light"] #btnShare:hover {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-theme="light"] #btnShare:focus {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Menu de compartilhamento responsivo SEM CAIXAS */
+@media screen and (max-width: 768px) {
+    #shareMenu {
+        right: 8px !important;
+        top: 50px !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 16px !important;
+    }
+    
+    .share-icon-btn {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        outline: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        min-width: 24px !important;
+        min-height: 24px !important;
+    }
+    
+    .share-icon-btn:hover,
+    .share-icon-btn:focus,
+    .share-icon-btn:active {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+}
+
+
+
