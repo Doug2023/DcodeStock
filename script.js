@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const listaSaidas = document.getElementById('listaSaidas');
     const btnLimparHistorico = document.getElementById('btnLimparHistorico');
     const themeToggle = document.getElementById('themeToggle');
+    
+    // Novos elementos para resumo e notificações
+    const listaResumoItens = document.getElementById('listaResumoItens');
+    const btnNotify = document.getElementById('btnNotify');
+    const notifyBadge = document.getElementById('notifyBadge');
 
     // Debug - verificar se os elementos foram encontrados
     console.log('Elementos DOM encontrados:', {
@@ -191,6 +196,187 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // --- Resumo em Tempo Real dos Itens ---
+    function atualizarResumoItens() {
+        if (!listaResumoItens) return;
+        
+        const itensResumo = {};
+        const linhas = tabelaBody.querySelectorAll('tr');
+        
+        linhas.forEach(linha => {
+            const nome = linha.querySelector('.item')?.value?.trim();
+            const entrada = parseFloat(linha.querySelector('.entrada')?.value) || 0;
+            const saida = parseFloat(linha.querySelector('.saida')?.value) || 0;
+            
+            // Filtrar nomes inválidos
+            if (nome && nome !== 'undefined' && nome !== 'null' && nome.length > 0 && (entrada > 0 || saida > 0)) {
+                if (!itensResumo[nome]) {
+                    itensResumo[nome] = { entrada: 0, saida: 0 };
+                }
+                itensResumo[nome].entrada += entrada;
+                itensResumo[nome].saida += saida;
+            }
+        });
+        
+        // Limpar lista anterior
+        listaResumoItens.innerHTML = '';
+        
+        const itensArray = Object.keys(itensResumo);
+        
+        if (itensArray.length === 0) {
+            listaResumoItens.innerHTML = '<p class="resumo-vazio">Nenhum item inserido ainda</p>';
+        } else {
+            itensArray.forEach(nome => {
+                const item = itensResumo[nome];
+                const saldo = item.entrada - item.saida;
+                
+                const divItem = document.createElement('div');
+                divItem.className = 'resumo-item';
+                
+                let saldoClass = 'zero';
+                if (saldo > 0) saldoClass = 'positivo';
+                else if (saldo < 0) saldoClass = 'negativo';
+                
+                divItem.innerHTML = `
+                    <div class="resumo-item-nome">${nome}</div>
+                    <div class="resumo-item-valores">
+                        <span class="resumo-entrada">+${item.entrada}</span>
+                        <span class="resumo-saida">-${item.saida}</span>
+                        <span class="resumo-saldo ${saldoClass}">${saldo}</span>
+                    </div>
+                `;
+                
+                listaResumoItens.appendChild(divItem);
+            });
+        }
+        
+        // Verificar notificações de reposição
+        verificarNotificacoes(itensArray, itensResumo);
+    }
+    
+    // --- Sistema de Notificações ---
+    let notificacaoAtiva = false;
+    let notificacaoJaDismissed = false;
+    let produtosParaRepor = [];
+    
+    function verificarNotificacoes(itensArray, itensResumo) {
+        if (!btnNotify || !notifyBadge) return;
+        
+        // Verificar produtos que precisam ser repostos (saldo <= 0 ou muito baixo)
+        produtosParaRepor = [];
+        let produtosCriticos = []; // Saldo <= 0
+        if (itensResumo) {
+            Object.keys(itensResumo).forEach(nome => {
+                const saldo = itensResumo[nome].entrada - itensResumo[nome].saida;
+                if (saldo <= 2) { // Considera necessidade de reposição quando saldo <= 2
+                    const produto = {
+                        nome: nome,
+                        saldo: saldo,
+                        entrada: itensResumo[nome].entrada,
+                        saida: itensResumo[nome].saida
+                    };
+                    produtosParaRepor.push(produto);
+                    
+                    if (saldo <= 0) {
+                        produtosCriticos.push(produto);
+                    }
+                }
+            });
+        }
+        
+        const quantidadeItens = itensArray.length;
+        const temProdutosParaRepor = produtosParaRepor.length > 0;
+        
+        // Ativar notificação se tiver 3+ produtos OU produtos para repor
+        if ((quantidadeItens >= 3 || temProdutosParaRepor) && !notificacaoAtiva && !notificacaoJaDismissed) {
+            notificacaoAtiva = true;
+            
+            // Badge mostra quantidade de produtos para repor, ou "!" se só tiver 3+ produtos
+            if (temProdutosParaRepor) {
+                notifyBadge.textContent = produtosParaRepor.length.toString();
+                
+                // Aplicar classe especial para produtos críticos
+                if (produtosCriticos.length > 0) {
+                    notifyBadge.classList.add('critico');
+                    btnNotify.title = `🚨 ${produtosCriticos.length} produto(s) crítico(s) + ${produtosParaRepor.length - produtosCriticos.length} para repor:\n${produtosParaRepor.map(p => `• ${p.nome} (saldo: ${p.saldo})`).join('\n')}`;
+                } else {
+                    notifyBadge.classList.remove('critico');
+                    btnNotify.title = `⚠️ ${produtosParaRepor.length} produto(s) precisam ser repostos:\n${produtosParaRepor.map(p => `• ${p.nome} (saldo: ${p.saldo})`).join('\n')}`;
+                }
+            } else {
+                notifyBadge.classList.remove('critico');
+                notifyBadge.textContent = '!';
+                btnNotify.title = `📊 ${quantidadeItens} produtos cadastrados no estoque`;
+            }
+            
+            notifyBadge.style.display = 'flex';
+            btnNotify.style.animation = 'pulse 2s infinite';
+            
+            console.log('Notificação ativada:', {
+                quantidadeItens,
+                produtosParaRepor: produtosParaRepor.map(p => `${p.nome} (${p.saldo})`),
+                produtosCriticos: produtosCriticos.map(p => `${p.nome} (${p.saldo})`)
+            });
+        } else if (quantidadeItens < 3 && !temProdutosParaRepor) {
+            // Reset quando menos de 3 itens E sem produtos para repor
+            notificacaoJaDismissed = false;
+        }
+    }
+    
+    function limparNotificacao() {
+        if (!btnNotify || !notifyBadge) return;
+        
+        notificacaoAtiva = false;
+        notificacaoJaDismissed = true;
+        notifyBadge.style.display = 'none';
+        notifyBadge.textContent = '0';
+        notifyBadge.classList.remove('critico'); // Remove classe especial
+        btnNotify.style.animation = 'none';
+        btnNotify.title = 'Notificações';
+        
+        // Mostrar resumo dos produtos que precisavam ser repostos
+        if (produtosParaRepor.length > 0) {
+            const resumo = produtosParaRepor.map(p => {
+                const status = p.saldo <= 0 ? '🚨 CRÍTICO' : '⚠️ BAIXO';
+                return `• ${p.nome}: ${p.entrada} entradas, ${p.saida} saídas = ${p.saldo} em estoque (${status})`;
+            }).join('\n');
+            console.log('Produtos que precisam ser repostos:\n' + resumo);
+        }
+        
+        console.log('Notificação dispensada pelo usuário');
+    }
+    
+    // Event listener para limpar notificação ao clicar
+    if (btnNotify) {
+        btnNotify.addEventListener('click', () => {
+            // Mostrar detalhes antes de limpar
+            if (produtosParaRepor.length > 0) {
+                const criticos = produtosParaRepor.filter(p => p.saldo <= 0);
+                const baixos = produtosParaRepor.filter(p => p.saldo > 0 && p.saldo <= 2);
+                
+                let mensagem = '📦 RELATÓRIO DE ESTOQUE\n\n';
+                
+                if (criticos.length > 0) {
+                    mensagem += '🚨 PRODUTOS CRÍTICOS (sem estoque):\n';
+                    mensagem += criticos.map(p => `• ${p.nome}: ${p.saldo} unidades`).join('\n');
+                    mensagem += '\n\n';
+                }
+                
+                if (baixos.length > 0) {
+                    mensagem += '⚠️ PRODUTOS COM ESTOQUE BAIXO:\n';
+                    mensagem += baixos.map(p => `• ${p.nome}: ${p.saldo} unidades`).join('\n');
+                    mensagem += '\n\n';
+                }
+                
+                mensagem += '💡 Considere reabastecer estes produtos.';
+                
+                alert(mensagem);
+            }
+            
+            limparNotificacao();
+        });
+    }
+
     // --- Color Generation & Storage ---
     const coresMap = JSON.parse(localStorage.getItem('coresMap') || '{}');
     function gerarCor(nome) {
@@ -350,6 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saidaTotalEl.textContent = saida;
         saldoTotalEl.textContent = saldo;
         valorFinalEl.textContent = valorTotal.toFixed(2);
+        
+        // Atualizar resumo dos itens
+        atualizarResumoItens();
     }
 
     // Updates chart data based on table content with error handling
@@ -365,7 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sai = parseFloat(linha.querySelector('.saida')?.value) || 0;
                 const val = parseFloat(linha.querySelector('.valor')?.value) || 0;
 
-                if (nome) {
+                // Filtrar nomes inválidos (vazio, undefined, null)
+                if (nome && nome !== 'undefined' && nome !== 'null' && nome.length > 0) {
                     const cor = gerarCor(nome);
                     if (ent > 0) {
                         const existingIndex = labels.indexOf(nome);
@@ -404,7 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update Saídas Chart with safety check
             if (chartSaidas && chartSaidas.data) {
-                const saidaLabels = Object.keys(dataSaida);
+                const saidaLabels = Object.keys(dataSaida).filter(l => l && l !== 'undefined' && l !== 'null' && l.trim().length > 0);
                 chartSaidas.data.labels = saidaLabels;
                 chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
                 chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
@@ -457,10 +647,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Registers an operation in the history list and saves it
     function registrarOperacao(tipo, item, quantidade) {
         const data = new Date();
-        const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth()+1).toString().padStart(2, '0')}/${data.getFullYear()}`;
-        const displayedMonthYear = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
-        // Novo formato: [DATA - MÊS] ITEM: NOME - ENTRADA/SAÍDA: QTD
-        const texto = `[${dataFormatada} - ${displayedMonthYear}] ITEM: ${item} - ${tipo.toUpperCase()}: ${quantidade}`;
+        // Formato compacto: DD/MM/AA
+        const dia = data.getDate().toString().padStart(2, '0');
+        const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+        const ano = data.getFullYear().toString().slice(-2); // Últimos 2 dígitos do ano
+        const dataFormatada = `${dia}/${mes}/${ano}`;
+        
+        // Formato compacto: 05/07/25 entrada/arroz:10
+        const texto = `${dataFormatada} ${tipo}/${item}:${quantidade}`;
 
         const li = document.createElement('li');
         li.textContent = texto;
@@ -554,6 +748,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of the current stock when the page loads
     loadStock(currentStockIndex);
+
+    // Garantir que o resumo seja exibido inicialmente
+    setTimeout(() => {
+        atualizarResumoItens();
+    }, 500);
 
     // Event Listener for stock name input (on blur/change)
     if (nomeEstoqueInput) {

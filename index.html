@@ -1048,20 +1048,170 @@
             color: #ffffff !important;
         }
 
-        /* BOTÃO DE COMPARTILHAR - Sempre branco visível, sem caixa */
-        #btnShare {
-            color: #ffffff !important;
-            background: none !important;
-            border: none !important;
-            padding: 4px !important;
-            cursor: pointer !important;
-            outline: none !important;
+        /* Badge de notificação melhorado */
+        #notifyBadge {
+            position: absolute !important;
+            top: 2px !important;
+            right: 2px !important;
+            background: #f44336 !important;
+            color: #fff !important;
+            font-size: 0.7em !important;
+            border-radius: 50% !important;
+            width: 16px !important;
+            height: 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: bold !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
         }
-        
-        #btnShare svg {
-            fill: none !important;
-            stroke: #ffffff !important;
-            color: #ffffff !important;
+
+        /* Badge especial para produtos críticos */
+        #notifyBadge.critico {
+            background: #ff5722 !important;
+            animation: pulse-urgent 1.5s infinite !important;
+        }
+
+        @keyframes pulse-urgent {
+            0% { transform: scale(1); background: #f44336; }
+            50% { transform: scale(1.2); background: #ff5722; }
+            100% { transform: scale(1); background: #f44336; }
+        }
+
+        /* --- RESUMO DOS ITENS EM TEMPO REAL --- */
+        #resumoItens {
+            position: relative;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin-top: var(--spacing-unit);
+            margin-bottom: var(--spacing-unit);
+            border: 2px solid var(--border-color);
+        }
+
+        .resumo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .resumo-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color) !important;
+        }
+
+        #listaResumoItens {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .resumo-vazio {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-style: italic;
+            opacity: 0.7;
+            margin: 10px 0;
+        }
+
+        .resumo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-color-medium);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .resumo-item-nome {
+            font-weight: 600;
+            color: var(--text-color);
+            flex: 1;
+            min-width: 0;
+            margin-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .resumo-item-valores {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .resumo-entrada {
+            color: #4CAF50 !important;
+            font-weight: 600;
+        }
+
+        .resumo-saida {
+            color: #F44336 !important;
+            font-weight: 600;
+        }
+
+        .resumo-saldo {
+            color: var(--text-color);
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--bg-color-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .resumo-saldo.positivo {
+            color: #4CAF50 !important;
+        }
+
+        .resumo-saldo.negativo {
+            color: #F44336 !important;
+        }
+
+        .resumo-saldo.zero {
+            color: #FF9800 !important;
+        }
+
+        /* Responsividade para o resumo */
+        @media (max-width: 600px) {
+            .resumo-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .resumo-item-nome {
+                margin-right: 0;
+                margin-bottom: 4px;
+            }
+            
+            .resumo-item-valores {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 350px) {
+            #resumoItens {
+                padding: 10px !important;
+                margin-top: 8px !important;
+            }
+            
+            .resumo-item {
+                padding: 6px 8px !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .resumo-header h3 {
+                font-size: 1rem !important;
+            }
         }
 
         /* TEMA TOGGLE - Emoji sempre visível, sem caixa */
@@ -1073,62 +1223,10 @@
             padding: 4px !important;
             cursor: pointer !important;
             outline: none !important;
-        }
-
-        /* Força aplicação em todos os estados e temas */
-        [data-theme="dark"] #btnNotify,
-        [data-theme="light"] #btnNotify,
-        [data-theme="dark"] #btnShare,
-        [data-theme="light"] #btnShare {
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] #btnNotify svg,
-        [data-theme="light"] #btnNotify svg {
-            fill: none !important;
-            stroke: #ffffff !important;
-        }
-
-        [data-theme="dark"] #btnShare svg,
-        [data-theme="light"] #btnShare svg {
-            fill: none !important;
-            stroke: #ffffff !important;
-        }
-
-        /* ÍCONES DO MENU - Cores fixas nos SVGs */
-        #shareWhatsapp svg {
-            fill: #25D366 !important;
-            stroke: none !important;
-        }
-
-        #shareEmail svg {
-            fill: #1E88E5 !important;
-            stroke: none !important;
-        }
-
-        #sharePdf svg {
-            fill: #E53935 !important;
-            stroke: none !important;
-        }
-
-        /* BOTÕES DO MENU DE COMPARTILHAMENTO - Sem caixa, apenas ícones */
-        .share-icon-btn {
-            background: none !important;
-            border: none !important;
-            padding: 4px !important;
-            cursor: pointer !important;
-            outline: none !important;
-            margin: 2px !important;
-        }
-
-        .share-icon-btn:hover {
-            background: none !important;
-            transform: scale(1.1) !important;
-            transition: transform 0.2s ease !important;
-        }
-
-        .share-icon-btn:active {
-            transform: scale(0.95) !important;
+            position: fixed !important;
+            top: 12px !important;
+            right: 16px !important;
+            z-index: 150 !important;
         }
     </style>
 </head>
@@ -1233,6 +1331,16 @@
                 <h4>Saídas</h4>
                 <ul id="listaSaidas"></ul>
             </div>
+        </div>
+    </div>
+
+    <!-- Resumo em Tempo Real dos Itens -->
+    <div id="resumoItens">
+        <div class="resumo-header">
+            <h3>Resumo dos Itens</h3>
+        </div>
+        <div id="listaResumoItens">
+            <p class="resumo-vazio">Nenhum item inserido ainda</p>
         </div>
     </div>    <!-- Menu de compartilhamento sem caixinha -->
     <div id="shareMenu" style="display:none;position:fixed;top:48px;right:16px;z-index:200;background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;gap:12px;flex-direction:row;align-items:center;">
