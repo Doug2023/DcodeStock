@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const listaEntradas = document.getElementById('listaEntradas');
     const listaSaidas = document.getElementById('listaSaidas');
     const btnLimparHistorico = document.getElementById('btnLimparHistorico');
-    const themeToggle = document.getElementById('themeToggle');
+    const themeToggle = document.getElementById('themeToggleTop');
     
     // Novos elementos para resumo e notificações
     const listaResumoItens = document.getElementById('listaResumoItens');
@@ -42,12 +42,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!nomeEstoqueInput) console.error('Elemento nomeEstoqueInput não encontrado!');
 
     // --- Month Navigation ---
-    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const mesesPadrao = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     let displayedDate = new Date();
 
     function updateMonthDisplay() {
-        mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
+        // Usar meses traduzidos se disponíveis, senão usar padrão em português
+        const meses = window.currentLanguageMonths || mesesPadrao;
+        const currentLang = window.currentLanguage || 'pt';
+        
+        // Formatar data de acordo com o idioma
+        if (currentLang === 'en') {
+            mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
+        } else if (currentLang === 'fr') {
+            mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
+        } else if (currentLang === 'it') {
+            mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}`;
+        } else if (currentLang === 'es') {
+            mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
+        } else {
+            // Português (padrão)
+            mesAtualEl.textContent = `${meses[displayedDate.getMonth()]} de ${displayedDate.getFullYear()}`;
+        }
     }
+
+    // Expor função globalmente para ser chamada pela tradução
+    window.updateMonthDisplay = updateMonthDisplay;
 
     btnMesAnterior?.addEventListener('click', () => {
         console.log('Clique mês anterior');
@@ -306,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 notifyBadge.classList.remove('critico');
                 notifyBadge.textContent = '!';
-                btnNotify.title = `📊 ${quantidadeItens} produtos cadastrados no estoque`;
+                btnNotify.title = `📊 ${quantidadeItens} produtos cadastrados no ${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt').toLowerCase() : 'estoque'}`;
             }
             
             notifyBadge.style.display = 'flex';
@@ -338,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (produtosParaRepor.length > 0) {
             const resumo = produtosParaRepor.map(p => {
                 const status = p.saldo <= 0 ? '🚨 CRÍTICO' : '⚠️ BAIXO';
-                return `• ${p.nome}: ${p.entrada} entradas, ${p.saida} saídas = ${p.saldo} em estoque (${status})`;
+                return `• ${p.nome}: ${p.entrada} entradas, ${p.saida} saídas = ${p.saldo} em ${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt').toLowerCase() : 'estoque'} (${status})`;
             }).join('\n');
             console.log('Produtos que precisam ser repostos:\n' + resumo);
         }
@@ -624,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('📊 Dados para salvar:', dadosParaSalvar);
 
             const monthYearKey = getMonthYearKey(dateToSave);
-            const currentName = nomeEstoqueInput.value.trim().substring(0, 50) || `Estoque ${index + 1}`;
+            const currentName = nomeEstoqueInput.value.trim().substring(0, 50) || (window.getStockName ? window.getStockName(index, window.currentLanguage || 'pt') : `Estoque ${index + 1}`);
 
             allStocksMeta[index].namesByMonth[monthYearKey] = currentName;
             localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
@@ -702,12 +721,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('currentStockIndex', currentStockIndex);
 
         const monthYearKey = getMonthYearKey(displayedDate);
-        const defaultName = `Estoque ${currentStockIndex + 1}`;
+        const defaultName = window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`;
         const savedName = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
         
         // Atualizar o nome do estoque com indicador visual
         nomeEstoqueInput.value = savedName;
-        nomeEstoqueInput.placeholder = `Estoque ${currentStockIndex + 1} de ${MAX_STOCKS}`;
+        nomeEstoqueInput.placeholder = (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`) + ` de ${MAX_STOCKS}`;
         
         console.log(`📝 Carregando estoque ${currentStockIndex + 1}/${MAX_STOCKS}: ${savedName}`);
 
@@ -830,7 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button to clear history for current stock (for the current month)
     if (btnLimparHistorico) {
         btnLimparHistorico.addEventListener('click', () => {
-            const stockName = allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)] || `Estoque ${currentStockIndex + 1}`;
+            const stockName = allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)] || (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
             if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}" no mês de ${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}? Esta ação é irreversível.`)) {
                 // Limpar ambas as listas
                 listaEntradas.innerHTML = '';
@@ -917,8 +936,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para gerar texto do estoque atual para compartilhamento
     function gerarTextoCompartilhamento() {
         const monthYearKey = getMonthYearKey(displayedDate);
-        const nomeEstoque = nomeEstoqueInput.value.trim() || (allStocksMeta[currentStockIndex]?.namesByMonth?.[monthYearKey] || `Estoque ${currentStockIndex + 1}`);
-        let texto = `📊 Estoque: ${nomeEstoque}\n📅 Mês: ${mesAtualEl.textContent}\n\n📦 Itens:\n`;
+        const nomeEstoque = nomeEstoqueInput.value.trim() || (allStocksMeta[currentStockIndex]?.namesByMonth?.[monthYearKey] || (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`));
+        let texto = `📊 ${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt') : 'Estoque'}: ${nomeEstoque}\n📅 Mês: ${mesAtualEl.textContent}\n\n📦 Itens:\n`;
         
         const linhas = tabelaBody.querySelectorAll('tr');
         let hasItems = false;
@@ -968,16 +987,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!DOCTYPE html>
                     <html>
                     <head>
-                        <title>Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}</title>
+                        <title>${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt') : 'Estoque'} ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}</title>
                         <style>
                             body { 
                                 font-family: Arial, sans-serif; 
                                 padding: 20px; 
-                                color: #000; 
-                                background: #fff; 
+                                color: var(--text-color); 
+                                background: var(--bg-color-dark); 
                                 line-height: 1.6;
                             }
-                            h1, h2, h3 { color: #333; margin-bottom: 10px; }
+                            h1, h2, h3 { color: var(--text-color); margin-bottom: 10px; }
                             pre { 
                                 white-space: pre-wrap; 
                                 font-family: Arial, sans-serif; 
@@ -1032,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
                 break;
             case 'email':
-                const subject = `Estoque ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}`;
+                const subject = `${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt') : 'Estoque'} ${nomeEstoqueInput.value.trim() || `${currentStockIndex + 1}`} - ${mesAtualEl.textContent}`;
                 url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(texto)}`;
                 break;
             case 'pdf':
@@ -1118,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border: 2px solid #ffd700;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         `;
-        feedback.textContent = `📊 Estoque ${stockIndex + 1} de ${MAX_STOCKS}`;
+        feedback.textContent = `📊 ${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt') : 'Estoque'} ${stockIndex + 1} de ${MAX_STOCKS}`;
         
         document.body.appendChild(feedback);
         
@@ -1464,30 +1483,30 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         modalCredenciais.innerHTML = `
-            <div style="background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.3);">
+            <div style="background: var(--bg-color-dark); color: var(--text-color); border: 2px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.3);">
                 <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
                 <h2 style="color: #2196F3; margin: 0 0 15px 0;">Assinatura Ativada!</h2>
-                <p style="color: #666; margin-bottom: 25px;">Suas credenciais de acesso foram geradas automaticamente:</p>
+                <p style="color: var(--text-color); margin-bottom: 25px;">Suas credenciais de acesso foram geradas automaticamente:</p>
                 
-                <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
+                <div style="background: var(--bg-color-dark); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
                     <div style="margin-bottom: 15px;">
-                        <strong style="color: #333;">👤 Login:</strong>
-                        <div style="font-family: monospace; font-size: 18px; color: #2196F3; font-weight: bold; margin-top: 5px; background: #e3f2fd; padding: 8px; border-radius: 4px;">${credenciais.login}</div>
+                        <strong style="color: var(--text-color);">👤 Login:</strong>
+                        <div style="font-family: monospace; font-size: 18px; color: #2196F3; font-weight: bold; margin-top: 5px; background: var(--bg-color-dark); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px;">${credenciais.login}</div>
                     </div>
                     <div>
-                        <strong style="color: #333;">🔑 Senha:</strong>
-                        <div style="font-family: monospace; font-size: 18px; color: #2196F3; font-weight: bold; margin-top: 5px; background: #e3f2fd; padding: 8px; border-radius: 4px;">${credenciais.senha}</div>
+                        <strong style="color: var(--text-color);">🔑 Senha:</strong>
+                        <div style="font-family: monospace; font-size: 18px; color: #2196F3; font-weight: bold; margin-top: 5px; background: var(--bg-color-dark); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px;">${credenciais.senha}</div>
                     </div>
                 </div>
                 
-                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #ffc107;">
-                    <p style="margin: 0; color: #856404; font-size: 14px;">
+                <div style="background: var(--bg-color-dark); border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 0; color: #ffc107; font-size: 14px;">
                         <strong>⚠️ IMPORTANTE:</strong> Anote essas credenciais em local seguro! 
                         Você pode recuperá-las pelo email se esquecer.
                     </p>
                 </div>
                 
-                <div style="margin: 20px 0; color: #666; font-size: 14px;">
+                <div style="margin: 20px 0; color: var(--text-color); font-size: 14px;">
                     <p><strong>Plano:</strong> ${plano.tipo}</p>
                     <p><strong>Válido até:</strong> ${new Date(Date.now() + plano.meses * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')}</p>
                 </div>
@@ -2002,3 +2021,326 @@ function listarTodosUsuarios() {
         limparUsuarios: limparTodosUsuarios,
         estatisticas: estatisticasUsuarios
     };
+
+    // === FUNCIONALIDADE DO MODAL PREMIUM ===
+    function showPaymentModal() {
+        const modal = document.getElementById('modalPagamento');
+        if (modal) {
+            modal.classList.add('active');
+            initializePaymentForm();
+        }
+    }
+
+    function hidePaymentModal() {
+        const modal = document.getElementById('modalPagamento');
+        if (modal) {
+            modal.classList.remove('active');
+            hideCardForm();
+        }
+    }
+
+    function initializePaymentForm() {
+        // Inicializar seleção de planos
+        const planOptions = document.querySelectorAll('.plan-option');
+        planOptions.forEach(plan => {
+            plan.addEventListener('click', () => {
+                planOptions.forEach(p => p.classList.remove('selected'));
+                plan.classList.add('selected');
+                updatePricing(plan.dataset.plan);
+            });
+        });
+
+        // Inicializar métodos de pagamento
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                method.classList.add('active');
+                handlePaymentMethodChange(method.dataset.method);
+            });
+        });
+
+        // Eventos dos botões
+        const cancelBtn = document.getElementById('cancelarPagamento');
+        const confirmBtn = document.getElementById('confirmarPagamento');
+        const closeBtn = document.getElementById('fecharModalPagamento');
+
+        if (cancelBtn) cancelBtn.addEventListener('click', hidePaymentModal);
+        if (closeBtn) closeBtn.addEventListener('click', hidePaymentModal);
+        if (confirmBtn) confirmBtn.addEventListener('click', processPayment);
+
+        // Inicializar formulário de cartão
+        initializeCardForm();
+        
+        // Inicializar área PIX
+        initializePixArea();
+    }
+
+    function initializePixArea() {
+        const copyPixBtn = document.getElementById('copyPixBtn');
+        const pixKey = document.getElementById('pixKey');
+        
+        if (copyPixBtn && pixKey) {
+            copyPixBtn.addEventListener('click', () => {
+                // Copiar para clipboard
+                pixKey.select();
+                pixKey.setSelectionRange(0, 99999); // Para dispositivos móveis
+                
+                navigator.clipboard.writeText(pixKey.value).then(() => {
+                    // Feedback visual
+                    const originalText = copyPixBtn.innerHTML;
+                    copyPixBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Copiado!';
+                    copyPixBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyPixBtn.innerHTML = originalText;
+                        copyPixBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback para navegadores mais antigos
+                    document.execCommand('copy');
+                    alert('Chave PIX copiada!');
+                });
+            });
+        }
+    }
+
+    function handlePaymentMethodChange(method) {
+        const cardForm = document.getElementById('cardForm');
+        if (method === 'credit' || method === 'debit') {
+            showCardForm();
+        } else {
+            hideCardForm();
+        }
+        
+        // Atualizar instruções específicas do método
+        updatePaymentInstructions(method);
+    }
+    
+    function updatePaymentInstructions(method) {
+        const instructions = document.querySelector('.pix-instructions p');
+        if (!instructions) return;
+        
+        const currentLang = window.currentLanguage || 'pt';
+        
+        let instructionText = '';
+        if (method === 'pix') {
+            switch(currentLang) {
+                case 'en':
+                    instructionText = 'Copy the PIX key above and make the payment through your bank app. Payment is instant.';
+                    break;
+                case 'fr':
+                    instructionText = 'Copiez la clé PIX ci-dessus et effectuez le paiement via votre application bancaire. Le paiement est instantané.';
+                    break;
+                case 'it':
+                    instructionText = 'Copia la chiave PIX sopra ed effettua il pagamento tramite la tua app bancaria. Il pagamento è istantaneo.';
+                    break;
+                case 'es':
+                    instructionText = 'Copia la clave PIX de arriba y realiza el pago a través de tu app bancaria. El pago es instantáneo.';
+                    break;
+                default:
+                    instructionText = 'Copie a chave PIX acima e faça o pagamento em seu app bancário. O pagamento é instantâneo.';
+            }
+        } else {
+            switch(currentLang) {
+                case 'en':
+                    instructionText = 'After filling your card details, the payment will be processed through our secure gateway using the PIX key below.';
+                    break;
+                case 'fr':
+                    instructionText = 'Après avoir rempli les détails de votre carte, le paiement sera traité via notre passerelle sécurisée en utilisant la clé PIX ci-dessous.';
+                    break;
+                case 'it':
+                    instructionText = 'Dopo aver inserito i dettagli della tua carta, il pagamento verrà elaborato tramite il nostro gateway sicuro utilizzando la chiave PIX sottostante.';
+                    break;
+                case 'es':
+                    instructionText = 'Después de completar los datos de tu tarjeta, el pago se procesará a través de nuestro gateway seguro usando la clave PIX de abajo.';
+                    break;
+                default:
+                    instructionText = 'Após preencher os dados do seu cartão, o pagamento será processado através do nosso gateway seguro usando a chave PIX abaixo.';
+            }
+        }
+        
+        instructions.textContent = instructionText;
+    }
+
+    function showCardForm() {
+        const cardForm = document.getElementById('cardForm');
+        if (cardForm) {
+            cardForm.style.display = 'block';
+            setTimeout(() => {
+                cardForm.classList.add('active');
+            }, 50);
+        }
+    }
+
+    function hideCardForm() {
+        const cardForm = document.getElementById('cardForm');
+        if (cardForm) {
+            cardForm.classList.remove('active');
+            setTimeout(() => {
+                cardForm.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    function initializeCardForm() {
+        // Máscara para número do cartão
+        const cardNumber = document.getElementById('cardNumber');
+        if (cardNumber) {
+            cardNumber.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+                let matches = value.match(/\d{4,16}/g);
+                let match = matches && matches[0] || '';
+                let parts = [];
+                for (let i = 0, len = match.length; i < len; i += 4) {
+                    parts.push(match.substring(i, i + 4));
+                }
+                if (parts.length) {
+                    e.target.value = parts.join(' ');
+                } else {
+                    e.target.value = value;
+                }
+            });
+        }
+
+        // Máscara para data de validade
+        const cardExpiry = document.getElementById('cardExpiry');
+        if (cardExpiry) {
+            cardExpiry.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Máscara para CVV
+        const cardCvv = document.getElementById('cardCvv');
+        if (cardCvv) {
+            cardCvv.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+
+        // Formatação do nome
+        const cardName = document.getElementById('cardName');
+        if (cardName) {
+            cardName.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+    }
+
+    function updatePricing(plan) {
+        const installmentsSelect = document.getElementById('cardInstallments');
+        if (!installmentsSelect) return;
+
+        installmentsSelect.innerHTML = '';
+        
+        if (plan === 'monthly') {
+            installmentsSelect.innerHTML = `
+                <option value="1">1x R$ 29,00 (à vista)</option>
+                <option value="2">2x R$ 15,00</option>
+                <option value="3">3x R$ 10,33</option>
+                <option value="6">6x R$ 5,42</option>
+                <option value="12">12x R$ 2,92</option>
+            `;
+        } else {
+            installmentsSelect.innerHTML = `
+                <option value="1">1x R$ 299,00 (à vista)</option>
+                <option value="2">2x R$ 154,00</option>
+                <option value="3">3x R$ 105,00</option>
+                <option value="6">6x R$ 54,50</option>
+                <option value="12">12x R$ 29,50</option>
+            `;
+        }
+    }
+
+    function processPayment() {
+        const selectedPlan = document.querySelector('.plan-option.selected');
+        const selectedMethod = document.querySelector('.payment-method.active');
+        
+        if (!selectedPlan || !selectedMethod) {
+            alert('Por favor, selecione um plano e método de pagamento.');
+            return;
+        }
+
+        const plan = selectedPlan.dataset.plan;
+        const method = selectedMethod.dataset.method;
+
+        if (method === 'credit' || method === 'debit') {
+            if (!validateCardForm()) {
+                return;
+            }
+        }
+
+        // Simular processamento
+        const confirmBtn = document.getElementById('confirmarPagamento');
+        if (confirmBtn) {
+            confirmBtn.innerHTML = '<span class="btn-text">Processando...</span><span class="btn-icon">⏳</span>';
+            confirmBtn.disabled = true;
+        }
+
+        setTimeout(() => {
+            activatePremiumSubscription(plan, method);
+            hidePaymentModal();
+            
+            if (confirmBtn) {
+                confirmBtn.innerHTML = '<span class="btn-text">Assinar Agora</span><span class="btn-icon">🚀</span>';
+                confirmBtn.disabled = false;
+            }
+        }, 2000);
+    }
+
+    function validateCardForm() {
+        const cardNumber = document.getElementById('cardNumber');
+        const cardExpiry = document.getElementById('cardExpiry');
+        const cardCvv = document.getElementById('cardCvv');
+        const cardName = document.getElementById('cardName');
+
+        if (!cardNumber?.value || cardNumber.value.replace(/\s/g, '').length < 16) {
+            alert('Por favor, insira um número de cartão válido.');
+            cardNumber?.focus();
+            return false;
+        }
+
+        if (!cardExpiry?.value || cardExpiry.value.length < 5) {
+            alert('Por favor, insira uma data de validade válida.');
+            cardExpiry?.focus();
+            return false;
+        }
+
+        if (!cardCvv?.value || cardCvv.value.length < 3) {
+            alert('Por favor, insira um CVV válido.');
+            cardCvv?.focus();
+            return false;
+        }
+
+        if (!cardName?.value || cardName.value.length < 3) {
+            alert('Por favor, insira o nome do cartão.');
+            cardName?.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function activatePremiumSubscription(plan, method) {
+        const subscription = {
+            plan: plan,
+            method: method,
+            activated: new Date().toISOString(),
+            expiry: plan === 'monthly' ? 
+                new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() :
+                new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+        };
+
+        localStorage.setItem('assinaturaPremium', JSON.stringify(subscription));
+        atualizarStatusPremium();
+        
+        alert(`✅ Assinatura ${plan === 'monthly' ? 'Mensal' : 'Anual'} ativada com sucesso!\n\nVocê agora tem acesso premium ao DcodeStock.`);
+    }
+
+    // Expor função globalmente para o botão Premium
+    window.showPaymentModal = showPaymentModal;
