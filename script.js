@@ -69,19 +69,45 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateMonthDisplay = updateMonthDisplay;
 
     btnMesAnterior?.addEventListener('click', () => {
-        console.log('Clique mês anterior');
-        const dateBeforeChange = new Date(displayedDate);
-        displayedDate.setMonth(displayedDate.getMonth() - 1);
-        updateMonthDisplay();
-        loadStock(currentStockIndex, dateBeforeChange);
+        console.log('Clique mês anterior - mostrando modal de pagamento');
+        // Pequeno delay para garantir que window.showPaymentModal esteja disponível
+        setTimeout(() => {
+            if (typeof window.showPaymentModal === 'function') {
+                window.showPaymentModal();
+            } else {
+                // Fallback direto
+                console.log('Usando fallback para abrir modal');
+                const modal = document.getElementById('modalPagamento');
+                if (modal) {
+                    modal.classList.add('active');
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    console.error('Modal modalPagamento não encontrado!');
+                }
+            }
+        }, 10);
     });
 
     btnProximoMes?.addEventListener('click', () => {
-        console.log('Clique próximo mês');
-        const dateBeforeChange = new Date(displayedDate);
-        displayedDate.setMonth(displayedDate.getMonth() + 1);
-        updateMonthDisplay();
-        loadStock(currentStockIndex, dateBeforeChange);
+        console.log('Clique próximo mês - mostrando modal de pagamento');
+        // Pequeno delay para garantir que window.showPaymentModal esteja disponível
+        setTimeout(() => {
+            if (typeof window.showPaymentModal === 'function') {
+                window.showPaymentModal();
+            } else {
+                // Fallback direto
+                console.log('Usando fallback para abrir modal');
+                const modal = document.getElementById('modalPagamento');
+                if (modal) {
+                    modal.classList.add('active');
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    console.error('Modal modalPagamento não encontrado!');
+                }
+            }
+        }, 10);
     });
 
     // --- Chart Setup with Error Handling ---
@@ -243,7 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const itensArray = Object.keys(itensResumo);
         
         if (itensArray.length === 0) {
-            listaResumoItens.innerHTML = '<p class="resumo-vazio">Nenhum item inserido ainda</p>';
+            const emptyText = window.getTranslation ? window.getTranslation('noItemsYet', window.currentLanguage || 'pt') : 'Nenhum item inserido ainda';
+            listaResumoItens.innerHTML = `<p class="resumo-vazio">${emptyText}</p>`;
         } else {
             itensArray.forEach(nome => {
                 const item = itensResumo[nome];
@@ -257,11 +284,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (saldo < 0) saldoClass = 'negativo';
                 
                 divItem.innerHTML = `
-                    <div class="resumo-item-nome">${nome}</div>
-                    <div class="resumo-item-valores">
-                        <span class="resumo-entrada">+${item.entrada}</span>
-                        <span class="resumo-saida">-${item.saida}</span>
-                        <span class="resumo-saldo ${saldoClass}">${saldo}</span>
+                    <div class="resumo-item-info">
+                        <div class="resumo-item-nome">${nome}</div>
+                        <div class="resumo-item-valores">
+                            <span class="resumo-entrada">${item.entrada}</span>
+                            <span class="resumo-saida">${item.saida}</span>
+                            <span class="resumo-saldo ${saldoClass}">${saldo}</span>
+                        </div>
                     </div>
                 `;
                 
@@ -806,40 +835,60 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Input nome estoque não encontrado - ID: nomeEstoqueInput');
     }
 
-    // '+' button to navigate to next stock (0-9)
+    // '+' button to show payment modal instead of navigating
     if (btnNovoEstoque) {
         console.log('Adicionando event listener ao botão +...');
         btnNovoEstoque.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Clique no botão + detectado!', e);
-            console.log('CurrentStockIndex antes:', currentStockIndex);
+            console.log('Clique no botão + detectado! - mostrando modal de pagamento');
             
-            // Navegação sequencial simples
-            const nextIndex = currentStockIndex + 1;
-            const finalIndex = nextIndex >= MAX_STOCKS ? 0 : nextIndex;
-            
-            console.log('Navegando para índice:', finalIndex);
-            loadStock(finalIndex);
+            // Pequeno delay para garantir que window.showPaymentModal esteja disponível
+            setTimeout(() => {
+                if (typeof window.showPaymentModal === 'function') {
+                    window.showPaymentModal();
+                } else {
+                    // Fallback direto
+                    console.log('Usando fallback para abrir modal');
+                    const modal = document.getElementById('modalPagamento');
+                    if (modal) {
+                        modal.classList.add('active');
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        console.error('Modal modalPagamento não encontrado!');
+                    }
+                }
+            }, 10);
         });
         console.log('✅ Event listener + adicionado com sucesso');
     } else {
         console.error('❌ Botão + não encontrado - ID: btnNovoEstoque');
     }
 
-    // '-' button to navigate to previous stock (0-9)
+    // '-' button to show payment modal instead of navigating
     if (btnVoltarEstoque) {
         console.log('Adicionando event listener ao botão -...');
         btnVoltarEstoque.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Clique no botão - detectado!', e);
-            console.log('CurrentStockIndex antes:', currentStockIndex);
+            console.log('Clique no botão - detectado! - mostrando modal de pagamento');
             
-            // Navegação sequencial simples
-            const prevIndex = currentStockIndex - 1;
-            const finalIndex = prevIndex < 0 ? MAX_STOCKS - 1 : prevIndex;
-            
-            console.log('Navegando para índice:', finalIndex);
-            loadStock(finalIndex);
+            // Pequeno delay para garantir que window.showPaymentModal esteja disponível
+            setTimeout(() => {
+                if (typeof window.showPaymentModal === 'function') {
+                    window.showPaymentModal();
+                } else {
+                    // Fallback direto
+                    console.log('Usando fallback para abrir modal');
+                    const modal = document.getElementById('modalPagamento');
+                    if (modal) {
+                        modal.classList.add('active');
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        console.error('Modal modalPagamento não encontrado!');
+                    }
+                }
+            }, 10);
         });
         console.log('✅ Event listener - adicionado com sucesso');
     } else {
@@ -1207,53 +1256,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return data.getMonth() === hoje.getMonth() && data.getFullYear() === hoje.getFullYear();
     }
     
-    // Mostrar opções de acesso (login ou pagamento)
+    // Mostrar modal de pagamento diretamente
     function mostrarOpcoesAcesso(acao) {
-        // Criar modal de escolha
-        const modalEscolha = document.createElement('div');
-        modalEscolha.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); z-index: 310; display: flex;
-            align-items: center; justify-content: center;
-        `;
-        
-        modalEscolha.innerHTML = `
-            <div style="background:var(--bg-color-dark);color:var(--text-color);padding:30px;border-radius:12px;max-width:400px;width:90%;border:2px solid var(--border-color);text-align:center;">
-                <h2 style="margin:0 0 20px 0;">🚀 Acesso Premium Necessário</h2>
-                <p style="margin-bottom:25px;color:var(--secondary-text-color);">
-                    Para navegar entre estoques e meses, você precisa de acesso premium.
-                </p>
-                
-                <div style="display:flex;flex-direction:column;gap:15px;">
-                    <button id="opcaoLogin" style="padding:15px;background:#4CAF50;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;">
-                        🔐 Fazer Login Premium
-                    </button>
-                    <button id="opcaoComprar" style="padding:15px;background:#2196F3;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;">
-                        💳 Comprar Assinatura
-                    </button>
-                    <button id="opcaoCancelar" style="padding:10px;background:transparent;color:var(--text-color);border:2px solid var(--border-color);border-radius:6px;cursor:pointer;">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modalEscolha);
-        
-        // Event listeners
-        modalEscolha.querySelector('#opcaoLogin').onclick = () => {
-            document.body.removeChild(modalEscolha);
-            mostrarModalLogin();
-        };
-        
-        modalEscolha.querySelector('#opcaoComprar').onclick = () => {
-            document.body.removeChild(modalEscolha);
-            mostrarModalPagamento(acao);
-        };
-        
-        modalEscolha.querySelector('#opcaoCancelar').onclick = () => {
-            document.body.removeChild(modalEscolha);
-        };
+        console.log('mostrarOpcoesAcesso chamada para:', acao);
+        // Mostrar modal de pagamento diretamente em vez do popup de escolha
+        setTimeout(() => {
+            if (typeof window.showPaymentModal === 'function') {
+                window.showPaymentModal();
+            } else {
+                // Fallback direto
+                console.log('Usando fallback para abrir modal');
+                const modal = document.getElementById('modalPagamento');
+                if (modal) {
+                    modal.classList.add('active');
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    console.error('Modal modalPagamento não encontrado!');
+                }
+            }
+        }, 10);
     }
     
     // Elements do modal de pagamento
@@ -1580,41 +1602,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Interceptar navegações que requerem premium
-    const originalBtnMesAnteriorClick = btnMesAnterior?.onclick;
-    const originalBtnProximoMesClick = btnProximoMes?.onclick;
-    
-    btnMesAnterior?.addEventListener('click', (e) => {
-        if (!verificarNavegacaoPremium('mes-anterior')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    });
-    
-    btnProximoMes?.addEventListener('click', (e) => {
-        if (!verificarNavegacaoPremium('proximo-mes')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    });
-    
-    btnNovoEstoque?.addEventListener('click', (e) => {
-        if (!verificarNavegacaoPremium('novo-estoque')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    });
-    
-    btnVoltarEstoque?.addEventListener('click', (e) => {
-        if (!verificarNavegacaoPremium('voltar-estoque')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    });
+    // Event listeners de navegação premium removidos - agora sempre mostra modal de pagamento
     
     // Inicializar status premium
     atualizarStatusPremium();

@@ -670,6 +670,12 @@
             margin: 64px auto 0 auto; /* 64px para ficar logo abaixo da barra superior moderna */
             left: 50%;
             transform: translateX(-50%);
+            /* Melhorias para apresentação empresarial */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
         }
         @media (orientation: landscape) {
             .video-banner-topo {
@@ -719,6 +725,59 @@
             display: block;
             margin: 0 auto; /* Centralização horizontal */
             border: none !important;
+            /* Configurações empresariais profissionais */
+            pointer-events: none !important; /* Remove interação do usuário */
+            outline: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            /* Remove controles nativos */
+            -webkit-media-controls: none !important;
+            -webkit-media-controls-panel: none !important;
+            -webkit-media-controls-play-button: none !important;
+            -webkit-media-controls-start-playback-button: none !important;
+            -webkit-media-controls-timeline: none !important;
+            -webkit-media-controls-current-time-display: none !important;
+            -webkit-media-controls-time-remaining-display: none !important;
+            -webkit-media-controls-volume-slider: none !important;
+            -webkit-media-controls-mute-button: none !important;
+            -webkit-media-controls-fullscreen-button: none !important;
+            /* Otimização para apresentação empresarial */
+            filter: contrast(1.05) brightness(1.02) saturate(1.1) !important;
+            transition: none !important;
+        }
+        
+        /* Remove qualquer possibilidade de controles em diferentes navegadores */
+        .video-banner-move video::-webkit-media-controls {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-timeline {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-current-time-display {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-time-remaining-display {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-volume-slider {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-mute-button {
+            display: none !important;
+        }
+        .video-banner-move video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
         }
         @media (max-width: 768px) {
             .video-banner-move video {
@@ -1570,7 +1629,7 @@
 
         /* --- Fim Header & Navigation REORGANIZADO --- */
 
-        /* === RESUMO DE ITENS REORGANIZADO === */
+        /* === RESUMO DE ITENS REORGANIZADO - FORMATO LINHA === */
         #resumoItens {
             max-width: 1200px;
             margin: 24px auto;
@@ -1599,22 +1658,44 @@
 
         #listaResumoItens {
             display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        /* Custom scrollbar para melhor aparência */
+        #listaResumoItens::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #listaResumoItens::-webkit-scrollbar-track {
+            background: var(--bg-color-medium);
+            border-radius: 3px;
+        }
+
+        #listaResumoItens::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        #listaResumoItens::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
         }
 
         .resumo-item {
             background: linear-gradient(135deg, var(--bg-color-dark) 0%, var(--bg-color-medium) 100%);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            min-width: 220px;
-            max-width: 300px;
-            flex: 1 1 220px;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
-            overflow: hidden;
+            min-height: 50px;
         }
 
         .resumo-item::before {
@@ -1622,94 +1703,154 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800);
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #4CAF50, #2196F3, #FF9800);
             opacity: 0;
             transition: opacity 0.3s ease;
+            border-radius: 8px 0 0 8px;
         }
 
         .resumo-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
-            border-color: #4CAF50;
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-color: var(--accent-color);
         }
 
         .resumo-item:hover::before {
             opacity: 1;
         }
 
+        .resumo-item-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
         .resumo-item-nome {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-color);
-            margin-bottom: 16px;
-            text-align: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-            position: relative;
+            margin: 0;
+            min-width: 120px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .resumo-item-valores {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .resumo-entrada,
+        .resumo-saida {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 60px;
+            justify-content: center;
         }
 
         .resumo-entrada {
             color: #4CAF50;
-            font-weight: 600;
-            font-size: 0.9rem;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .resumo-entrada::before {
+            content: '↗';
+            font-size: 0.8rem;
         }
 
         .resumo-saida {
             color: #f44336;
-            font-weight: 600;
-            font-size: 0.9rem;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .resumo-saida::before {
+            content: '↘';
+            font-size: 0.8rem;
         }
 
         .resumo-saldo {
             font-weight: 700;
-            font-size: 1rem;
-            padding: 4px 8px;
+            font-size: 0.95rem;
+            padding: 6px 12px;
             border-radius: 6px;
+            min-width: 70px;
+            text-align: center;
+            border: 1px solid;
         }
 
         .resumo-saldo.positivo {
             color: #4CAF50;
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(76, 175, 80, 0.15);
+            border-color: rgba(76, 175, 80, 0.3);
         }
 
         .resumo-saldo.negativo {
             color: #f44336;
-            background: rgba(244, 67, 54, 0.1);
+            background: rgba(244, 67, 54, 0.15);
+            border-color: rgba(244, 67, 54, 0.3);
         }
 
         .resumo-saldo.zero {
             color: var(--text-color);
-            background: rgba(128, 128, 128, 0.1);
+            background: rgba(128, 128, 128, 0.15);
+            border-color: rgba(128, 128, 128, 0.3);
         }
 
         .resumo-vazio {
             text-align: center;
             color: var(--secondary-text-color);
             font-style: italic;
-            padding: 40px;
+            padding: 40px 20px;
             width: 100%;
         }
 
         @media (max-width: 768px) {
-            #listaResumoItens {
+            .resumo-item {
                 flex-direction: column;
+                align-items: flex-start;
+                padding: 16px;
                 gap: 12px;
             }
             
-            .resumo-item {
+            .resumo-item-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                width: 100%;
+            }
+            
+            .resumo-item-nome {
                 min-width: auto;
                 max-width: none;
             }
+            
+            .resumo-item-valores {
+                justify-content: space-between;
+                width: 100%;
+            }
         }
+
+        @media (max-width: 480px) {
+            .resumo-item-valores {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+        }
+
+
 
         /* Remove todas as regras antigas dos botões específicos que foram reorganizadas */
         /* === BOTÃO TEMA REORGANIZADO === */
@@ -2992,27 +3133,7 @@
             color: var(--accent-color) !important;
         }
 
-        /* Logo empresarial space */
-        .company-branding {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(var(--accent-rgb), 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(var(--accent-rgb), 0.2);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent-color);
-            z-index: 50;
-            transition: all 0.3s ease;
-        }
 
-        .company-branding:hover {
-            background: rgba(var(--accent-rgb), 0.15);
-            transform: translateY(-2px);
-        }
 
         /* Efeitos premium nos gráficos */
         .graficos-top {
@@ -3140,7 +3261,7 @@
     <!-- Video Banner -->
     <div class="video-banner-topo">
         <div class="video-banner-move">
-            <video autoplay muted loop>
+            <video autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback">
                 <source src="Dcodeanimation.mp4" type="video/mp4">
                 Seu navegador não suporta vídeos HTML5.
             </video>
@@ -3344,21 +3465,21 @@
                 <div class="card-fields">
                     <div class="card-group">
                         <label class="card-label" data-translate="cardNumber">Número do Cartão</label>
-                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" class="card-input">
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" class="card-input" data-translate-placeholder="cardNumberPlaceholder">
                     </div>
                     <div class="card-row">
                         <div class="card-group">
                             <label class="card-label" data-translate="expiryDate">Validade</label>
-                            <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" class="card-input">
+                            <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" class="card-input" data-translate-placeholder="cardExpiryPlaceholder">
                         </div>
                         <div class="card-group">
                             <label class="card-label" data-translate="cvv">CVV</label>
-                            <input type="text" id="cardCvv" placeholder="123" maxlength="4" class="card-input">
+                            <input type="text" id="cardCvv" placeholder="123" maxlength="4" class="card-input" data-translate-placeholder="cardCvvPlaceholder">
                         </div>
                     </div>
                     <div class="card-group">
                         <label class="card-label" data-translate="cardName">Nome no Cartão</label>
-                        <input type="text" id="cardName" placeholder="Nome completo" class="card-input">
+                        <input type="text" id="cardName" placeholder="Nome completo" class="card-input" data-translate-placeholder="cardNamePlaceholder">
                     </div>
                     <div class="card-group">
                         <label class="card-label" data-translate="installments">Parcelas</label>
@@ -3430,10 +3551,7 @@
         </div>
     </div>
 
-    <!-- Branding Empresarial -->
-    <div class="company-branding">
-        <span>💼 DcodeStock Pro</span>
-    </div>
+
 
     <!-- Scripts -->
     <script>
@@ -3558,7 +3676,33 @@
                     'forgotPassword': 'Esqueceu a senha?',
                     
                     // Meses
-                    'months': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+                    'months': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    
+                    // Additional translations
+                    'addItem': 'Adicionar Item',
+                    'removeItem': 'Remover Item',
+                    'clearAll': 'Limpar Tudo',
+                    'save': 'Salvar',
+                    'export': 'Exportar',
+                    'import': 'Importar',
+                    'settings': 'Configurações',
+                    'about': 'Sobre',
+                    'help': 'Ajuda',
+                    'close': 'Fechar',
+                    'ok': 'OK',
+                    'yes': 'Sim',
+                    'no': 'Não',
+                    'loading': 'Carregando...',
+                    'success': 'Sucesso!',
+                    'error': 'Erro!',
+                    'warning': 'Aviso!',
+                    'info': 'Informação',
+                    
+                    // Card placeholders
+                    'cardNumberPlaceholder': '1234 5678 9012 3456',
+                    'cardExpiryPlaceholder': 'MM/AA',
+                    'cardCvvPlaceholder': '123',
+                    'cardNamePlaceholder': 'Nome completo'
                 }
             },
             'en': { 
@@ -3677,7 +3821,33 @@
                     'forgotPassword': 'Forgot password?',
                     
                     // Months
-                    'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    
+                    // Additional translations
+                    'addItem': 'Add Item',
+                    'removeItem': 'Remove Item',
+                    'clearAll': 'Clear All',
+                    'save': 'Save',
+                    'export': 'Export',
+                    'import': 'Import',
+                    'settings': 'Settings',
+                    'about': 'About',
+                    'help': 'Help',
+                    'close': 'Close',
+                    'ok': 'OK',
+                    'yes': 'Yes',
+                    'no': 'No',
+                    'loading': 'Loading...',
+                    'success': 'Success!',
+                    'error': 'Error!',
+                    'warning': 'Warning!',
+                    'info': 'Information',
+                    
+                    // Card placeholders
+                    'cardNumberPlaceholder': '1234 5678 9012 3456',
+                    'cardExpiryPlaceholder': 'MM/YY',
+                    'cardCvvPlaceholder': '123',
+                    'cardNamePlaceholder': 'Full name'
                 }
             },
             'fr': { 
@@ -3787,7 +3957,33 @@
                     'valuePlaceholder': 'Valeur...',
                     
                     // Months
-                    'months': ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+                    'months': ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    
+                    // Additional translations
+                    'addItem': 'Ajouter Article',
+                    'removeItem': 'Supprimer Article',
+                    'clearAll': 'Tout Effacer',
+                    'save': 'Sauvegarder',
+                    'export': 'Exporter',
+                    'import': 'Importer',
+                    'settings': 'Paramètres',
+                    'about': 'À propos',
+                    'help': 'Aide',
+                    'close': 'Fermer',
+                    'ok': 'OK',
+                    'yes': 'Oui',
+                    'no': 'Non',
+                    'loading': 'Chargement...',
+                    'success': 'Succès!',
+                    'error': 'Erreur!',
+                    'warning': 'Attention!',
+                    'info': 'Information',
+                    
+                    // Card placeholders
+                    'cardNumberPlaceholder': '1234 5678 9012 3456',
+                    'cardExpiryPlaceholder': 'MM/AA',
+                    'cardCvvPlaceholder': '123',
+                    'cardNamePlaceholder': 'Nom complet'
                 }
             },
             'it': { 
@@ -3986,7 +4182,33 @@
                     'valuePlaceholder': 'Valor...',
                     
                     // Months
-                    'months': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+                    'months': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    
+                    // Additional translations
+                    'addItem': 'Agregar Artículo',
+                    'removeItem': 'Eliminar Artículo',
+                    'clearAll': 'Limpiar Todo',
+                    'save': 'Guardar',
+                    'export': 'Exportar',
+                    'import': 'Importar',
+                    'settings': 'Configuración',
+                    'about': 'Acerca de',
+                    'help': 'Ayuda',
+                    'close': 'Cerrar',
+                    'ok': 'OK',
+                    'yes': 'Sí',
+                    'no': 'No',
+                    'loading': 'Cargando...',
+                    'success': '¡Éxito!',
+                    'error': '¡Error!',
+                    'warning': '¡Advertencia!',
+                    'info': 'Información',
+                    
+                    // Card placeholders
+                    'cardNumberPlaceholder': '1234 5678 9012 3456',
+                    'cardExpiryPlaceholder': 'MM/AA',
+                    'cardCvvPlaceholder': '123',
+                    'cardNamePlaceholder': 'Nombre completo'
                 }
             }
         };
@@ -3996,6 +4218,11 @@
         function getTranslation(key, lang = currentLanguage) {
             return languages[lang]?.translations[key] || key;
         }
+        
+        // Expor função globalmente para uso em outros scripts
+        window.getTranslation = getTranslation;
+        window.applyTranslations = applyTranslations;
+        window.languages = languages;
 
         // Função auxiliar para traduzir nome de estoque padrão
         function getStockName(index, lang = currentLanguage) {
@@ -4005,6 +4232,7 @@
 
         function applyTranslations(lang) {
             const translations = languages[lang].translations;
+            console.log(`Aplicando traduções para: ${lang}`, translations);
             
             // Traduzir textos dos elementos
             document.querySelectorAll('[data-translate]').forEach(element => {
@@ -4047,6 +4275,20 @@
                 }
             });
             
+            // Traduzir inputs da tabela de forma dinâmica
+            document.querySelectorAll('input[placeholder]').forEach(input => {
+                const placeholder = input.getAttribute('placeholder');
+                if (placeholder.includes('Nome do item') || placeholder.includes('Item name') || placeholder.includes('Nome de l\'article') || placeholder.includes('Nombre del artículo')) {
+                    input.setAttribute('placeholder', translations['itemPlaceholder'] || placeholder);
+                } else if (placeholder.includes('Qtd entrada') || placeholder.includes('Entry qty') || placeholder.includes('Qté entrée') || placeholder.includes('Cant. entrada')) {
+                    input.setAttribute('placeholder', translations['entryPlaceholder'] || placeholder);
+                } else if (placeholder.includes('Qtd saída') || placeholder.includes('Exit qty') || placeholder.includes('Qté sortie') || placeholder.includes('Cant. salida')) {
+                    input.setAttribute('placeholder', translations['exitPlaceholder'] || placeholder);
+                } else if (placeholder.includes('Valor') || placeholder.includes('Value') || placeholder.includes('Valeur')) {
+                    input.setAttribute('placeholder', translations['valuePlaceholder'] || placeholder);
+                }
+            });
+            
             // Atualizar mês atual com tradução
             if (translations.months) {
                 // Expor os meses traduzidos globalmente para o script.js
@@ -4058,6 +4300,28 @@
                     window.updateMonthDisplay();
                 }
             }
+            
+            // Força a re-tradução de elementos que podem ter sido criados dinamicamente
+            setTimeout(() => {
+                // Re-aplicar traduções após um breve delay para elementos dinâmicos
+                document.querySelectorAll('[data-translate]').forEach(element => {
+                    const key = element.getAttribute('data-translate');
+                    if (translations[key] && element.textContent !== translations[key]) {
+                        const currentText = element.textContent || element.innerText;
+                        const iconMatch = currentText.match(/^[\u{1F000}-\u{1F9FF}][\u{1F000}-\u{1F9FF}]?|^[🔑👑📦📋📈📉◀▶\-\+💳🏦💳💸]/u);
+                        const icon = iconMatch ? iconMatch[0] + ' ' : '';
+                        element.textContent = icon + translations[key];
+                    }
+                });
+                
+                // Re-aplicar placeholders
+                document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-translate-placeholder');
+                    if (translations[key]) {
+                        element.setAttribute('placeholder', translations[key]);
+                    }
+                });
+            }, 100);
             
             console.log(`Idioma alterado para: ${languages[lang].fullName}`);
         }
@@ -4101,8 +4365,16 @@
                 // Aplica as traduções em toda a interface
                 applyTranslations(lang);
                 
+                // Força re-tradução após breve delay para garantir que todos os elementos sejam atualizados
+                setTimeout(() => {
+                    applyTranslations(lang);
+                }, 200);
+                
                 // Salva preferência
                 localStorage.setItem('selectedLanguage', lang);
+                
+                // Dispara evento customizado para outros scripts
+                window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
             });
         });
 
@@ -4114,6 +4386,42 @@
                 document.getElementById('currentFlag').textContent = languages[savedLang].flag;
                 applyTranslations(savedLang); // Aplica as traduções na inicialização
             }
+            
+            // Reaplica traduções quando novos elementos são adicionados
+            const observer = new MutationObserver(function(mutations) {
+                let shouldReapply = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        // Verifica se algum nó adicionado tem atributos de tradução
+                        for (let node of mutation.addedNodes) {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                if (node.hasAttribute && (node.hasAttribute('data-translate') || 
+                                    node.hasAttribute('data-translate-title') || 
+                                    node.hasAttribute('data-translate-placeholder') ||
+                                    node.querySelector('[data-translate]') ||
+                                    node.querySelector('[data-translate-title]') ||
+                                    node.querySelector('[data-translate-placeholder]'))) {
+                                    shouldReapply = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                if (shouldReapply) {
+                    // Reaplica traduções após um breve delay
+                    setTimeout(() => {
+                        applyTranslations(currentLanguage);
+                    }, 50);
+                }
+            });
+            
+            // Observa mudanças no DOM
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
         });
 
         // Fecha menus ao clicar fora
@@ -4203,129 +4511,18 @@
         }
 
         function showLoginSuccess() {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: linear-gradient(135deg, #4CAF50, #45a049);
-                color: white;
-                padding: 20px 28px;
-                border-radius: 16px;
-                font-weight: 600;
-                font-size: 1rem;
-                z-index: 2000;
-                box-shadow: 
-                    0 12px 30px rgba(76, 175, 80, 0.5),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-                animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                transform: translateX(100%);
-                opacity: 0;
-                transition: all 0.5s ease;
-            `;
-            toast.innerHTML = '✅ Login realizado com sucesso!';
-            
-            document.body.appendChild(toast);
-            
-            // Trigger animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-                toast.style.opacity = '1';
-            }, 10);
-            
-            // Remove with animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+            // Removido - sem popup toast
+            console.log('Login realizado com sucesso!');
         }
 
         function showLoginError() {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: linear-gradient(135deg, #f44336, #d32f2f);
-                color: white;
-                padding: 20px 28px;
-                border-radius: 16px;
-                font-weight: 600;
-                font-size: 1rem;
-                z-index: 2000;
-                box-shadow: 
-                    0 12px 30px rgba(244, 67, 54, 0.5),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-                animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                transform: translateX(100%);
-                opacity: 0;
-                transition: all 0.5s ease;
-            `;
-            toast.innerHTML = '❌ Usuário ou senha incorretos!';
-            
-            document.body.appendChild(toast);
-            
-            // Trigger animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-                toast.style.opacity = '1';
-            }, 10);
-            
-            // Remove with animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+            // Removido - sem popup toast
+            console.log('Erro no login!');
         }
 
         function showLogoutSuccess() {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: linear-gradient(135deg, #2196F3, #1976D2);
-                color: white;
-                padding: 20px 28px;
-                border-radius: 16px;
-                font-weight: 600;
-                font-size: 1rem;
-                z-index: 2000;
-                box-shadow: 
-                    0 12px 30px rgba(33, 150, 243, 0.5),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-                animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                transform: translateX(100%);
-                opacity: 0;
-                transition: all 0.5s ease;
-            `;
-            toast.innerHTML = '👋 Logout realizado com sucesso!';
-            
-            document.body.appendChild(toast);
-            
-            // Trigger animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-                toast.style.opacity = '1';
-            }, 10);
-            
-            // Remove with animation
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+            // Removido - sem popup toast
+            console.log('Logout realizado com sucesso!');
         }
 
         function showRegister() {
@@ -4366,45 +4563,53 @@
             }
         });
 
-        // Adiciona animação CSS para os toasts
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        // CSS para animações removido - sem toasts
 
         // === FUNÇÕES DO MODAL PREMIUM === //
         function showPaymentModal() {
-            const modal = document.getElementById('modalPagamento');
-            modal.classList.add('active');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            console.log('showPaymentModal chamada');
+            const modalElement = document.getElementById('modalPagamento');
+            if (modalElement) {
+                console.log('Modal encontrado, abrindo...');
+                modalElement.classList.add('active');
+                modalElement.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                console.error('Modal modalPagamento não encontrado!');
+            }
         }
+        
+        // Expor função globalmente
+        window.showPaymentModal = showPaymentModal;
 
         function closePaymentModal() {
-            const modal = document.getElementById('modalPagamento');
-            modal.classList.remove('active');
+            const modalElement = document.getElementById('modalPagamento');
+            modalElement.classList.remove('active');
             setTimeout(() => {
-                modal.style.display = 'none';
+                modalElement.style.display = 'none';
                 document.body.style.overflow = '';
             }, 500);
         }
 
         // Event listeners para o modal premium
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM carregado, inicializando modal premium...');
+            
+            // Verificar se modal existe
+            const modalPagamento = document.getElementById('modalPagamento');
+            if (modalPagamento) {
+                console.log('Modal modalPagamento encontrado!');
+            } else {
+                console.error('Modal modalPagamento NÃO encontrado!');
+            }
+            
             // Botão fechar
             const closeBtn = document.getElementById('fecharModalPagamento');
             if (closeBtn) {
                 closeBtn.addEventListener('click', closePaymentModal);
+                console.log('Botão fechar modal configurado');
+            } else {
+                console.error('Botão fechar modal não encontrado');
             }
 
             // Botão cancelar
@@ -4446,9 +4651,9 @@
             }
 
             // Fechar modal ao clicar fora
-            const modal = document.getElementById('modalPagamento');
-            if (modal) {
-                modal.addEventListener('click', function(e) {
+            const modalOutsideClick = document.getElementById('modalPagamento');
+            if (modalOutsideClick) {
+                modalOutsideClick.addEventListener('click', function(e) {
                     if (e.target === this) {
                         closePaymentModal();
                     }
@@ -4457,44 +4662,75 @@
         });
 
         function showPremiumSuccess() {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: linear-gradient(135deg, #FFD700, #FFA500);
-                color: #000;
-                padding: 20px 28px;
-                border-radius: 16px;
-                font-weight: 600;
-                font-size: 1rem;
-                z-index: 2000;
-                box-shadow: 
-                    0 12px 30px rgba(255, 215, 0, 0.5),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                transform: translateX(100%);
-                opacity: 0;
-                transition: all 0.5s ease;
-            `;
-            toast.innerHTML = '🎉 Plano Premium ativado com sucesso!';
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-                toast.style.opacity = '1';
-            }, 10);
-            
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+            // Removido - sem popup toast
+            console.log('Plano Premium ativado com sucesso!');
         }
     </script>
+    
+    <!-- Script para otimização empresarial do vídeo -->
+    <script>
+        // Configuração empresarial do vídeo para apresentação profissional
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-banner-move video');
+            
+            if (video) {
+                // Configurações profissionais para apresentação empresarial
+                video.setAttribute('webkit-playsinline', 'true');
+                video.setAttribute('playsinline', 'true');
+                video.setAttribute('x5-playsinline', 'true');
+                video.setAttribute('x5-video-player-type', 'h5');
+                video.setAttribute('x5-video-player-fullscreen', 'false');
+                video.setAttribute('x5-video-orientation', 'portraint');
+                
+                // Remove completamente qualquer controle
+                video.controls = false;
+                video.removeAttribute('controls');
+                
+                // Garante reprodução contínua
+                video.play().catch(e => {
+                    console.log('Autoplay foi bloqueado pelo navegador');
+                });
+                
+                // Previne menu de contexto
+                video.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                
+                // Previne clique direito e seleção
+                video.addEventListener('selectstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                
+                // Previne drag
+                video.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                
+                // Garante que não haja interrupções
+                video.addEventListener('pause', function() {
+                    video.play();
+                });
+                
+                // Otimização para apresentação empresarial
+                video.addEventListener('loadedmetadata', function() {
+                    video.currentTime = 0;
+                });
+                
+                // Controle de qualidade para apresentação
+                video.addEventListener('canplaythrough', function() {
+                    video.style.opacity = '1';
+                    video.style.transition = 'opacity 0.5s ease';
+                });
+                
+                // Inicializa com opacidade 0 para transição suave
+                video.style.opacity = '0';
+            }
+        });
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="script.js"></script>
