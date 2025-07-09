@@ -253,12 +253,12 @@
             color: var(--text-color) !important;
             border: 2px solid var(--border-color) !important;
             border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 10px 20px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .month-navigation button:hover {
@@ -347,8 +347,8 @@
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
-            gap: 4px !important;
-            padding: 0 2px !important;
+            gap: 8px !important;
+            padding: 0 4px !important;
             flex-wrap: nowrap !important;
             min-width: 0 !important;
             width: 100%;
@@ -356,18 +356,18 @@
         }
         .month-navigation button {
             flex: 0 0 auto;
-            min-width: 0 !important;
+            min-width: 140px !important;
             white-space: nowrap;
-            font-size: 0.9rem;
-            padding: 7px 8px;
+            font-size: 1rem;
+            padding: 10px 16px;
         }
         #mesAtual {
             flex: 1 1 auto;
             min-width: 0;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             color: var(--text-color) !important;
-            margin: 0 4px;
+            margin: 0 8px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -375,15 +375,16 @@
         }
         @media (max-width: 400px) {
             .month-navigation {
-                gap: 2px !important;
+                gap: 4px !important;
             }
             .month-navigation button {
-                font-size: 0.8rem;
-                padding: 4px 4px;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+                min-width: 100px !important;
             }
             #mesAtual {
-                font-size: 0.85rem;
-                margin: 0 2px;
+                font-size: 1rem;
+                margin: 0 4px;
             }
         }
         @media (max-width: 350px) {
@@ -398,15 +399,15 @@
                 padding: 0 2px !important;
             }
             .month-navigation button, .stock-actions button, #btnLimparHistorico {
-                font-size: 0.7rem !important;
-                padding: 2px 4px !important;
-                min-width: 24px !important;
-                min-height: 24px !important;
+                font-size: 0.8rem !important;
+                padding: 6px 8px !important;
+                min-width: 80px !important;
+                min-height: 32px !important;
             }
             #mesAtual, #nomeEstoqueInput {
-                font-size: 0.8rem !important;
-                margin: 0 2px !important;
-                max-width: 80px !important;
+                font-size: 0.9rem !important;
+                margin: 0 4px !important;
+                max-width: 120px !important;
             }
             .stock-actions .nav-button {
                 width: 24px !important;
@@ -446,14 +447,14 @@
                 font-size: 10px;
             }
             .month-navigation button, .stock-actions button, #btnLimparHistorico {
-                font-size: 0.6rem !important;
-                padding: 1px 2px !important;
-                min-width: 18px !important;
-                min-height: 18px !important;
+                font-size: 0.75rem !important;
+                padding: 4px 6px !important;
+                min-width: 60px !important;
+                min-height: 28px !important;
             }
             #mesAtual, #nomeEstoqueInput {
-                font-size: 0.7rem !important;
-                max-width: 60px !important;
+                font-size: 0.8rem !important;
+                max-width: 100px !important;
             }
             .stock-actions .nav-button {
                 width: 18px !important;
@@ -2815,6 +2816,7 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
+            min-height: 500px; /* Altura mínima para evitar cortes */
         }
 
         .plan-option {
@@ -2822,11 +2824,15 @@
             background: var(--bg-color-dark);
             border: 2px solid var(--border-color);
             border-radius: 24px;
-            padding: 30px 25px;
+            padding: 30px 25px 25px 25px; /* Padding ajustado para acomodar o badge */
             text-align: center;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            overflow: hidden;
+            overflow: visible; /* Mudado para visible para mostrar o badge completo */
+            min-height: 450px; /* Altura mínima para garantir espaço suficiente */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .plan-option::before {
@@ -2860,7 +2866,7 @@
 
         .plan-badge {
             position: absolute;
-            top: -15px;
+            top: -12px; /* Ajustado para ficar mais visível */
             right: 20px;
             padding: 8px 16px;
             border-radius: 20px;
@@ -2868,6 +2874,8 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            z-index: 10; /* Garantir que fique acima de outros elementos */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3); /* Sombra para destacar */
         }
 
         .plan-option[data-plan="monthly"] .plan-badge {
@@ -3049,25 +3057,152 @@
         /* Responsividade Premium */
         @media (max-width: 768px) {
             .premium-container {
-                padding: 25px;
-                margin: 20px;
+                padding: 20px;
+                margin: 10px;
+                max-height: 95vh;
+                overflow-y: auto;
+                border-radius: 16px;
             }
             
             .premium-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .premium-plans {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 15px;
+                min-height: auto;
+            }
+            
+            .plan-option {
+                min-height: 350px;
+                padding: 20px 15px 15px 15px;
             }
             
             .payment-methods {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .premium-actions {
                 flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-confirm, .btn-cancel {
+                width: 100%;
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+
+        /* iPhone e Mobile Específico */
+        @media (max-width: 480px) {
+            .premium-modal {
+                padding: 0;
+                align-items: flex-start;
+            }
+            
+            .premium-container {
+                margin: 0;
+                padding: 15px;
+                min-height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                width: 100%;
+            }
+            
+            .premium-title {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .premium-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+            }
+            
+            .premium-features {
+                margin-bottom: 20px;
+            }
+            
+            .feature-item {
+                font-size: 0.85rem;
+                padding: 8px 0;
+            }
+            
+            .plan-option {
+                min-height: 300px;
+                padding: 15px 12px 12px 12px;
+            }
+            
+            .plan-name {
+                font-size: 1.2rem;
+            }
+            
+            .amount {
+                font-size: 2.5rem;
+            }
+            
+            .plan-features li {
+                font-size: 0.85rem;
+                padding: 6px 0;
+            }
+            
+            .payment-method {
+                padding: 12px;
+            }
+            
+            .card-form {
+                padding: 15px;
+            }
+            
+            .card-input {
+                padding: 12px;
+                font-size: 16px; /* Evita zoom no iOS */
+            }
+            
+            .pix-key-input {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .copy-pix-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* iPhone X e modelos similares */
+        @media (max-width: 414px) and (min-height: 812px) {
+            .premium-container {
+                padding-top: env(safe-area-inset-top, 20px);
+                padding-bottom: env(safe-area-inset-bottom, 20px);
+            }
+        }
+
+        /* iPhone SE e telas pequenas */
+        @media (max-width: 375px) {
+            .premium-container {
+                padding: 10px;
+            }
+            
+            .premium-title {
+                font-size: 1.3rem;
+            }
+            
+            .plan-option {
+                min-height: 280px;
+                padding: 12px 10px 10px 10px;
+            }
+            
+            .amount {
+                font-size: 2rem;
+            }
+            
+            .card-input {
+                padding: 10px;
+                font-size: 16px;
             }
         }
 
@@ -3168,16 +3303,8 @@
             <span id="notifyBadge" style="display:none;position:absolute;top:2px;right:2px;background:#f00;color:#fff;font-size:0.7em;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;">0</span>
         </button>
         
-        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage">
-            <div class="globe-container">
-                <div class="globe-background"></div>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="globe-icon">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="2" y1="12" x2="22" y2="12"/>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-                <span class="country-flag" id="currentFlag">🇧🇷</span>
-            </div>
+        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage" style="font-size:24px;padding:8px;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all 0.3s ease;">
+            <span class="country-flag" id="currentFlag">🇧🇷</span>
         </button>
         
         <button id="themeToggleTop" title="Alternar tema" data-translate-title="toggleTheme">🌙</button>
@@ -3200,20 +3327,20 @@
     <!-- Menu de Seleção de Idiomas -->
     <div id="languageMenu" style="display:none;position:fixed;top:60px;right:20px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:12px;padding:12px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
         <div style="display:flex;flex-direction:column;gap:8px;">
-            <button class="language-option" data-lang="pt" style="padding:10px 16px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;text-align:left;">
-                🇧🇷 Português
+            <button class="language-option" data-lang="pt" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Português">
+                🇧🇷
             </button>
-            <button class="language-option" data-lang="en" style="padding:10px 16px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;text-align:left;">
-                🇺🇸 English
+            <button class="language-option" data-lang="en" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="English">
+                🇺🇸
             </button>
-            <button class="language-option" data-lang="fr" style="padding:10px 16px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;text-align:left;">
-                🇫🇷 Français
+            <button class="language-option" data-lang="fr" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Français">
+                🇫🇷
             </button>
-            <button class="language-option" data-lang="it" style="padding:10px 16px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;text-align:left;">
-                🇮🇹 Italiano
+            <button class="language-option" data-lang="it" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Italiano">
+                🇮🇹
             </button>
-            <button class="language-option" data-lang="es" style="padding:10px 16px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;text-align:left;">
-                🇪🇸 Español
+            <button class="language-option" data-lang="es" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Español">
+                🇪🇸
             </button>
         </div>
     </div>
@@ -3270,19 +3397,19 @@
 
     <!-- Header with Navigation -->
     <header>
-        <div class="month-navigation">
-            <button id="btnMesAnterior" data-translate="previousMonth">Mês Anterior</button>
-            <div id="mesAtual">Janeiro de 2025</div>
-            <button id="btnProximoMes" data-translate="nextMonth">Próximo Mês</button>
+        <div class="month-navigation" style="gap:8px;">
+            <button id="btnMesAnterior" data-translate="previousMonth" style="padding:8px 12px;font-size:13px;">Mês Anterior</button>
+            <div id="mesAtual" style="padding:8px 16px;font-size:14px;min-width:140px;">Janeiro de 2025</div>
+            <button id="btnProximoMes" data-translate="nextMonth" style="padding:8px 12px;font-size:13px;">Próximo Mês</button>
         </div>
         
-        <div class="stock-actions">
-            <button id="btnVoltarEstoque" class="nav-button" title="Estoque Anterior" data-translate-title="backStock">-</button>
+        <div class="stock-actions" style="gap:8px;">
+            <button id="btnVoltarEstoque" class="nav-button" title="Estoque Anterior" data-translate-title="backStock" style="width:32px;height:32px;font-size:16px;padding:0;">-</button>
         
-        <div class="nome-estoque-container">
-            <input type="text" id="nomeEstoqueInput" placeholder="Nome do Estoque" data-translate-placeholder="stockName" maxlength="50">
+        <div class="nome-estoque-container" style="min-width:200px;">
+            <input type="text" id="nomeEstoqueInput" placeholder="Nome do Estoque" data-translate-placeholder="stockName" maxlength="50" style="padding:8px 12px;font-size:14px;">
         </div>
-            <button id="btnNovoEstoque" class="nav-button" title="Próximo Estoque" data-translate-title="newStock">+</button>
+            <button id="btnNovoEstoque" class="nav-button" title="Próximo Estoque" data-translate-title="newStock" style="width:32px;height:32px;font-size:16px;padding:0;">+</button>
         </div>
     </header>
 
@@ -3483,7 +3610,7 @@
                         <label class="card-label" data-translate="cardName">Nome no Cartão</label>
                         <input type="text" id="cardName" placeholder="Nome completo" class="card-input" data-translate-placeholder="cardNamePlaceholder">
                     </div>
-                    <div class="card-group">
+                    <div class="card-group" id="installmentsGroup" style="display:none;">
                         <label class="card-label" data-translate="installments">Parcelas</label>
                         <select id="cardInstallments" class="card-input">
                             <option value="1">1x R$ 29,00 (à vista)</option>
@@ -3496,14 +3623,14 @@
                 </div>
             </div>
 
-            <!-- Área PIX (sempre visível) -->
-            <div id="pixArea" class="pix-area">
+            <!-- Área PIX (oculta por padrão, visível apenas quando PIX for selecionado) -->
+            <div id="pixArea" class="pix-area" style="display:none;">
                 <h4 class="pix-title" data-translate="pixPayment">Pagamento PIX</h4>
                 <div class="pix-content">
                     <div class="pix-info">
                         <span class="pix-label" data-translate="pixKey">Chave PIX:</span>
                         <div class="pix-key-container">
-                            <input type="text" id="pixKey" value="839b9d0b-af64-4e52-b737-ee642d3cb1ba" readonly class="pix-key-input">
+                            <input type="text" id="pixKey" value="00020126580014br.gov.bcb.pix013650b9d0b-af64-4e52-b737-ee642d3cb1ba5204000053039865802BR5913DCODE SISTEMAS6009SAO PAULO62070503***6304A1B2" readonly class="pix-key-input">
                             <button id="copyPixBtn" class="copy-pix-btn" data-translate="copyPix">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
@@ -3531,24 +3658,21 @@
     <!-- Menu de Compartilhamento Ultra-Moderno -->
     <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:16px;padding:16px;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
         <div style="display:flex;flex-direction:column;gap:14px;">
-            <button id="shareWhatsapp" style="padding:14px 18px;border:none;background:#25D366;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(37, 211, 102, 0.3);" data-translate="whatsapp">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <button id="shareWhatsapp" style="padding:16px;border:none;background:#25D366;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(37, 211, 102, 0.3);width:56px;height:56px;" data-translate="whatsapp" title="WhatsApp">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.051 3.488"/>
                 </svg>
-                WhatsApp
             </button>
-            <button id="shareEmail" style="padding:14px 18px;border:none;background:#EA4335;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(234, 67, 53, 0.3);" data-translate="email">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <button id="shareEmail" style="padding:16px;border:none;background:#EA4335;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(234, 67, 53, 0.3);width:56px;height:56px;" data-translate="email" title="Email">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                 </svg>
-                Email
             </button>
-            <button id="sharePdf" style="padding:14px 18px;border:none;background:#FF5722;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(255, 87, 34, 0.3);" data-translate="pdf">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <button id="sharePdf" style="padding:16px;border:none;background:#FF5722;color:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(255, 87, 34, 0.3);width:56px;height:56px;" data-translate="pdf" title="PDF">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                     <path d="M8.5,13.5L11,16.5L15.5,12L19,16H5L8.5,13.5Z"/>
                 </svg>
-                PDF
             </button>
         </div>
     </div>

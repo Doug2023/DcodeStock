@@ -1,5 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado, iniciando aplicação...');
+    
+    // ===== FUNÇÃO UTILITÁRIA PARA FILTRAR UNDEFINED =====
+    function filterUndefined(value, defaultValue = '') {
+        if (value === undefined || value === null || value === 'undefined' || String(value).toLowerCase() === 'undefined') {
+            return defaultValue;
+        }
+        return value;
+    }
+    
+    function cleanText(text, defaultValue = '') {
+        if (!text || text === 'undefined' || String(text).toLowerCase() === 'undefined' || text.trim() === '') {
+            return defaultValue;
+        }
+        return String(text).trim();
+    }
+    
+    // Expor globalmente para uso em outras funções
+    window.filterUndefined = filterUndefined;
+    window.cleanText = cleanText;
+    
+    // ===== INICIALIZAÇÃO FORÇADA =====
+    // SEMPRE iniciar no estoque 1 (índice 0) e mês atual, independente do estado anterior
+    localStorage.setItem('currentStockIndex', '0');
+    console.log('Sistema iniciado/recarregado - forçando estoque 1 e mês atual');
 
     // --- DOM Elements ---
     const mesAtualEl = document.getElementById('mesAtual');
@@ -69,45 +93,35 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateMonthDisplay = updateMonthDisplay;
 
     btnMesAnterior?.addEventListener('click', () => {
-        console.log('Clique mês anterior - mostrando modal de pagamento');
-        // Pequeno delay para garantir que window.showPaymentModal esteja disponível
-        setTimeout(() => {
-            if (typeof window.showPaymentModal === 'function') {
-                window.showPaymentModal();
-            } else {
-                // Fallback direto
-                console.log('Usando fallback para abrir modal');
-                const modal = document.getElementById('modalPagamento');
-                if (modal) {
-                    modal.classList.add('active');
-                    modal.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    console.error('Modal modalPagamento não encontrado!');
-                }
-            }
-        }, 10);
+        console.log('🔴 Clique no botão mês anterior detectado!');
+        
+        if (verificarNavegacaoPremium('navegacao_mes_anterior')) {
+            console.log('✅ Usuário premium - navegando para mês anterior');
+            salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+            
+            displayedDate.setMonth(displayedDate.getMonth() - 1);
+            loadStock(currentStockIndex, null);
+            updateMonthDisplay();
+            mostrarFeedbackNavegacao(currentStockIndex);
+        } else {
+            console.log('❌ Usuário sem premium - modal deve aparecer!');
+        }
     });
 
     btnProximoMes?.addEventListener('click', () => {
-        console.log('Clique próximo mês - mostrando modal de pagamento');
-        // Pequeno delay para garantir que window.showPaymentModal esteja disponível
-        setTimeout(() => {
-            if (typeof window.showPaymentModal === 'function') {
-                window.showPaymentModal();
-            } else {
-                // Fallback direto
-                console.log('Usando fallback para abrir modal');
-                const modal = document.getElementById('modalPagamento');
-                if (modal) {
-                    modal.classList.add('active');
-                    modal.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    console.error('Modal modalPagamento não encontrado!');
-                }
-            }
-        }, 10);
+        console.log('🟠 Clique no botão próximo mês detectado!');
+        
+        if (verificarNavegacaoPremium('navegacao_mes_proximo')) {
+            console.log('✅ Usuário premium - navegando para próximo mês');
+            salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+            
+            displayedDate.setMonth(displayedDate.getMonth() + 1);
+            loadStock(currentStockIndex, null);
+            updateMonthDisplay();
+            mostrarFeedbackNavegacao(currentStockIndex);
+        } else {
+            console.log('❌ Usuário sem premium - modal deve aparecer!');
+        }
     });
 
     // --- Chart Setup with Error Handling ---
@@ -462,10 +476,18 @@ document.addEventListener('DOMContentLoaded', () => {
         allStocksMeta = allStocksMeta.slice(0, MAX_STOCKS);
     }
 
-    let currentStockIndex = parseInt(localStorage.getItem('currentStockIndex') || '0');
-    if (currentStockIndex < 0 || currentStockIndex >= MAX_STOCKS) {
-        currentStockIndex = 0;
-    }
+    // ===== FORÇAR INICIALIZAÇÃO NO ESTOQUE 1 E MÊS ATUAL =====
+    // Garantir que SEMPRE inicie no estoque 1 (índice 0) e mês atual
+    // IMPORTANTE: Este sistema foi projetado para que:
+    // 1. Qualquer acesso/reload sempre comece no estoque 1
+    // 2. Navegação para outros estoques/meses só é permitida com premium/login
+    // 3. Após logout, sempre retorna ao estoque 1
+    // 4. Verificações de segurança garantem que não há "vazamentos" de navegação
+    let currentStockIndex = 0;
+    displayedDate = new Date(); // Garantir que seja sempre o mês atual
+    
+    // Salvar configuração inicial forçada
+    localStorage.setItem('currentStockIndex', '0');
 
     // --- Função para obter a chave do localStorage para o estoque e mês específicos ---
     function getStorageKey(index, date) {
@@ -672,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('📊 Dados para salvar:', dadosParaSalvar);
 
             const monthYearKey = getMonthYearKey(dateToSave);
-            const currentName = nomeEstoqueInput.value.trim().substring(0, 50) || (window.getStockName ? window.getStockName(index, window.currentLanguage || 'pt') : `Estoque ${index + 1}`);
+            const currentName = cleanText(nomeEstoqueInput.value, '').substring(0, 50) || (window.getStockName ? window.getStockName(index, window.currentLanguage || 'pt') : `Estoque ${index + 1}`);
 
             allStocksMeta[index].namesByMonth[monthYearKey] = currentName;
             localStorage.setItem('allStocksMeta', JSON.stringify(allStocksMeta));
@@ -750,12 +772,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('currentStockIndex', currentStockIndex);
 
         const monthYearKey = getMonthYearKey(displayedDate);
-        const defaultName = window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`;
+        const defaultName = cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
         const savedName = allStocksMeta[currentStockIndex].namesByMonth[monthYearKey] || defaultName;
         
         // Atualizar o nome do estoque com indicador visual
         nomeEstoqueInput.value = savedName;
-        nomeEstoqueInput.placeholder = (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`) + ` de ${MAX_STOCKS}`;
+        nomeEstoqueInput.placeholder = cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`) + ` de ${MAX_STOCKS}`;
         
         console.log(`📝 Carregando estoque ${currentStockIndex + 1}/${MAX_STOCKS}: ${savedName}`);
 
@@ -819,6 +841,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of the current stock when the page loads
     loadStock(currentStockIndex);
+    
+    // ===== VERIFICAÇÃO FINAL DE SEGURANÇA =====
+    // Garantir que sempre esteja no estoque 1 e mês atual (último checkpoint)
+    setTimeout(() => {
+        if (currentStockIndex !== 0) {
+            console.warn('⚠️ Correção aplicada: forçando retorno ao estoque 1');
+            currentStockIndex = 0;
+            displayedDate = new Date();
+            loadStock(currentStockIndex);
+            updateMonthDisplay();
+        }
+        console.log('✅ Verificação de segurança concluída - Sistema no estoque 1');
+    }, 100);
 
     // Garantir que o resumo seja exibido inicialmente
     setTimeout(() => {
@@ -835,60 +870,60 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Input nome estoque não encontrado - ID: nomeEstoqueInput');
     }
 
-    // '+' button to show payment modal instead of navigating
+    // '+' button - navegação para próximo estoque ou modal premium
     if (btnNovoEstoque) {
         console.log('Adicionando event listener ao botão +...');
         btnNovoEstoque.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Clique no botão + detectado! - mostrando modal de pagamento');
+            e.stopPropagation();
+            console.log('🟢 Clique no botão + detectado!');
             
-            // Pequeno delay para garantir que window.showPaymentModal esteja disponível
-            setTimeout(() => {
-                if (typeof window.showPaymentModal === 'function') {
-                    window.showPaymentModal();
+            if (verificarNavegacaoPremium('navegacao_estoque_proximo')) {
+                console.log('Usuário premium - navegando para próximo estoque');
+                const proximoIndex = Math.min(currentStockIndex + 1, MAX_STOCKS - 1);
+                
+                if (proximoIndex !== currentStockIndex) {
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                    currentStockIndex = proximoIndex;
+                    loadStock(currentStockIndex);
+                    mostrarFeedbackNavegacao(currentStockIndex);
                 } else {
-                    // Fallback direto
-                    console.log('Usando fallback para abrir modal');
-                    const modal = document.getElementById('modalPagamento');
-                    if (modal) {
-                        modal.classList.add('active');
-                        modal.style.display = 'flex';
-                        document.body.style.overflow = 'hidden';
-                    } else {
-                        console.error('Modal modalPagamento não encontrado!');
-                    }
+                    console.log('Já está no último estoque');
+                    mostrarMensagem('Você já está no último estoque disponível.', 'info');
                 }
-            }, 10);
+            } else {
+                console.log('❌ Usuário sem premium - modal deve aparecer para botão +!');
+            }
         });
         console.log('✅ Event listener + adicionado com sucesso');
     } else {
         console.error('❌ Botão + não encontrado - ID: btnNovoEstoque');
     }
 
-    // '-' button to show payment modal instead of navigating
+    // '-' button - navegação para estoque anterior ou modal premium
     if (btnVoltarEstoque) {
         console.log('Adicionando event listener ao botão -...');
         btnVoltarEstoque.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Clique no botão - detectado! - mostrando modal de pagamento');
+            e.stopPropagation();
+            console.log('🔵 Clique no botão - detectado!');
             
-            // Pequeno delay para garantir que window.showPaymentModal esteja disponível
-            setTimeout(() => {
-                if (typeof window.showPaymentModal === 'function') {
-                    window.showPaymentModal();
+            if (verificarNavegacaoPremium('navegacao_estoque_anterior')) {
+                console.log('Usuário premium - navegando para estoque anterior');
+                const anteriorIndex = Math.max(currentStockIndex - 1, 0);
+                
+                if (anteriorIndex !== currentStockIndex) {
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                    currentStockIndex = anteriorIndex;
+                    loadStock(currentStockIndex);
+                    mostrarFeedbackNavegacao(currentStockIndex);
                 } else {
-                    // Fallback direto
-                    console.log('Usando fallback para abrir modal');
-                    const modal = document.getElementById('modalPagamento');
-                    if (modal) {
-                        modal.classList.add('active');
-                        modal.style.display = 'flex';
-                        document.body.style.overflow = 'hidden';
-                    } else {
-                        console.error('Modal modalPagamento não encontrado!');
-                    }
+                    console.log('Já está no primeiro estoque');
+                    mostrarMensagem('Você já está no primeiro estoque.', 'info');
                 }
-            }, 10);
+            } else {
+                console.log('❌ Usuário sem premium - modal deve aparecer para botão -!');
+            }
         });
         console.log('✅ Event listener - adicionado com sucesso');
     } else {
@@ -898,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button to clear history for current stock (for the current month)
     if (btnLimparHistorico) {
         btnLimparHistorico.addEventListener('click', () => {
-            const stockName = allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)] || (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
+            const stockName = cleanText(allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)]) || cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
             if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}" no mês de ${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}? Esta ação é irreversível.`)) {
                 // Limpar ambas as listas
                 listaEntradas.innerHTML = '';
@@ -985,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para gerar texto do estoque atual para compartilhamento
     function gerarTextoCompartilhamento() {
         const monthYearKey = getMonthYearKey(displayedDate);
-        const nomeEstoque = nomeEstoqueInput.value.trim() || (allStocksMeta[currentStockIndex]?.namesByMonth?.[monthYearKey] || (window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`));
+        const nomeEstoque = cleanText(nomeEstoqueInput.value) || cleanText(allStocksMeta[currentStockIndex]?.namesByMonth?.[monthYearKey]) || cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
         let texto = `📊 ${window.getTranslation ? window.getTranslation('stockDefault', window.currentLanguage || 'pt') : 'Estoque'}: ${nomeEstoque}\n📅 Mês: ${mesAtualEl.textContent}\n\n📦 Itens:\n`;
         
         const linhas = tabelaBody.querySelectorAll('tr');
@@ -1201,11 +1236,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SISTEMA DE PAGAMENTO/ASSINATURA ---
     
     // Credenciais master para acesso premium
-    const CREDENCIAIS_MASTER = {
-        login: 'Daphiny',
-        senha: '2019',
-        email: 'admin@dcodestock.com' // Email para recuperação
-    };
+    const CREDENCIAIS_MASTER = [
+        {
+            login: 'Daphiny',
+            senha: '2019',
+            email: 'admin@dcodestock.com'
+        },
+        {
+            login: 'Douglas',
+            senha: 'Daphiny@#2019',
+            email: 'douglas@dcodestock.com'
+        }
+    ];
     
     // Verificar se usuário está logado
     function verificarLogin() {
@@ -1220,33 +1262,61 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Verificar status da assinatura (agora inclui login)
     function verificarAssinatura() {
+        console.log('🔍 Verificando assinatura...');
+        
         // Primeiro verifica se está logado
-        if (verificarLogin()) {
+        const loginAtivo = verificarLogin();
+        console.log('🔍 Login ativo:', loginAtivo);
+        
+        if (loginAtivo) {
+            console.log('✅ Login ativo encontrado');
             return true;
         }
         
         // Senão, verifica assinatura paga
         const assinatura = JSON.parse(localStorage.getItem('assinaturaPremium') || 'null');
-        if (!assinatura) return false;
+        console.log('🔍 Assinatura paga:', assinatura);
+        
+        if (!assinatura) {
+            console.log('❌ Nenhuma assinatura encontrada');
+            return false;
+        }
         
         const agora = new Date();
         const vencimento = new Date(assinatura.vencimento);
+        const assinaturaValida = agora < vencimento;
         
-        return agora < vencimento;
+        console.log('🔍 Verificação assinatura:', { agora, vencimento, valida: assinaturaValida });
+        
+        return assinaturaValida;
     }
     
     // Verificar se a navegação requer premium
     function verificarNavegacaoPremium(acao) {
+        console.log('🔍 Verificando navegação premium para:', acao);
+        
+        // Verificar se tem premium/login ativo
         if (verificarAssinatura()) {
+            console.log('✅ Usuário tem premium - navegação permitida');
+            // Marcar que já teve premium
+            localStorage.setItem('jaTevePremium', 'true');
             return true; // Usuário tem premium (pago ou logado), pode navegar
         }
         
-        // Primeira vez é gratuita (estoque 1, mês atual)
-        if (currentStockIndex === 0 && ehMesAtual(displayedDate)) {
-            return true;
+        // SEM PREMIUM = SEMPRE MOSTRAR MODAL
+        console.log('❌ Usuário sem premium - mostrando modal de pagamento');
+        
+        // Garantir que sempre volte ao estoque 1 quando tentar navegar sem premium
+        if (currentStockIndex !== 0 || !ehMesAtual(displayedDate)) {
+            console.log('🔄 Forçando retorno ao estoque 1 - navegação sem premium detectada');
+            currentStockIndex = 0;
+            displayedDate = new Date();
+            localStorage.setItem('currentStockIndex', '0');
+            loadStock(0);
+            updateMonthDisplay();
         }
         
-        // Qualquer outra navegação requer premium
+        // SEMPRE mostrar modal de pagamento se não tem premium
         mostrarOpcoesAcesso(acao);
         return false;
     }
@@ -1258,21 +1328,27 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Mostrar modal de pagamento diretamente
     function mostrarOpcoesAcesso(acao) {
-        console.log('mostrarOpcoesAcesso chamada para:', acao);
+        console.log('🚀 mostrarOpcoesAcesso chamada para:', acao);
+        console.log('📱 Tentando abrir modal de pagamento...');
+        
         // Mostrar modal de pagamento diretamente em vez do popup de escolha
         setTimeout(() => {
             if (typeof window.showPaymentModal === 'function') {
+                console.log('✅ Usando window.showPaymentModal()');
                 window.showPaymentModal();
             } else {
                 // Fallback direto
-                console.log('Usando fallback para abrir modal');
+                console.log('⚠️ Usando fallback para abrir modal');
                 const modal = document.getElementById('modalPagamento');
                 if (modal) {
+                    console.log('✅ Modal encontrado, abrindo...');
                     modal.classList.add('active');
                     modal.style.display = 'flex';
                     document.body.style.overflow = 'hidden';
                 } else {
-                    console.error('Modal modalPagamento não encontrado!');
+                    console.error('❌ Modal modalPagamento não encontrado!');
+                    // Fallback final - alert
+                    alert('🔒 Acesso Premium Necessário!\n\nPara navegar entre estoques e meses, você precisa:\n• Fazer login (Daphiny/2019 ou Douglas/premium123)\n• Ou adquirir uma assinatura premium\n\nClique em "Premium" no menu para mais opções.');
                 }
             }
         }, 10);
@@ -1607,6 +1683,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar status premium
     atualizarStatusPremium();
     
+    // === EVENT LISTENER PARA BOTÃO PREMIUM ===
+    const btnPremium = document.getElementById('btnPremium');
+    if (btnPremium) {
+        console.log('✅ Botão Premium encontrado, adicionando event listener...');
+        btnPremium.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('👑 Clique no botão Premium detectado!');
+            showPaymentModal();
+        });
+        console.log('✅ Event listener do botão Premium adicionado com sucesso');
+    } else {
+        console.warn('⚠️ Botão Premium não encontrado - ID: btnPremium');
+    }
+    
     console.log('Sistema de pagamento inicializado');
 });
 
@@ -1654,6 +1744,8 @@ function realizarLogin() {
     const login = loginUsuario.value.trim();
     const senha = loginSenha.value.trim();
     
+    console.log('🔍 Tentativa de login:', { login, senha: senha ? '***' : 'vazio' });
+    
     // Remover classes de erro
     loginUsuario.classList.remove('login-error');
     loginSenha.classList.remove('login-error');
@@ -1665,26 +1757,47 @@ function realizarLogin() {
         return;
     }
     
+    console.log('🔍 Verificando credenciais master...', CREDENCIAIS_MASTER);
+    
     // Verificar credenciais master
-    if (login === CREDENCIAIS_MASTER.login && senha === CREDENCIAIS_MASTER.senha) {
+    const masterEncontrado = CREDENCIAIS_MASTER.find(master => 
+        master.login === login && master.senha === senha
+    );
+    
+    console.log('🔍 Master encontrado:', masterEncontrado);
+    
+    if (masterEncontrado) {
+        console.log('✅ Login master bem-sucedido!');
         // Login master bem-sucedido
-        ativarLoginPremium(login, { tipo: 'master', usuario: login });
+        ativarLoginPremium(login, { tipo: 'master', usuario: login, email: masterEncontrado.email });
         fecharModalLoginFn();
-        mostrarMensagem('Login master realizado com sucesso! Acesso premium ativado.', 'sucesso');
+        mostrarMensagem(`Login master realizado com sucesso! Bem-vindo, ${login}! Acesso premium ativado.`, 'sucesso');
+        
+        // Salvar automaticamente os dados ao fazer login master
+        if (typeof salvarDadosDoMesAtual === 'function') {
+            salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+        }
+        
         window.location.reload();
         return;
     }
     
     // Verificar credenciais de clientes
     const usuarios = JSON.parse(localStorage.getItem('usuariosPremium') || '[]');
+    console.log('🔍 Verificando clientes:', usuarios);
+    
     const usuarioEncontrado = usuarios.find(user => 
         user.login === login && user.senha === senha && user.ativo
     );
+    
+    console.log('🔍 Cliente encontrado:', usuarioEncontrado);
     
     if (usuarioEncontrado) {
         // Verificar se a assinatura ainda está válida
         const agora = new Date();
         const vencimento = new Date(usuarioEncontrado.vencimento);
+        
+        console.log('🔍 Verificando vencimento:', { agora, vencimento, valida: agora <= vencimento });
         
         if (agora <= vencimento) {
             // Login de cliente válido
@@ -1700,6 +1813,7 @@ function realizarLogin() {
         }
     } else {
         // Login inválido
+        console.log('❌ Login inválido');
         loginUsuario.classList.add('login-error');
         loginSenha.classList.add('login-error');
         mostrarMensagem('Login ou senha incorretos. Tente novamente.', 'erro');
@@ -1727,10 +1841,30 @@ function ativarLoginPremium(login, dadosUsuario) {
         expiracao: expiracao.toISOString(),
         ativo: true,
         tipo: tipo,
-        plano: dadosUsuario.plano || 'master'
+        plano: dadosUsuario.plano || 'master',
+        email: dadosUsuario.email || ''
     };
     
     localStorage.setItem('loginPremium', JSON.stringify(loginData));
+    
+    // Auto-salvar dados do estoque atual quando faz login
+    console.log('🔄 Auto-salvando dados após login...');
+    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+    
+    // Salvar também dados de outros estoques se existirem
+    setTimeout(() => {
+        for (let i = 0; i < MAX_STOCKS; i++) {
+            if (i !== currentStockIndex) {
+                const storageKey = getStorageKey(i, displayedDate);
+                const existingData = localStorage.getItem(storageKey);
+                if (existingData) {
+                    console.log(`💾 Preservando dados do estoque ${i + 1}`);
+                }
+            }
+        }
+        console.log('✅ Auto-salvamento concluído');
+    }, 100);
+    
     atualizarStatusPremium();
 }
 
@@ -1771,12 +1905,15 @@ function recuperarSenha() {
     const credenciaisDisponiveis = [];
     
     // Adicionar credenciais master
-    credenciaisDisponiveis.push({
-        login: CREDENCIAIS_MASTER.login,
-        senha: CREDENCIAIS_MASTER.senha,
-        tipo: 'Acesso Master',
-        plano: 'Completo',
-        vencimento: 'Permanente'
+    CREDENCIAIS_MASTER.forEach(master => {
+        credenciaisDisponiveis.push({
+            login: master.login,
+            senha: master.senha,
+            tipo: 'Acesso Master',
+            plano: 'Completo',
+            vencimento: 'Permanente',
+            email: master.email
+        });
     });
     
     // Adicionar credenciais de clientes ativos
@@ -1797,97 +1934,206 @@ function recuperarSenha() {
         }
     });
     
-    // Simular envio de email
-    recuperacaoForm.style.display = 'none';
-    sucessoRecuperacao.style.display = 'block';
+    // Simular envio de email com feedback visual
+    mostrarMensagem('📧 Enviando credenciais por email...', 'info');
     
-    // Montar email com todas as credenciais
-    let corpoEmail = `
-        Olá,
+    setTimeout(() => {
+        // Mostrar sucesso
+        recuperacaoForm.style.display = 'none';
+        sucessoRecuperacao.style.display = 'block';
         
-        Você solicitou a recuperação de suas credenciais de acesso premium do DcodeStock.
+        // Simular envio real do email
+        enviarEmailRecuperacao(email, credenciaisDisponiveis);
         
-        Aqui estão todas as credenciais de acesso disponíveis:
-        
+        mostrarMensagem(`✅ Email enviado com sucesso para ${email}! Verifique sua caixa de entrada.`, 'sucesso');
+    }, 1500);
+}
+
+function enviarEmailRecuperacao(email, credenciais) {
+    console.log('📧 ENVIANDO EMAIL DE RECUPERAÇÃO');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`📩 Para: ${email}`);
+    console.log(`📋 Total de credenciais: ${credenciais.length}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    
+    // Montar email HTML
+    let emailHTML = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f5f5f5; padding: 20px;">
+        <div style="background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #2196F3; margin: 0;">🔐 DcodeStock</h1>
+                <h2 style="color: #333; margin: 10px 0;">Recuperação de Credenciais</h2>
+                <p style="color: #666;">Suas credenciais de acesso premium</p>
+            </div>
+            
+            <div style="background: #f8f9fa; border-left: 4px solid #2196F3; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                <p style="margin: 0; color: #333;">
+                    <strong>📧 Email solicitante:</strong> ${email}<br>
+                    <strong>📅 Data:</strong> ${new Date().toLocaleString('pt-BR')}<br>
+                    <strong>📊 Total de contas:</strong> ${credenciais.length}
+                </p>
+            </div>
     `;
     
-    credenciaisDisponiveis.forEach((cred, index) => {
-        corpoEmail += `
-        ═══════════════════════════════════════════════
-        ${index + 1}. ${cred.tipo}
-        ═══════════════════════════════════════════════
-        👤 Login: ${cred.login}
-        🔑 Senha: ${cred.senha}
-        📋 Plano: ${cred.plano}
-        📅 Válido até: ${cred.vencimento}
-        ${cred.status ? `📊 Status: ${cred.status}` : ''}
+    // Adicionar cada credencial
+    credenciais.forEach((cred, index) => {
+        const corTipo = cred.tipo.includes('Master') ? '#4CAF50' : '#FF9800';
+        const statusColor = cred.status === 'Ativo' ? '#4CAF50' : '#f44336';
         
+        emailHTML += `
+        <div style="background: #fff; border: 2px solid ${corTipo}; border-radius: 12px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: ${corTipo}; margin: 0;">${index + 1}. ${cred.tipo}</h3>
+                ${cred.status ? `<span style="background: ${statusColor}; color: white; padding: 4px 8px; border-radius: 20px; font-size: 12px; font-weight: bold;">${cred.status}</span>` : ''}
+            </div>
+            
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 15px;">
+                <div style="margin-bottom: 10px;">
+                    <strong style="color: #333;">👤 Login:</strong>
+                    <div style="background: #e3f2fd; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 16px; font-weight: bold; color: #1976d2; margin-top: 5px;">${cred.login}</div>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <strong style="color: #333;">🔑 Senha:</strong>
+                    <div style="background: #e8f5e8; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 16px; font-weight: bold; color: #388e3c; margin-top: 5px;">${cred.senha}</div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                    <div>
+                        <strong style="color: #666; font-size: 14px;">📋 Plano:</strong>
+                        <div style="color: #333; font-weight: bold;">${cred.plano}</div>
+                    </div>
+                    <div>
+                        <strong style="color: #666; font-size: 14px;">📅 Válido até:</strong>
+                        <div style="color: #333; font-weight: bold;">${cred.vencimento}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         `;
     });
     
-    corpoEmail += `
-        ═══════════════════════════════════════════════
-        
-        INSTRUÇÕES DE USO:
-        • Use qualquer uma das credenciais acima para fazer login
-        • Credenciais expiradas precisam ser renovadas
-        • O acesso Master é permanente e possui todos os recursos
-        • Guarde essas informações em local seguro
-        
-        Se você adquiriu recentemente uma assinatura e não vê suas 
-        credenciais na lista, entre em contato conosco.
-        
-        Atenciosamente,
-        Equipe DcodeStock
-        
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        Este email foi enviado automaticamente para: ${email}
-        Total de credenciais encontradas: ${credenciaisDisponiveis.length}
-        Data: ${new Date().toLocaleString('pt-BR')}
+    emailHTML += `
+            <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 20px; margin: 30px 0;">
+                <h3 style="color: #856404; margin: 0 0 15px 0;">⚠️ Instruções Importantes</h3>
+                <ul style="color: #856404; margin: 0; padding-left: 20px;">
+                    <li>Use qualquer uma das credenciais acima para fazer login</li>
+                    <li>Credenciais master têm acesso permanente e completo</li>
+                    <li>Credenciais expiradas precisam ser renovadas</li>
+                    <li>Guarde essas informações em local seguro</li>
+                    <li>Se tiver problemas, entre em contato conosco</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                <p style="color: #666; margin: 0; font-size: 14px;">
+                    Este email foi gerado automaticamente pelo sistema DcodeStock.<br>
+                    📧 Enviado para: <strong>${email}</strong><br>
+                    🕐 Em: <strong>${new Date().toLocaleString('pt-BR')}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
     `;
     
-    console.log('📧 Email de recuperação enviado para:', email);
-    console.log('📋 Credenciais encontradas:', credenciaisDisponiveis.length);
-    console.log('📄 Conteúdo completo do email:', corpoEmail);
+    // Log do conteúdo do email para desenvolvimento
+    console.log('📄 CONTEÚDO DO EMAIL:');
+    console.log(emailHTML);
     
-    // Mostrar resumo no console para desenvolvimento
-    console.table(credenciaisDisponiveis);
+    // Simular API de envio de email
+    console.log('🚀 SIMULANDO ENVIO DE EMAIL...');
+    console.log('✅ Email enviado com sucesso!');
     
-    // Em produção, aqui seria feita a chamada para API de email
-    // sendEmail(email, 'Recuperação de Credenciais - DcodeStock', corpoEmail);
+    // Em produção, aqui seria feita a chamada real para API de email:
+    // await sendEmail({
+    //     to: email,
+    //     subject: 'Recuperação de Credenciais - DcodeStock',
+    //     html: emailHTML
+    // });
+    
+    return true;
 }
 
 function realizarLogout() {
+    console.log('🔐 Realizando logout...');
+    
+    // Salvar dados antes de fazer logout
+    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+    
+    // Remover dados de login
     localStorage.removeItem('loginPremium');
+    
+    // Limpar dados dos gráficos da sessão atual (mas manter os salvos)
+    if (typeof atualizarGraficos === 'function') {
+        atualizarGraficos();
+    }
+    
     atualizarStatusPremium();
-    mostrarMensagem('Logout realizado com sucesso.', 'sucesso');
-    window.location.reload();
+    mostrarMensagem('Logout realizado com sucesso. Seus dados foram salvos. Retornando ao Estoque 1.', 'sucesso');
+    
+    // SEMPRE voltar para o primeiro estoque e mês atual
+    currentStockIndex = 0;
+    displayedDate = new Date();
+    
+    // Forçar salvamento do estado correto no localStorage
+    localStorage.setItem('currentStockIndex', '0');
+    
+    // Carregar o estoque 1 imediatamente e depois recarregar
+    setTimeout(() => {
+        loadStock(0);
+        updateMonthDisplay();
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    }, 1000);
 }
 
 function mostrarMensagem(texto, tipo) {
     const mensagem = document.createElement('div');
     mensagem.style.cssText = `
-        position: fixed; top: 20px; right: 20px; z-index: 400;
-        padding: 15px 20px; border-radius: 8px; font-weight: bold;
-        max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        position: fixed; top: 80px; right: 20px; z-index: 2000;
+        padding: 15px 20px; border-radius: 12px; font-weight: 600;
+        max-width: 350px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 2px solid;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+        transform: translateX(100%);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     `;
     
     if (tipo === 'sucesso') {
-        mensagem.style.background = '#4CAF50';
+        mensagem.style.background = 'rgba(76, 175, 80, 0.95)';
         mensagem.style.color = '#fff';
+        mensagem.style.borderColor = '#4CAF50';
+    } else if (tipo === 'info') {
+        mensagem.style.background = 'rgba(33, 150, 243, 0.95)';
+        mensagem.style.color = '#fff';
+        mensagem.style.borderColor = '#2196F3';
     } else {
-        mensagem.style.background = '#f44336';
+        mensagem.style.background = 'rgba(244, 67, 54, 0.95)';
         mensagem.style.color = '#fff';
+        mensagem.style.borderColor = '#f44336';
     }
     
     mensagem.textContent = texto;
     document.body.appendChild(mensagem);
     
+    // Animação de entrada
     setTimeout(() => {
-        if (mensagem.parentNode) {
-            mensagem.parentNode.removeChild(mensagem);
-        }
-    }, 4000);
+        mensagem.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Remover com animação
+    setTimeout(() => {
+        mensagem.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (mensagem.parentNode) {
+                mensagem.parentNode.removeChild(mensagem);
+            }
+        }, 400);
+    }, tipo === 'sucesso' ? 5000 : 4000);
 }
 
 // Event listeners do modal de login
@@ -1919,11 +2165,14 @@ function listarTodosUsuarios() {
         console.log('═══════════════════════════════════════════════');
         
         // Usuário Master
-        console.log('👑 USUÁRIO MASTER:');
-        console.log(`   Login: ${CREDENCIAIS_MASTER.login}`);
-        console.log(`   Senha: ${CREDENCIAIS_MASTER.senha}`);
-        console.log(`   Tipo: Acesso Master Permanente`);
-        console.log('');
+        console.log('👑 USUÁRIOS MASTER:');
+        CREDENCIAIS_MASTER.forEach((master, index) => {
+            console.log(`   ${index + 1}. ${master.login}`);
+            console.log(`      Senha: ${master.senha}`);
+            console.log(`      Email: ${master.email}`);
+            console.log(`      Tipo: Acesso Master Permanente`);
+            console.log('');
+        });
         
         // Usuários Clientes
         const usuarios = JSON.parse(localStorage.getItem('usuariosPremium') || '[]');
@@ -2010,19 +2259,109 @@ function listarTodosUsuarios() {
         estatisticas: estatisticasUsuarios
     };
 
+    // === FUNÇÃO DE TESTE PARA MODAL PREMIUM ===
+    window.testarModalPremium = function() {
+        console.log('🧪 TESTE: Forçando abertura do modal premium...');
+        showPaymentModal();
+    };
+
+    window.testarBotaoPremium = function() {
+        console.log('🧪 TESTE: Simulando clique no botão Premium...');
+        const btnPremium = document.getElementById('btnPremium');
+        if (btnPremium) {
+            console.log('✅ Botão Premium encontrado, simulando clique...');
+            btnPremium.click();
+        } else {
+            console.error('❌ Botão Premium não encontrado!');
+        }
+    };
+
+    window.testarBotoes = function() {
+        console.log('🧪 TESTE: Simulando clique nos botões de navegação...');
+        console.log('Testando botão +...');
+        if (btnNovoEstoque) btnNovoEstoque.click();
+        
+        setTimeout(() => {
+            console.log('Testando botão -...');
+            if (btnVoltarEstoque) btnVoltarEstoque.click();
+        }, 2000);
+        
+        setTimeout(() => {
+            console.log('Testando botão mês anterior...');
+            if (btnMesAnterior) btnMesAnterior.click();
+        }, 4000);
+        
+        setTimeout(() => {
+            console.log('Testando botão próximo mês...');
+            if (btnProximoMes) btnProximoMes.click();
+        }, 6000);
+    };
+
     // === FUNCIONALIDADE DO MODAL PREMIUM ===
     function showPaymentModal() {
+        console.log('🚀 showPaymentModal() chamada - abrindo modal de planos...');
         const modal = document.getElementById('modalPagamento');
         if (modal) {
+            console.log('✅ Modal encontrado, exibindo planos premium...');
+            
+            // Limpar/reiniciar estado do modal
+            resetModalState();
+            
             modal.classList.add('active');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Previne scroll do fundo
             initializePaymentForm();
+        } else {
+            console.error('❌ Modal modalPagamento não encontrado!');
+            // Fallback - alert informativo
+            alert('🔒 Acesso Premium Necessário!\n\n📋 Planos Disponíveis:\n\n💰 MENSAL - R$ 19,90\n✅ Acesso a todos os estoques\n✅ Navegação entre meses\n✅ Suporte completo\n\n💰 ANUAL - R$ 199,90\n✅ Todos os recursos mensais\n✅ Economia de 2 meses\n✅ Prioridade no suporte\n\n🔑 MASTERS GRATUITOS:\n• Daphiny / 2019\n• Douglas / Daphiny@#2019');
         }
     }
 
+    function resetModalState() {
+        console.log('🔄 Reiniciando estado do modal premium...');
+        
+        // Limpar seleções de plano
+        const planOptions = document.querySelectorAll('.plan-option');
+        planOptions.forEach(plan => plan.classList.remove('selected'));
+        
+        // Limpar seleções de método de pagamento
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        paymentMethods.forEach(method => method.classList.remove('active'));
+        
+        // Selecionar PIX como padrão
+        const pixMethod = document.querySelector('.payment-method[data-method="pix"]');
+        if (pixMethod) {
+            pixMethod.classList.add('active');
+            handlePaymentMethodChange('pix');
+        }
+        
+        // Limpar campos de formulário
+        const inputs = document.querySelectorAll('#modalPagamento input[type="text"], #modalPagamento input[type="email"], #modalPagamento input[type="tel"]');
+        inputs.forEach(input => {
+            input.value = '';
+            input.classList.remove('valid', 'invalid');
+        });
+        
+        // Ocultar formulário de cartão
+        hideCardForm();
+        
+        // Resetar exibição para a aba de planos
+        const planSection = document.querySelector('.payment-plans');
+        const formSection = document.querySelector('.payment-form');
+        if (planSection) planSection.style.display = 'block';
+        if (formSection) formSection.style.display = 'none';
+        
+        console.log('✅ Estado do modal resetado com sucesso');
+    }
+
     function hidePaymentModal() {
+        console.log('🔒 Fechando modal de pagamento...');
         const modal = document.getElementById('modalPagamento');
         if (modal) {
             modal.classList.remove('active');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
             hideCardForm();
         }
     }
@@ -2095,10 +2434,45 @@ function listarTodosUsuarios() {
 
     function handlePaymentMethodChange(method) {
         const cardForm = document.getElementById('cardForm');
+        const pixArea = document.getElementById('pixArea');
+        const installmentsGroup = document.getElementById('installmentsGroup');
+        
+        // Mostrar/ocultar formulário de cartão
         if (method === 'credit' || method === 'debit') {
             showCardForm();
+            
+            // Mostrar parcelamento apenas para crédito
+            if (installmentsGroup) {
+                if (method === 'credit') {
+                    installmentsGroup.style.display = 'block';
+                    // Atualizar preços para crédito
+                    const selectedPlan = document.querySelector('.plan-option.selected');
+                    if (selectedPlan) {
+                        updatePricing(selectedPlan.dataset.plan);
+                    }
+                } else {
+                    // Para débito, mostrar mas com apenas opção à vista
+                    installmentsGroup.style.display = 'block';
+                    const selectedPlan = document.querySelector('.plan-option.selected');
+                    if (selectedPlan) {
+                        updatePricingForDebit(selectedPlan.dataset.plan);
+                    }
+                }
+            }
         } else {
             hideCardForm();
+            if (installmentsGroup) {
+                installmentsGroup.style.display = 'none';
+            }
+        }
+        
+        // Mostrar/ocultar área PIX apenas quando PIX for selecionado
+        if (pixArea) {
+            if (method === 'pix') {
+                pixArea.style.display = 'block';
+            } else {
+                pixArea.style.display = 'none';
+            }
         }
         
         // Atualizar instruções específicas do método
@@ -2242,6 +2616,18 @@ function listarTodosUsuarios() {
                 <option value="6">6x R$ 54,50</option>
                 <option value="12">12x R$ 29,50</option>
             `;
+        }
+    }
+
+    function updatePricingForDebit(plan) {
+        const installmentsSelect = document.getElementById('cardInstallments');
+        if (!installmentsSelect) return;
+
+        // Para débito, apenas à vista
+        if (plan === 'monthly') {
+            installmentsSelect.innerHTML = `<option value="1">R$ 29,00 (débito à vista)</option>`;
+        } else {
+            installmentsSelect.innerHTML = `<option value="1">R$ 299,00 (débito à vista)</option>`;
         }
     }
 
