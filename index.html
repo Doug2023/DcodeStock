@@ -3,8 +3,31 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DcodeStock" />
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="Dcodelogo.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="Dcodelogo.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="Dcodelogo.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="Dcodelogo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="Dcodelogo.png" />
+    
+    <!-- iOS Splash Screen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-startup-image" href="Dcodelogo.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="Dcodelogo.png" />
+    <link rel="shortcut icon" href="Dcodelogo.png" />
+    
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
@@ -242,29 +265,30 @@
             width: 100%;
             max-width: 600px;
             gap: 12px;
-            background: var(--bg-color-dark);
+            /* Removido fundo unificado e borda para separar os botões */
             padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
         }
 
         .month-navigation button {
             background: var(--bg-color-dark) !important;
             color: var(--text-color) !important;
             border: 2px solid var(--border-color) !important;
-            border-radius: 8px;
-            padding: 10px 20px;
+            border-radius: 12px; /* Bordas mais arredondadas para visual independente */
+            padding: 12px 20px; /* Padding maior para destaque individual */
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 140px;
+            /* Adicionando sombra sutil para individualizar cada botão */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .month-navigation button:hover {
             background: var(--button-hover-bg) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px); /* Movimento mais pronunciado */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* Sombra maior no hover */
+            border-color: var(--accent-color) !important; /* Borda colorida no hover */
         }
 
         #mesAtual {
@@ -274,6 +298,12 @@
             font-weight: 700;
             color: var(--text-color) !important;
             margin: 0 16px;
+            /* Adicionando visual próprio para o display do mês */
+            background: var(--bg-color-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .stock-actions {
@@ -282,20 +312,18 @@
             justify-content: space-between;
             width: 100%;
             max-width: 600px;
-            gap: 12px;
-            background: var(--bg-color-dark);
+            gap: 20px; /* Gap maior para separar visualmente os elementos */
+            /* Removido fundo unificado e borda para separar os botões */
             padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
         }
 
         .stock-actions .nav-button {
             background: var(--bg-color-dark) !important;
             color: var(--text-color) !important;
             border: 2px solid var(--border-color) !important;
-            border-radius: 8px;
-            width: 44px;
-            height: 44px;
+            border-radius: 12px; /* Bordas mais arredondadas para visual independente */
+            width: 50px; /* Ligeiramente maior para melhor aparência */
+            height: 50px;
             font-size: 1.5rem;
             font-weight: 700;
             cursor: pointer;
@@ -303,42 +331,68 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* Adicionando sombra sutil para individualizar cada botão */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .stock-actions .nav-button:hover {
             background: var(--button-hover-bg) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px); /* Movimento mais pronunciado */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* Sombra maior no hover */
+            border-color: var(--accent-color) !important; /* Borda colorida no hover */
         }
 
-        /* --- Botões seguem o tema --- */
-        .month-navigation button,
-        .stock-actions button,
+        /* Estilo específico para o input do nome do estoque */
+        .nome-estoque-container {
+            flex: 1;
+            max-width: 250px;
+        }
+
+        #nomeEstoqueInput {
+            width: 100%;
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
+            border-radius: 12px; /* Mesma borda dos botões */
+            padding: 12px 16px; /* Padding consistente com os botões */
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            /* Sombra sutil para consistência visual */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        #nomeEstoqueInput:focus {
+            outline: none;
+            border-color: var(--accent-color) !important;
+            box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+            transform: translateY(-1px);
+        }
+
+        #nomeEstoqueInput::placeholder {
+            color: var(--secondary-text-color);
+            opacity: 0.7;
+        }
+
+        /* --- Botões seguem o tema (aplicado apenas aos outros botões) --- */
         #btnLimparHistorico {
             background: var(--bg-color-dark) !important;
             color: var(--text-color) !important;
             border: 2px solid var(--border-color) !important;
-            box-shadow: none !important;
-            border-radius: 6px;
-            padding: 10px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 12px 20px;
             font-size: 1rem;
-            transition: background 0.2s, color 0.2s, border 0.2s;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-        .month-navigation button:hover,
-        .stock-actions button:hover,
         #btnLimparHistorico:hover {
             background: var(--button-hover-bg) !important;
             color: var(--text-color) !important;
-            border-color: var(--border-color) !important;
-        }
-        .stock-actions .nav-button {
-            min-width: 40px;
-            min-height: 40px;
-            font-size: 1.5rem;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border-color: var(--accent-color) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
         /* --- Responsividade dos Botões e Navegação --- */
@@ -354,6 +408,20 @@
             width: 100%;
             margin-bottom: 10px;
         }
+
+        .stock-actions {
+            display: flex;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 12px !important;
+            padding: 0 4px !important;
+            flex-wrap: nowrap !important;
+            min-width: 0 !important;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
         .month-navigation button {
             flex: 0 0 auto;
             min-width: 140px !important;
@@ -361,6 +429,16 @@
             font-size: 1rem;
             padding: 10px 16px;
         }
+
+        .stock-actions .nav-button {
+            flex: 0 0 auto;
+            min-width: 50px !important;
+            min-height: 50px !important;
+            white-space: nowrap;
+            font-size: 1.5rem;
+            padding: 0;
+        }
+
         #mesAtual {
             flex: 1 1 auto;
             min-width: 0;
@@ -373,18 +451,45 @@
             white-space: nowrap;
             width: auto !important;
         }
+
+        .nome-estoque-container {
+            flex: 1 1 auto;
+            min-width: 120px;
+            max-width: 250px;
+        }
+
+        #nomeEstoqueInput {
+            min-width: 120px;
+            font-size: 1rem;
+        }
         @media (max-width: 400px) {
             .month-navigation {
                 gap: 4px !important;
+            }
+            .stock-actions {
+                gap: 6px !important;
             }
             .month-navigation button {
                 font-size: 0.9rem;
                 padding: 8px 10px;
                 min-width: 100px !important;
             }
+            .stock-actions .nav-button {
+                min-width: 45px !important;
+                min-height: 45px !important;
+                font-size: 1.3rem;
+            }
             #mesAtual {
                 font-size: 1rem;
                 margin: 0 4px;
+            }
+            .nome-estoque-container {
+                min-width: 100px;
+                max-width: 180px;
+            }
+            #nomeEstoqueInput {
+                font-size: 0.9rem;
+                padding: 10px 12px;
             }
         }
         @media (max-width: 350px) {
@@ -395,19 +500,24 @@
                 padding: 0 2px !important;
             }
             .month-navigation, .stock-actions {
-                gap: 2px !important;
+                gap: 4px !important;
                 padding: 0 2px !important;
             }
-            .month-navigation button, .stock-actions button, #btnLimparHistorico {
+            .month-navigation button, .stock-actions .nav-button, #btnLimparHistorico {
                 font-size: 0.8rem !important;
                 padding: 6px 8px !important;
-                min-width: 80px !important;
+                min-width: 70px !important;
                 min-height: 32px !important;
+            }
+            .stock-actions .nav-button {
+                min-width: 40px !important;
+                min-height: 40px !important;
+                font-size: 1.2rem !important;
             }
             #mesAtual, #nomeEstoqueInput {
                 font-size: 0.9rem !important;
                 margin: 0 4px !important;
-                max-width: 120px !important;
+                max-width: 100px !important;
             }
             .stock-actions .nav-button {
                 width: 24px !important;
@@ -2670,6 +2780,62 @@
             animation: bounceIn 0.8s ease-out;
         }
 
+        /* === BOTÃO TOGGLE SENHA === */
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-text-color);
+            opacity: 0.7;
+            z-index: 10;
+        }
+
+        .password-toggle:hover {
+            background: rgba(var(--accent-rgb), 0.15);
+            color: var(--accent-color);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .password-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .password-toggle .eye-icon {
+            width: 18px;
+            height: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle.password-visible .eye-icon {
+            color: var(--accent-color);
+            opacity: 1;
+        }
+
+        /* Linha cortando o olho quando senha está oculta */
+        .password-toggle:not(.password-visible)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 24px;
+            background: currentColor;
+            transform: translate(-50%, -50%) rotate(45deg);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
         /* === MODAL PREMIUM ULTRA-MODERNO === */
         .premium-modal {
             position: fixed;
@@ -3371,6 +3537,12 @@
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
                     <input type="password" id="loginPassword" class="form-input" placeholder="Senha" data-translate-placeholder="password" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword', this)" title="Mostrar/Ocultar senha">
+                        <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
                 </div>
                 
                 <button type="submit" class="login-button-submit" data-translate="signIn">
@@ -3388,7 +3560,7 @@
     <!-- Video Banner -->
     <div class="video-banner-topo">
         <div class="video-banner-move">
-            <video autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback">
+            <video autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" webkit-playsinline="true" poster="Dcodelogo.png">
                 <source src="Dcodeanimation.mp4" type="video/mp4">
                 Seu navegador não suporta vídeos HTML5.
             </video>
@@ -3397,19 +3569,20 @@
 
     <!-- Header with Navigation -->
     <header>
-        <div class="month-navigation" style="gap:8px;">
+        <div class="month-navigation" style="gap:20px;">
             <button id="btnMesAnterior" data-translate="previousMonth" style="padding:8px 12px;font-size:13px;">Mês Anterior</button>
             <div id="mesAtual" style="padding:8px 16px;font-size:14px;min-width:140px;">Janeiro de 2025</div>
             <button id="btnProximoMes" data-translate="nextMonth" style="padding:8px 12px;font-size:13px;">Próximo Mês</button>
         </div>
         
-        <div class="stock-actions" style="gap:8px;">
-            <button id="btnVoltarEstoque" class="nav-button" title="Estoque Anterior" data-translate-title="backStock" style="width:32px;height:32px;font-size:16px;padding:0;">-</button>
+        <div class="stock-actions">
+            <button id="btnVoltarEstoque" class="nav-button" title="Estoque Anterior" data-translate-title="backStock">-</button>
         
-        <div class="nome-estoque-container" style="min-width:200px;">
-            <input type="text" id="nomeEstoqueInput" placeholder="Nome do Estoque" data-translate-placeholder="stockName" maxlength="50" style="padding:8px 12px;font-size:14px;">
-        </div>
-            <button id="btnNovoEstoque" class="nav-button" title="Próximo Estoque" data-translate-title="newStock" style="width:32px;height:32px;font-size:16px;padding:0;">+</button>
+            <div class="nome-estoque-container">
+                <input type="text" id="nomeEstoqueInput" placeholder="Nome do Estoque" data-translate-placeholder="stockName" maxlength="50">
+            </div>
+            
+            <button id="btnNovoEstoque" class="nav-button" title="Próximo Estoque" data-translate-title="newStock">+</button>
         </div>
     </header>
 
@@ -4588,36 +4761,67 @@
                 return;
             }
             
-            // Simulação de login (aqui você pode integrar com sua API)
-            if (username === 'admin' && password === 'admin') {
+            // Integração com o sistema principal - simular campos do sistema principal
+            const tempLoginUsuario = { value: username };
+            const tempLoginSenha = { value: password };
+            
+            // Verificar credenciais master (mesmo sistema do script.js)
+            const CREDENCIAIS_MASTER = [
+                { login: 'Daphiny', senha: '2019', email: 'admin@dcodestock.com' },
+                { login: 'Douglas', senha: 'Daphiny@#2019', email: 'douglas@dcodestock.com' }
+            ];
+            
+            const masterEncontrado = CREDENCIAIS_MASTER.find(master => 
+                master.login === username && master.senha === password
+            );
+            
+            if (masterEncontrado) {
+                console.log('✅ Login master bem-sucedido via modal moderno!');
+                
                 // Adiciona animação de sucesso
                 container.classList.add('success');
                 
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('username', username);
+                // Salvar login premium no localStorage (mesmo formato do script.js)
+                const agora = new Date();
+                const expiracao = new Date(agora);
+                expiracao.setFullYear(expiracao.getFullYear() + 10); // 10 anos para master
                 
-                // Atualiza o botão de login
+                const loginData = {
+                    usuario: username,
+                    ativacao: agora.toISOString(),
+                    expiracao: expiracao.toISOString(),
+                    ativo: true,
+                    tipo: 'master',
+                    plano: 'master',
+                    email: masterEncontrado.email
+                };
+                
+                localStorage.setItem('loginPremium', JSON.stringify(loginData));
+                
+                // Atualizar interface
                 const btnLogin = document.getElementById('btnLogin');
-                btnLogin.innerHTML = '👤 ' + username;
-                btnLogin.classList.add('logged-in');
-                btnLogin.onclick = logout;
-                btnLogin.title = 'Clique para sair';
+                if (btnLogin) {
+                    btnLogin.innerHTML = '👤 ' + username;
+                    btnLogin.classList.add('logged-in');
+                    btnLogin.title = 'Master logado - Premium ativo';
+                }
                 
-                // Fecha modal com delay para mostrar animação
+                // Feedback visual
                 setTimeout(() => {
                     closeLoginModal();
                     container.classList.remove('success');
+                    
+                    // Mostrar mensagem de sucesso e recarregar
+                    alert(`✅ Login master realizado com sucesso!\n\nBem-vindo, ${username}!\n\nAcesso premium ativado. A página será recarregada.`);
+                    window.location.reload();
                 }, 800);
                 
-                // Feedback visual moderno
-                showLoginSuccess();
             } else {
-                // Adiciona animação de erro
+                // Login inválido
+                console.log('❌ Login inválido no modal moderno');
                 container.classList.add('error');
                 setTimeout(() => container.classList.remove('error'), 600);
-                
-                // Feedback de erro moderno
-                showLoginError();
+                alert('❌ Login ou senha incorretos.\n\n🔑 Use as credenciais master:\n• Douglas / Daphiny@#2019\n• Daphiny / 2019');
             }
         }
 
@@ -4659,6 +4863,36 @@
         function showForgotPassword() {
             closeLoginModal();
             alert('Funcionalidade de recuperação de senha em desenvolvimento!');
+        }
+
+        // === FUNÇÃO TOGGLE SENHA === //
+        function togglePasswordVisibility(inputId, toggleButton) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = toggleButton.querySelector('.eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                // Mostrar senha
+                passwordInput.type = 'text';
+                toggleButton.classList.add('password-visible');
+                toggleButton.title = 'Ocultar senha';
+                
+                // Trocar ícone para olho aberto
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+            } else {
+                // Ocultar senha
+                passwordInput.type = 'password';
+                toggleButton.classList.remove('password-visible');
+                toggleButton.title = 'Mostrar senha';
+                
+                // Trocar ícone para olho fechado
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+            }
         }
 
         // Fecha modal ao clicar fora do container
@@ -4800,6 +5034,10 @@
             const video = document.querySelector('.video-banner-move video');
             
             if (video) {
+                // Detecta iOS
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+                
                 // Configurações profissionais para apresentação empresarial
                 video.setAttribute('webkit-playsinline', 'true');
                 video.setAttribute('playsinline', 'true');
@@ -4808,14 +5046,35 @@
                 video.setAttribute('x5-video-player-fullscreen', 'false');
                 video.setAttribute('x5-video-orientation', 'portraint');
                 
+                // Configurações específicas para iOS
+                if (isIOS) {
+                    video.setAttribute('playsInline', 'true');
+                    video.setAttribute('webkit-playsInline', 'true');
+                    video.muted = true;
+                    video.loop = true;
+                    video.autoplay = true;
+                    video.preload = 'metadata';
+                }
+                
                 // Remove completamente qualquer controle
                 video.controls = false;
                 video.removeAttribute('controls');
                 
+                // Função para forçar reprodução
+                const forcePlay = () => {
+                    if (video.paused) {
+                        video.play().catch(e => {
+                            console.log('Autoplay foi bloqueado pelo navegador');
+                            // Tenta novamente após interação do usuário
+                            document.addEventListener('click', () => {
+                                video.play().catch(console.log);
+                            }, { once: true });
+                        });
+                    }
+                };
+                
                 // Garante reprodução contínua
-                video.play().catch(e => {
-                    console.log('Autoplay foi bloqueado pelo navegador');
-                });
+                forcePlay();
                 
                 // Previne menu de contexto
                 video.addEventListener('contextmenu', function(e) {
@@ -4837,22 +5096,34 @@
                 
                 // Garante que não haja interrupções
                 video.addEventListener('pause', function() {
-                    video.play();
+                    setTimeout(forcePlay, 100);
                 });
                 
                 // Otimização para apresentação empresarial
                 video.addEventListener('loadedmetadata', function() {
                     video.currentTime = 0;
+                    forcePlay();
                 });
                 
                 // Controle de qualidade para apresentação
                 video.addEventListener('canplaythrough', function() {
                     video.style.opacity = '1';
                     video.style.transition = 'opacity 0.5s ease';
+                    forcePlay();
+                });
+                
+                // Especial para iOS - força reprodução após carregamento
+                video.addEventListener('loadeddata', function() {
+                    if (isIOS) {
+                        setTimeout(forcePlay, 500);
+                    }
                 });
                 
                 // Inicializa com opacidade 0 para transição suave
                 video.style.opacity = '0';
+                
+                // Tenta reproduzir após um breve delay
+                setTimeout(forcePlay, 1000);
             }
         });
     </script>
