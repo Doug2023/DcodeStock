@@ -31,6 +31,55 @@
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
+    
+    <!-- CSS de Força Máxima para Ícones -->
+    <style>
+        /* === FORÇA MÁXIMA - GARANTE VISIBILIDADE DOS ÍCONES === */
+        #shareWhatsapp, #shareEmail, #sharePdf {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 210 !important;
+            pointer-events: auto !important;
+        }
+        
+        #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            width: 32px !important;
+            height: 32px !important;
+            fill: #ffffff !important;
+            stroke: none !important;
+        }
+        
+        #shareMenu {
+            z-index: 999999 !important;
+            pointer-events: auto !important;
+        }
+        
+        #btnShare {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+        
+        .country-flag, #currentFlag {
+            font-size: 24px !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .language-option {
+            font-size: 28px !important;
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
+    
     <style>
         /* --- General Styles --- */
         :root {
@@ -4040,155 +4089,330 @@
     </style>
 </head>
 <body>
-    <!-- Script de Correção de Bandeiras e Ícones -->
+    <!-- Script de Correção DEFINITIVA de Bandeiras e Ícones -->
     <script>
-    // === CORREÇÃO DEFINITIVA DE BANDEIRAS E ÍCONES ===
+    // === CORREÇÃO DEFINITIVA E ROBUSTA - SEM CONFLITOS ===
+    
+    // Flag para evitar múltiplas execuções
+    window.dcodeFixExecuted = false;
+    window.dcodeShareMenuOpen = false;
     
     // Corrige bandeiras do botão de idioma
     function updateLanguageButtonFlag() {
-        const lang = localStorage.getItem('selectedLanguage') || 'pt';
-        const flags = { 
-            pt: '🇧🇷', 
-            en: '🇺🇸', 
-            es: '🇪🇸', 
-            fr: '🇫🇷', 
-            it: '🇮🇹' 
-        };
-        const flag = flags[lang] || '🇧🇷';
-        
-        // Atualiza o botão principal
-        const flagEl = document.getElementById('currentFlag');
-        if (flagEl) {
-            flagEl.textContent = flag;
-            flagEl.innerHTML = flag; // força como emoji
-        }
-        
-        // Força também no botão se não tiver o elemento currentFlag
-        const langBtn = document.getElementById('btnLanguage');
-        if (langBtn && !flagEl) {
-            langBtn.innerHTML = `<span class="country-flag" id="currentFlag">${flag}</span>`;
+        try {
+            const lang = localStorage.getItem('selectedLanguage') || 'pt';
+            const flags = { 
+                pt: '🇧🇷', 
+                en: '🇺🇸', 
+                es: '🇪🇸', 
+                fr: '🇫🇷', 
+                it: '🇮🇹' 
+            };
+            const flag = flags[lang] || '🇧🇷';
+            
+            // Atualiza o botão principal
+            const flagEl = document.getElementById('currentFlag');
+            if (flagEl) {
+                flagEl.textContent = flag;
+                flagEl.innerHTML = flag;
+                flagEl.style.fontSize = '24px';
+                flagEl.style.display = 'inline-block';
+            }
+            
+            // Força também no botão se não tiver o elemento currentFlag
+            const langBtn = document.getElementById('btnLanguage');
+            if (langBtn && !flagEl) {
+                langBtn.innerHTML = `<span class="country-flag" id="currentFlag" style="font-size:24px;">${flag}</span>`;
+            }
+        } catch (e) {
+            console.log('Erro ao atualizar bandeira:', e);
         }
     }
 
     // Corrige menu de idiomas para mostrar só bandeiras
     function fixLanguageMenu() {
-        const menu = document.getElementById('languageMenu');
-        if (!menu) return;
-        
-        const flags = { 
-            pt: '🇧🇷', 
-            en: '🇺🇸', 
-            es: '🇪🇸', 
-            fr: '🇫🇷', 
-            it: '🇮🇹' 
-        };
-        
-        menu.querySelectorAll('.language-option').forEach(btn => {
-            const lang = btn.getAttribute('data-lang');
-            if (flags[lang]) {
-                btn.innerHTML = flags[lang];
-                btn.style.fontSize = '28px';
-                btn.style.display = 'flex';
-                btn.style.alignItems = 'center';
-                btn.style.justifyContent = 'center';
-                
-                // Define título baseado no idioma
-                const titles = {
-                    pt: 'Português',
-                    en: 'English', 
-                    es: 'Español',
-                    fr: 'Français',
-                    it: 'Italiano'
-                };
-                btn.title = titles[lang] || lang;
-            }
-        });
-    }
-
-    // Corrige ícones de compartilhamento
-    function fixShareIcons() {
-        const shareIcons = {
-            shareWhatsapp: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
-            shareEmail: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>`,
-            sharePdf: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2" ry="2"/><path d="M8 6h8"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg>`
-        };
-        
-        Object.keys(shareIcons).forEach(id => {
-            const btn = document.getElementById(id);
-            if (btn) {
-                // Se não tem SVG, adiciona
-                if (!btn.querySelector('svg')) {
-                    btn.innerHTML = shareIcons[id];
-                }
-                
-                // Força estilos de visibilidade
-                btn.style.display = 'flex';
-                btn.style.alignItems = 'center';
-                btn.style.justifyContent = 'center';
-                btn.style.opacity = '1';
-                btn.style.visibility = 'visible';
-                btn.style.zIndex = '210';
-                
-                // Força o SVG a ser visível
-                const svg = btn.querySelector('svg');
-                if (svg) {
-                    svg.style.display = 'block';
-                    svg.style.opacity = '1';
-                    svg.style.visibility = 'visible';
-                    svg.style.fill = 'none';
-                    svg.style.stroke = 'currentColor';
-                }
-            }
-        });
-    }
-
-    // Garante que o menu de compartilhamento funcione
-    function fixShareMenu() {
-        const btnShare = document.getElementById('btnShare');
-        const shareMenu = document.getElementById('shareMenu');
-        
-        if (btnShare && shareMenu) {
-            // Força visibilidade do botão
-            btnShare.style.display = 'flex';
-            btnShare.style.opacity = '1';
-            btnShare.style.visibility = 'visible';
+        try {
+            const menu = document.getElementById('languageMenu');
+            if (!menu) return;
             
-            // Inicialmente esconde o menu
-            shareMenu.style.display = 'none';
-            shareMenu.style.opacity = '1';
-            shareMenu.style.visibility = 'visible';
-            shareMenu.style.zIndex = '200';
-            
-            // Remove listeners antigos e adiciona novo
-            btnShare.onclick = function(e) {
-                e.stopPropagation();
-                const isVisible = shareMenu.style.display !== 'none';
-                shareMenu.style.display = isVisible ? 'none' : 'block';
+            const flags = { 
+                pt: '🇧🇷', 
+                en: '🇺🇸', 
+                es: '🇪🇸', 
+                fr: '🇫🇷', 
+                it: '🇮🇹' 
             };
             
-            // Fecha ao clicar fora
-            document.addEventListener('click', function(e) {
-                if (!shareMenu.contains(e.target) && e.target !== btnShare) {
-                    shareMenu.style.display = 'none';
+            const titles = {
+                pt: 'Português',
+                en: 'English', 
+                es: 'Español',
+                fr: 'Français',
+                it: 'Italiano'
+            };
+            
+            menu.querySelectorAll('.language-option').forEach(btn => {
+                const lang = btn.getAttribute('data-lang');
+                if (flags[lang]) {
+                    btn.innerHTML = flags[lang];
+                    btn.title = titles[lang] || lang;
+                    
+                    // Força estilos para garantir visibilidade
+                    btn.style.fontSize = '28px';
+                    btn.style.display = 'flex';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    btn.style.width = '48px';
+                    btn.style.height = '48px';
+                    btn.style.border = 'none';
+                    btn.style.background = 'transparent';
+                    btn.style.cursor = 'pointer';
+                    btn.style.borderRadius = '8px';
+                    btn.style.transition = 'all 0.3s ease';
                 }
             });
+        } catch (e) {
+            console.log('Erro ao corrigir menu de idiomas:', e);
+        }
+    }
+
+    // Corrige ícones de compartilhamento com SVGs originais
+    function fixShareIcons() {
+        try {
+            // Força os SVGs originais que já estão no HTML para serem visíveis
+            const shareButtons = ['shareWhatsapp', 'shareEmail', 'sharePdf'];
+            
+            shareButtons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    // Força estilos de visibilidade no botão
+                    btn.style.display = 'flex !important';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    btn.style.opacity = '1 !important';
+                    btn.style.visibility = 'visible !important';
+                    btn.style.zIndex = '210';
+                    btn.style.pointerEvents = 'auto';
+                    
+                    // Força o SVG a ser visível
+                    const svg = btn.querySelector('svg');
+                    if (svg) {
+                        svg.style.display = 'block !important';
+                        svg.style.opacity = '1 !important';
+                        svg.style.visibility = 'visible !important';
+                        svg.style.width = '32px';
+                        svg.style.height = '32px';
+                        svg.style.minWidth = '32px';
+                        svg.style.minHeight = '32px';
+                        svg.style.fill = '#ffffff';
+                        svg.style.stroke = 'none';
+                        svg.style.pointerEvents = 'none';
+                    }
+                }
+            });
+        } catch (e) {
+            console.log('Erro ao corrigir ícones de compartilhamento:', e);
+        }
+    }
+
+    // Sistema robusto para o menu de compartilhamento
+    function fixShareMenu() {
+        try {
+            const btnShare = document.getElementById('btnShare');
+            const shareMenu = document.getElementById('shareMenu');
+            
+            if (btnShare && shareMenu) {
+                // Remove TODOS os event listeners antigos
+                const newBtnShare = btnShare.cloneNode(true);
+                btnShare.parentNode.replaceChild(newBtnShare, btnShare);
+                
+                // Força visibilidade do botão
+                newBtnShare.style.display = 'flex !important';
+                newBtnShare.style.opacity = '1 !important';
+                newBtnShare.style.visibility = 'visible !important';
+                newBtnShare.style.pointerEvents = 'auto';
+                
+                // Configura o menu
+                shareMenu.style.display = 'none';
+                shareMenu.style.opacity = '1';
+                shareMenu.style.visibility = 'visible';
+                shareMenu.style.zIndex = '999999';
+                shareMenu.style.position = 'fixed';
+                shareMenu.style.top = '70px';
+                shareMenu.style.right = '20px';
+                
+                // Adiciona ÚNICO event listener
+                newBtnShare.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const isVisible = shareMenu.style.display !== 'none';
+                    shareMenu.style.display = isVisible ? 'none' : 'block';
+                    window.dcodeShareMenuOpen = !isVisible;
+                    
+                    console.log('Menu toggled:', !isVisible);
+                });
+                
+                // Event listener único para fechar ao clicar fora
+                document.addEventListener('click', function(e) {
+                    if (window.dcodeShareMenuOpen && 
+                        !shareMenu.contains(e.target) && 
+                        e.target !== newBtnShare && 
+                        !newBtnShare.contains(e.target)) {
+                        shareMenu.style.display = 'none';
+                        window.dcodeShareMenuOpen = false;
+                    }
+                });
+                
+                // Impede que cliques no menu fechem ele
+                shareMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+                
+                // Adiciona funcionalidade aos botões de compartilhamento
+                setTimeout(() => {
+                    setupShareButtons(shareMenu);
+                }, 200);
+            }
+        } catch (e) {
+            console.log('Erro ao corrigir menu de compartilhamento:', e);
+        }
+    }
+    
+    // Configura os botões de compartilhamento
+    function setupShareButtons(shareMenu) {
+        try {
+            // Função para gerar dados de compartilhamento
+            function gerarDadosCompartilhamento() {
+                const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                const tabela = document.querySelector('table.estoque-table tbody');
+                let dados = `📊 *${nomeEstoque}*\\n\\n`;
+                
+                if (tabela) {
+                    const linhas = tabela.querySelectorAll('tr');
+                    linhas.forEach(linha => {
+                        const inputs = linha.querySelectorAll('input');
+                        if (inputs.length >= 3) {
+                            const nome = inputs[0].value.trim();
+                            const entrada = inputs[1].value.trim();
+                            const saida = inputs[2].value.trim();
+                            
+                            if (nome || entrada || saida) {
+                                dados += `• ${nome || 'Item'}\\n`;
+                                if (entrada) dados += `  ↗️ Entrada: ${entrada}\\n`;
+                                if (saida) dados += `  ↘️ Saída: ${saida}\\n`;
+                                dados += '\\n';
+                            }
+                        }
+                    });
+                }
+                
+                dados += '\\n📱 Criado com DcodeStock';
+                return dados;
+            }
+            
+            // WhatsApp
+            const shareWhatsapp = document.getElementById('shareWhatsapp');
+            if (shareWhatsapp) {
+                shareWhatsapp.addEventListener('click', function() {
+                    const dados = gerarDadosCompartilhamento();
+                    const textoEncoded = encodeURIComponent(dados);
+                    const url = `https://wa.me/?text=${textoEncoded}`;
+                    window.open(url, '_blank');
+                    shareMenu.style.display = 'none';
+                    window.dcodeShareMenuOpen = false;
+                });
+            }
+            
+            // Email
+            const shareEmail = document.getElementById('shareEmail');
+            if (shareEmail) {
+                shareEmail.addEventListener('click', function() {
+                    const dados = gerarDadosCompartilhamento();
+                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                    const subject = encodeURIComponent(`Estoque: ${nomeEstoque}`);
+                    const body = encodeURIComponent(dados);
+                    const url = `mailto:?subject=${subject}&body=${body}`;
+                    window.location.href = url;
+                    shareMenu.style.display = 'none';
+                    window.dcodeShareMenuOpen = false;
+                });
+            }
+            
+            // PDF
+            const sharePdf = document.getElementById('sharePdf');
+            if (sharePdf) {
+                sharePdf.addEventListener('click', function() {
+                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                    const printWindow = window.open('', '_blank');
+                    const tabela = document.querySelector('table.estoque-table');
+                    
+                    if (printWindow && tabela) {
+                        printWindow.document.write(`
+                            <html>
+                                <head>
+                                    <title>${nomeEstoque} - PDF</title>
+                                    <style>
+                                        body { font-family: Arial, sans-serif; margin: 20px; }
+                                        h1 { color: #333; text-align: center; }
+                                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                        th { background-color: #f2f2f2; }
+                                        .footer { text-align: center; margin-top: 30px; color: #666; }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>📊 ${nomeEstoque}</h1>
+                                    ${tabela.outerHTML}
+                                    <div class="footer">📱 Criado com DcodeStock - ${new Date().toLocaleDateString()}</div>
+                                </body>
+                            </html>
+                        `);
+                        printWindow.document.close();
+                        printWindow.print();
+                    }
+                    
+                    shareMenu.style.display = 'none';
+                    window.dcodeShareMenuOpen = false;
+                });
+            }
+        } catch (e) {
+            console.log('Erro ao configurar botões de compartilhamento:', e);
         }
     }
 
     // Executa todas as correções
     function executeAllFixes() {
-        updateLanguageButtonFlag();
-        fixLanguageMenu();
-        fixShareIcons();
-        fixShareMenu();
+        if (window.dcodeFixExecuted) return;
+        
+        try {
+            updateLanguageButtonFlag();
+            fixLanguageMenu();
+            fixShareIcons();
+            fixShareMenu();
+            
+            window.dcodeFixExecuted = true;
+            console.log('DcodeStock: Todas as correções aplicadas com sucesso!');
+        } catch (e) {
+            console.log('Erro ao executar correções:', e);
+        }
     }
 
-    // Executa ao carregar a página
+    // Executa quando o DOM estiver pronto
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', executeAllFixes);
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(executeAllFixes, 100);
+        });
     } else {
-        executeAllFixes();
+        setTimeout(executeAllFixes, 100);
     }
+
+    // Backup: executa após 2 segundos se não foi executado ainda
+    setTimeout(() => {
+        if (!window.dcodeFixExecuted) {
+            executeAllFixes();
+        }
+    }, 2000);
 
     // Executa quando o idioma muda
     window.addEventListener('languageChanged', function() {
@@ -4197,16 +4421,6 @@
             fixLanguageMenu();
         }, 100);
     });
-
-    // Re-executa a cada 2 segundos para garantir (só nas primeiras vezes)
-    let fixAttempts = 0;
-    const intervalFix = setInterval(() => {
-        executeAllFixes();
-        fixAttempts++;
-        if (fixAttempts >= 5) { // Para após 10 segundos
-            clearInterval(intervalFix);
-        }
-    }, 2000);
     </script>
 
     <!-- Barra Superior -->
@@ -5833,156 +6047,33 @@
             console.log('Plano Premium ativado com sucesso!');
         }
 
-        // ========== SISTEMA DE COMPARTILHAMENTO ULTRA-MODERNO ==========
+        // ========== FUNÇÕES DE COMPARTILHAMENTO ==========
         
-        // Forçar visibilidade imediata dos ícones
-        document.head.insertAdjacentHTML('beforeend', `
-            <style>
-                /* FORÇA MÁXIMA - Garante que os ícones sempre apareçam */
-                #shareWhatsapp, #shareEmail, #sharePdf,
-                #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                }
-                
-                #shareMenu {
-                    z-index: 9999 !important;
-                }
-                
-                #shareMenu[style*="display: block"], 
-                #shareMenu[style*="display: flex"] {
-                    display: block !important;
-                }
-            </style>
-        `);
-        
-        // Controle do menu de compartilhamento
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnShare = document.getElementById('btnShare');
-            const shareMenu = document.getElementById('shareMenu');
-            const shareWhatsapp = document.getElementById('shareWhatsapp');
-            const shareEmail = document.getElementById('shareEmail');
-            const sharePdf = document.getElementById('sharePdf');
+        // Função para gerar dados de compartilhamento
+        function gerarDadosCompartilhamento() {
+            const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+            const tabela = document.querySelector('table.estoque-table tbody');
+            let dados = `📊 *${nomeEstoque}*\n\n`;
             
-            let shareMenuOpen = false;
-            
-            // Toggle do menu de compartilhamento
-            if (btnShare && shareMenu) {
-                btnShare.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    shareMenuOpen = !shareMenuOpen;
-                    shareMenu.style.display = shareMenuOpen ? 'block' : 'none';
-                });
-                
-                // Fechar menu ao clicar fora
-                document.addEventListener('click', function(e) {
-                    if (shareMenuOpen && !shareMenu.contains(e.target) && e.target !== btnShare) {
-                        shareMenu.style.display = 'none';
-                        shareMenuOpen = false;
-                    }
-                });
-                
-                // Impedir que cliques no menu fechem ele
-                shareMenu.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
-            
-            // Função para gerar dados de compartilhamento
-            function gerarDadosCompartilhamento() {
-                const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
-                const tabela = document.querySelector('table.estoque-table tbody');
-                let dados = `📊 *${nomeEstoque}*\n\n`;
-                
-                if (tabela) {
-                    const linhas = tabela.querySelectorAll('tr');
-                    linhas.forEach(linha => {
-                        const inputs = linha.querySelectorAll('input');
-                        if (inputs.length >= 3) {
-                            const nome = inputs[0].value.trim();
-                            const entrada = inputs[1].value.trim();
-                            const saida = inputs[2].value.trim();
-                            
-                            if (nome || entrada || saida) {
-                                dados += `• ${nome || 'Item'}\n`;
-                                if (entrada) dados += `  ↗️ Entrada: ${entrada}\n`;
-                                if (saida) dados += `  ↘️ Saída: ${saida}\n`;
-                                dados += '\n';
-                            }
+            if (tabela) {
+                const linhas = tabela.querySelectorAll('tr');
+                linhas.forEach(linha => {
+                    const inputs = linha.querySelectorAll('input');
+                    if (inputs.length >= 3) {
+                        const nome = inputs[0].value.trim();
+                        const entrada = inputs[1].value.trim();
+                        const saida = inputs[2].value.trim();
+                        
+                        if (nome || entrada || saida) {
+                            dados += `• ${nome || 'Item'}\n`;
+                            if (entrada) dados += `  ↗️ Entrada: ${entrada}\n`;
+                            if (saida) dados += `  ↘️ Saída: ${saida}\n`;
+                            dados += '\n';
                         }
-                    });
-                }
-                
-                dados += '\n📱 Criado com DcodeStock';
-                return dados;
-            }
-            
-            // WhatsApp Share
-            if (shareWhatsapp) {
-                shareWhatsapp.addEventListener('click', function() {
-                    const dados = gerarDadosCompartilhamento();
-                    const textoEncoded = encodeURIComponent(dados);
-                    const url = `https://wa.me/?text=${textoEncoded}`;
-                    window.open(url, '_blank');
-                    shareMenu.style.display = 'none';
-                    shareMenuOpen = false;
-                });
-            }
-            
-            // Email Share
-            if (shareEmail) {
-                shareEmail.addEventListener('click', function() {
-                    const dados = gerarDadosCompartilhamento();
-                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
-                    const subject = encodeURIComponent(`Estoque: ${nomeEstoque}`);
-                    const body = encodeURIComponent(dados);
-                    const url = `mailto:?subject=${subject}&body=${body}`;
-                    window.location.href = url;
-                    shareMenu.style.display = 'none';
-                    shareMenuOpen = false;
-                });
-            }
-            
-            // PDF Share
-            if (sharePdf) {
-                sharePdf.addEventListener('click', function() {
-                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
-                    
-                    // Criar nova janela para PDF
-                    const printWindow = window.open('', '_blank');
-                    const tabela = document.querySelector('table.estoque-table');
-                    
-                    if (printWindow && tabela) {
-                        printWindow.document.write(`
-                            <html>
-                                <head>
-                                    <title>${nomeEstoque} - PDF</title>
-                                    <style>
-                                        body { font-family: Arial, sans-serif; margin: 20px; }
-                                        h1 { color: #333; text-align: center; }
-                                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                                        th { background-color: #f2f2f2; }
-                                        .footer { text-align: center; margin-top: 30px; color: #666; }
-                                    </style>
-                                </head>
-                                <body>
-                                    <h1>📊 ${nomeEstoque}</h1>
-                                    ${tabela.outerHTML}
-                                    <div class="footer">📱 Criado com DcodeStock - ${new Date().toLocaleDateString()}</div>
-                                </body>
-                            </html>
-                        `);
-                        printWindow.document.close();
-                        printWindow.print();
                     }
-                    
-                    shareMenu.style.display = 'none';
-                    shareMenuOpen = false;
                 });
             }
-        });
+        // === FIM DAS FUNÇÕES DE COMPARTILHAMENTO ===
     </script>
     
     <!-- Script para otimização empresarial do vídeo -->
