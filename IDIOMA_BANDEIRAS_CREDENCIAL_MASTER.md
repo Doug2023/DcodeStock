@@ -1,53 +1,158 @@
-# 🌐🔐 BOTÃO IDIOMA BANDEIRAS + NOVA CREDENCIAL MASTER
+# 🌍 Idiomas com Bandeiras e Credencial Master
 
-## ✅ Alterações Implementadas
+## ✅ Implementações Realizadas
 
-### 🌐 **Botão de Idioma com Apenas Bandeiras**
+### 1. **Globinho de Idiomas no Header**
+- **Adicionado globinho (🌍)** no header entre a navegação de meses e botões de estoque
+- **Posicionamento responsivo** com CSS adaptável a diferentes tamanhos de tela
+- **Estilo moderno** com hover e transições suaves
 
-#### **ANTES:**
-```html
-<button id="btnLanguage">
-    <div class="globe-container">
-        <svg class="globe-icon">...</svg>
-        <span class="country-flag">🇧🇷</span>
-    </div>
-</button>
+### 2. **Menu de Idiomas com Bandeiras**
+- **Bandeiras já implementadas** nos botões de idioma:
+  - 🇧🇷 Português
+  - 🇺🇸 English
+  - 🇫🇷 Français
+  - 🇮🇹 Italiano
+  - 🇪🇸 Español
+- **Centralizado** no topo da tela quando acionado pelo globinho
+- **Backdrop blur** para efeito visual profissional
 
-<!-- Menu com texto + bandeira -->
-🇧🇷 Português
-🇺🇸 English
-🇫🇷 Français
-🇮🇹 Italiano  
-🇪🇸 Español
+### 3. **Função "Sair do Premium"**
+- **Botão dinâmico** que alterna entre:
+  - `⭐ Premium` (quando não tem premium)
+  - `🚪 Sair Premium` (quando tem premium)
+- **Salva todos os dados** antes de sair do modo premium
+- **Confirmação de segurança** antes de sair
+- **Retorna ao estoque 1** do mês atual após sair
+
+### 4. **Ícones SVG Originais no Menu Share**
+- **WhatsApp**: Verde oficial (#25D366) com SVG original
+- **Email**: Vermelho Google (#EA4335) com SVG original
+- **PDF**: Laranja Material (#FF5722) com SVG original
+- **Hover effects** com sombras e transições
+
+### 5. **Modal de Chamado - Aparição Garantida**
+- **Sempre aparece** quando usuário tenta navegar em modo normal
+- **Não há limite de tentativas** - funciona infinitamente
+- **Força retorno** ao estoque 1 mês atual quando não tem premium
+- **Logs detalhados** para monitoramento
+
+## 📱 Recursos Técnicos
+
+### **CSS do Globinho**
+```css
+.language-globe-btn {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+}
+
+.language-globe-btn:hover {
+    background: var(--button-hover-bg);
+    border-color: var(--border-color);
+    transform: scale(1.1);
+}
 ```
 
-#### **DEPOIS:**
-```html
-<button id="btnLanguage" style="font-size:24px;">
-    <span class="country-flag">🇧🇷</span>
-</button>
+### **JavaScript do Globinho**
+```javascript
+// Toggle menu de idiomas via globinho
+languageToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isVisible = languageMenu.style.display === 'block';
+    
+    // Esconde outros menus
+    document.getElementById('shareMenu').style.display = 'none';
+    
+    // Toggle menu de idiomas
+    languageMenu.style.display = isVisible ? 'none' : 'block';
+});
 
-<!-- Menu apenas com bandeiras -->
-🇧🇷 (tooltip: Português)
-🇺🇸 (tooltip: English)
-🇫🇷 (tooltip: Français)
-🇮🇹 (tooltip: Italiano)
-🇪🇸 (tooltip: Español)
+// Fechar menu ao clicar fora
+document.addEventListener('click', function(e) {
+    if (!languageToggle.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.style.display = 'none';
+    }
+});
 ```
 
-### 🔧 **Especificações**:
-- **Botão Principal**: Apenas bandeira do país (24px)
-- **Menu**: Bandeiras grandes (28px) em botões 48x48px
-- **Tooltips**: Nomes dos idiomas ao passar o mouse
-- **Design**: Mais limpo e minimalista
-- **Funcionalidade**: Mantida completamente
+### **Função Sair Premium**
+```javascript
+function sairModoPremiun() {
+    // Salvar todos os dados antes de sair
+    salvarTodosOsDados();
+    
+    // Remover dados de premium do localStorage
+    localStorage.removeItem('assinaturaPremium');
+    localStorage.removeItem('loginPremium');
+    
+    // Remover indicadores visuais de premium
+    const premiumStatus = document.getElementById('premium-status');
+    if (premiumStatus) premiumStatus.remove();
+    
+    // Voltar ao estoque 1 do mês atual
+    currentStockIndex = 0;
+    displayedDate = new Date();
+    localStorage.setItem('currentStockIndex', '0');
+    
+    // Recarregar interface
+    loadStock(0);
+    updateMonthDisplay();
+    atualizarStatusPremium();
+    
+    // Mostrar confirmação
+    alert('✅ Saiu do modo premium com sucesso!\\n\\n📁 Todos os seus dados foram salvos.\\n🔒 Voltou ao modo limitado.');
+}
+```
+
+## 🎯 Comportamento Final
+
+### **Modo Normal (Sem Premium)**
+- **Bloqueio total** na navegação (+ - estoques, meses anterior/próximo)
+- **Modal aparece SEMPRE** que tenta navegar
+- **Força retorno** ao estoque 1 mês atual
+- **Botão**: `⭐ Premium` (para ativar)
+
+### **Modo Premium**
+- **Navegação livre** em todos os botões
+- **Dados salvos** automaticamente
+- **Botão**: `🚪 Sair Premium` (para sair)
+- **Badge premium** exibido ao lado do nome do estoque
+
+### **Credencial Master**
+- **Daphiny/2019** = 👑 MASTER
+- **Douglas/premium123** = ⭐ PREMIUM
+- **Status visual** diferenciado
+
+## 🔧 Testes Realizados
+
+1. ✅ **Globinho funciona** - abre/fecha menu de idiomas
+2. ✅ **Bandeiras exibidas** - todos os 5 idiomas
+3. ✅ **Função sair premium** - salva dados e retorna ao modo limitado
+4. ✅ **Ícones SVG originais** - WhatsApp, Email, PDF
+5. ✅ **Modal sempre aparece** - sem limite de tentativas
+6. ✅ **Responsividade** - funciona em mobile e desktop
+
+## 📝 Observações
+
+- **Usuário master** (Daphiny) tem badge especial `👑 MASTER`
+- **Dados sempre salvos** ao sair do premium
+- **Interface intuitiva** com feedback visual claro
+- **Compatível** com todos os temas (claro/escuro)
 
 ---
 
-### 🔐 **Nova Credencial Master**
-
-#### **Credencial Atualizada:**
-```javascript
+**Status**: ✅ **IMPLEMENTADO E FUNCIONAL**  
+**Última atualização**: Janeiro 2025
 {
     login: 'Douglas',
     senha: 'Daphiny@#2019',
