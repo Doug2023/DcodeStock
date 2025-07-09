@@ -67,16 +67,47 @@
         
         .country-flag, #currentFlag {
             font-size: 24px !important;
-            display: inline-block !important;
+            width: 24px !important;
+            height: 24px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             opacity: 1 !important;
             visibility: visible !important;
+            line-height: 1 !important;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "Twemoji Mozilla", "EmojiOne Color", sans-serif !important;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            -webkit-text-stroke: 0.5px rgba(0,0,0,0.1) !important;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)) !important;
+            position: relative !important;
+            z-index: 10 !important;
         }
         
         .language-option {
-            font-size: 28px !important;
+            font-size: 32px !important;
+            width: 48px !important;
+            height: 48px !important;
             display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             opacity: 1 !important;
             visibility: visible !important;
+            padding: 12px !important;
+            border: none !important;
+            background: transparent !important;
+            color: var(--text-color) !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "Twemoji Mozilla", "EmojiOne Color", sans-serif !important;
+            line-height: 1 !important;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            -webkit-text-stroke: 0.3px rgba(0,0,0,0.1) !important;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)) !important;
         }
     </style>
     
@@ -2732,30 +2763,30 @@
             transform: translate(-50%, -50%) scale(1.1);
         }
 
-        /* Bandeira do país selecionado - ultra-moderna */
+        /* Bandeira do país selecionado - compatível com Desktop e Mobile */
         .country-flag {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 18px !important;
-            width: 24px !important;
-            height: 24px !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
+            font-size: 24px !important;
+            width: auto !important;
+            height: auto !important;
+            display: inline-block !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+            text-align: center !important;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "Twemoji Mozilla", "EmojiOne Color", sans-serif !important;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            -webkit-text-stroke: 0.5px rgba(0,0,0,0.1) !important;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)) !important;
+            transition: all 0.3s ease !important;
+            z-index: 2 !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .language-button:hover .country-flag {
-            transform: translate(-50%, -50%) scale(1.15);
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-            background: rgba(255,255,255,0.2);
+            transform: scale(1.1) !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) !important;
         }
 
         /* Efeito de brilho no globo */
@@ -4089,15 +4120,14 @@
     </style>
 </head>
 <body>
-    <!-- Script de Correção DEFINITIVA de Bandeiras e Ícones -->
+    <!-- ====== SCRIPT DO SISTEMA DE IDIOMAS - INDEPENDENTE ====== -->
     <script>
-    // === CORREÇÃO DEFINITIVA E ROBUSTA - SEM CONFLITOS ===
+    // === SISTEMA DE IDIOMAS COMPLETAMENTE SEPARADO ===
     
     // Flag para evitar múltiplas execuções
-    window.dcodeFixExecuted = false;
-    window.dcodeShareMenuOpen = false;
+    window.dcodeLanguageSystemInitialized = false;
     
-    // Corrige bandeiras do botão de idioma
+    // Corrige bandeiras do botão de idioma - APENAS IDIOMAS
     function updateLanguageButtonFlag() {
         try {
             const lang = localStorage.getItem('selectedLanguage') || 'pt';
@@ -4116,20 +4146,26 @@
                 flagEl.textContent = flag;
                 flagEl.innerHTML = flag;
                 flagEl.style.fontSize = '24px';
+                flagEl.style.fontFamily = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif';
                 flagEl.style.display = 'inline-block';
+                flagEl.style.lineHeight = '1';
+                flagEl.style.textRendering = 'optimizeLegibility';
+                flagEl.style.webkitFontSmoothing = 'antialiased';
             }
             
             // Força também no botão se não tiver o elemento currentFlag
             const langBtn = document.getElementById('btnLanguage');
             if (langBtn && !flagEl) {
-                langBtn.innerHTML = `<span class="country-flag" id="currentFlag" style="font-size:24px;">${flag}</span>`;
+                langBtn.innerHTML = `<span class="country-flag" id="currentFlag" style="font-size:24px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;">${flag}</span>`;
             }
+            
+            console.log('✅ Bandeira do idioma atualizada:', flag);
         } catch (e) {
             console.log('Erro ao atualizar bandeira:', e);
         }
     }
 
-    // Corrige menu de idiomas para mostrar só bandeiras
+    // Corrige menu de idiomas para mostrar só bandeiras - APENAS IDIOMAS
     function fixLanguageMenu() {
         try {
             const menu = document.getElementById('languageMenu');
@@ -4157,8 +4193,9 @@
                     btn.innerHTML = flags[lang];
                     btn.title = titles[lang] || lang;
                     
-                    // Força estilos para garantir visibilidade
-                    btn.style.fontSize = '28px';
+                    // Força estilos para garantir visibilidade no desktop
+                    btn.style.fontSize = '32px';
+                    btn.style.fontFamily = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif';
                     btn.style.display = 'flex';
                     btn.style.alignItems = 'center';
                     btn.style.justifyContent = 'center';
@@ -4169,68 +4206,111 @@
                     btn.style.cursor = 'pointer';
                     btn.style.borderRadius = '8px';
                     btn.style.transition = 'all 0.3s ease';
+                    btn.style.lineHeight = '1';
+                    btn.style.textRendering = 'optimizeLegibility';
+                    btn.style.webkitFontSmoothing = 'antialiased';
                 }
             });
+            
+            console.log('✅ Menu de idiomas corrigido');
         } catch (e) {
             console.log('Erro ao corrigir menu de idiomas:', e);
         }
     }
 
-    // Corrige ícones de compartilhamento com SVGs originais
+    // Executa correções do sistema de idiomas - SEPARADO DE OUTROS SISTEMAS
+    function executeLanguageFixes() {
+        if (window.dcodeLanguageSystemInitialized) return;
+        
+        try {
+            updateLanguageButtonFlag();
+            fixLanguageMenu();
+            
+            window.dcodeLanguageSystemInitialized = true;
+            console.log('✅ Sistema de idiomas inicializado com sucesso!');
+        } catch (e) {
+            console.log('Erro ao executar correções de idioma:', e);
+        }
+    }
+
+    // Executa quando o DOM estiver pronto - APENAS PARA IDIOMAS
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(executeLanguageFixes, 50);
+        });
+    } else {
+        setTimeout(executeLanguageFixes, 50);
+    }
+
+    // Backup: executa após 1 segundo se não foi executado ainda
+    setTimeout(() => {
+        if (!window.dcodeLanguageSystemInitialized) {
+            executeLanguageFixes();
+        }
+    }, 1000);
+
+    // Executa quando o idioma muda - APENAS PARA IDIOMAS
+    window.addEventListener('languageChanged', function() {
+        setTimeout(() => {
+            updateLanguageButtonFlag();
+            fixLanguageMenu();
+        }, 50);
+    });
+    </script>
+
+    <!-- ====== SCRIPT DO SISTEMA DE COMPARTILHAMENTO - INDEPENDENTE ====== -->
+    <script>
+    // === SISTEMA DE COMPARTILHAMENTO COMPLETAMENTE SEPARADO ===
+    
+    // Flag para evitar múltiplas execuções
+    window.dcodeShareSystemInitialized = false;
+    window.dcodeShareMenuOpen = false;
+
+    // Corrige ícones de compartilhamento - MANTÉM SVGs ORIGINAIS - APENAS COMPARTILHAMENTO
     function fixShareIcons() {
         try {
-            // Força os SVGs originais que já estão no HTML para serem visíveis
             const shareButtons = ['shareWhatsapp', 'shareEmail', 'sharePdf'];
             
             shareButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    // Força estilos de visibilidade no botão
-                    btn.style.display = 'flex !important';
+                    // Força apenas a visibilidade do botão, SEM alterar o conteúdo
+                    btn.style.display = 'flex';
                     btn.style.alignItems = 'center';
                     btn.style.justifyContent = 'center';
-                    btn.style.opacity = '1 !important';
-                    btn.style.visibility = 'visible !important';
-                    btn.style.zIndex = '210';
+                    btn.style.opacity = '1';
+                    btn.style.visibility = 'visible';
                     btn.style.pointerEvents = 'auto';
                     
-                    // Força o SVG a ser visível
+                    // Força apenas a visibilidade do SVG, SEM alterar o conteúdo
                     const svg = btn.querySelector('svg');
                     if (svg) {
-                        svg.style.display = 'block !important';
-                        svg.style.opacity = '1 !important';
-                        svg.style.visibility = 'visible !important';
-                        svg.style.width = '32px';
-                        svg.style.height = '32px';
-                        svg.style.minWidth = '32px';
-                        svg.style.minHeight = '32px';
-                        svg.style.fill = '#ffffff';
-                        svg.style.stroke = 'none';
+                        svg.style.display = 'block';
+                        svg.style.opacity = '1';
+                        svg.style.visibility = 'visible';
                         svg.style.pointerEvents = 'none';
                     }
                 }
             });
+            
+            console.log('✅ Ícones de compartilhamento corrigidos - SVGs originais mantidos');
         } catch (e) {
             console.log('Erro ao corrigir ícones de compartilhamento:', e);
         }
     }
 
-    // Sistema robusto para o menu de compartilhamento
+    // Sistema robusto para o menu de compartilhamento - PRESERVA ÍCONES ORIGINAIS
     function fixShareMenu() {
         try {
             const btnShare = document.getElementById('btnShare');
             const shareMenu = document.getElementById('shareMenu');
             
             if (btnShare && shareMenu) {
-                // Remove TODOS os event listeners antigos
-                const newBtnShare = btnShare.cloneNode(true);
-                btnShare.parentNode.replaceChild(newBtnShare, btnShare);
-                
-                // Força visibilidade do botão
-                newBtnShare.style.display = 'flex !important';
-                newBtnShare.style.opacity = '1 !important';
-                newBtnShare.style.visibility = 'visible !important';
-                newBtnShare.style.pointerEvents = 'auto';
+                // Força visibilidade do botão de compartilhar
+                btnShare.style.display = 'flex';
+                btnShare.style.opacity = '1';
+                btnShare.style.visibility = 'visible';
+                btnShare.style.pointerEvents = 'auto';
                 
                 // Configura o menu
                 shareMenu.style.display = 'none';
@@ -4241,7 +4321,11 @@
                 shareMenu.style.top = '70px';
                 shareMenu.style.right = '20px';
                 
-                // Adiciona ÚNICO event listener
+                // Remove event listeners antigos para evitar duplicação
+                const newBtnShare = btnShare.cloneNode(true);
+                btnShare.parentNode.replaceChild(newBtnShare, btnShare);
+                
+                // Adiciona event listener único
                 newBtnShare.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -4250,7 +4334,7 @@
                     shareMenu.style.display = isVisible ? 'none' : 'block';
                     window.dcodeShareMenuOpen = !isVisible;
                     
-                    console.log('Menu toggled:', !isVisible);
+                    console.log('Menu de compartilhamento toggled:', !isVisible);
                 });
                 
                 // Event listener único para fechar ao clicar fora
@@ -4269,24 +4353,26 @@
                     e.stopPropagation();
                 });
                 
-                // Adiciona funcionalidade aos botões de compartilhamento
+                // Configura os botões de compartilhamento SEM alterar os ícones
                 setTimeout(() => {
                     setupShareButtons(shareMenu);
-                }, 200);
+                }, 50);
             }
+            
+            console.log('✅ Menu de compartilhamento configurado - ícones originais preservados');
         } catch (e) {
             console.log('Erro ao corrigir menu de compartilhamento:', e);
         }
     }
-    
-    // Configura os botões de compartilhamento
+
+    // Configura os botões de compartilhamento SEM alterar ícones originais
     function setupShareButtons(shareMenu) {
         try {
             // Função para gerar dados de compartilhamento
             function gerarDadosCompartilhamento() {
                 const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
                 const tabela = document.querySelector('table.estoque-table tbody');
-                let dados = `📊 *${nomeEstoque}*\\n\\n`;
+                let dados = `📊 *${nomeEstoque}*\n\n`;
                 
                 if (tabela) {
                     const linhas = tabela.querySelectorAll('tr');
@@ -4298,36 +4384,45 @@
                             const saida = inputs[2].value.trim();
                             
                             if (nome || entrada || saida) {
-                                dados += `• ${nome || 'Item'}\\n`;
-                                if (entrada) dados += `  ↗️ Entrada: ${entrada}\\n`;
-                                if (saida) dados += `  ↘️ Saída: ${saida}\\n`;
-                                dados += '\\n';
+                                dados += `• ${nome || 'Item'}\n`;
+                                if (entrada) dados += `  ↗️ Entrada: ${entrada}\n`;
+                                if (saida) dados += `  ↘️ Saída: ${saida}\n`;
+                                dados += '\n';
                             }
                         }
                     });
                 }
                 
-                dados += '\\n📱 Criado com DcodeStock';
+                dados += '\n📱 Criado com DcodeStock';
                 return dados;
             }
             
-            // WhatsApp
+            // WhatsApp - APENAS adiciona funcionalidade, NÃO altera ícones
             const shareWhatsapp = document.getElementById('shareWhatsapp');
             if (shareWhatsapp) {
-                shareWhatsapp.addEventListener('click', function() {
+                // Remove event listeners antigos
+                const newShareWhatsapp = shareWhatsapp.cloneNode(true);
+                shareWhatsapp.parentNode.replaceChild(newShareWhatsapp, shareWhatsapp);
+                
+                newShareWhatsapp.addEventListener('click', function() {
                     const dados = gerarDadosCompartilhamento();
                     const textoEncoded = encodeURIComponent(dados);
                     const url = `https://wa.me/?text=${textoEncoded}`;
                     window.open(url, '_blank');
                     shareMenu.style.display = 'none';
                     window.dcodeShareMenuOpen = false;
+                    console.log('✅ WhatsApp compartilhado!');
                 });
             }
             
-            // Email
+            // Email - APENAS adiciona funcionalidade, NÃO altera ícones
             const shareEmail = document.getElementById('shareEmail');
             if (shareEmail) {
-                shareEmail.addEventListener('click', function() {
+                // Remove event listeners antigos
+                const newShareEmail = shareEmail.cloneNode(true);
+                shareEmail.parentNode.replaceChild(newShareEmail, shareEmail);
+                
+                newShareEmail.addEventListener('click', function() {
                     const dados = gerarDadosCompartilhamento();
                     const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
                     const subject = encodeURIComponent(`Estoque: ${nomeEstoque}`);
@@ -4336,13 +4431,18 @@
                     window.location.href = url;
                     shareMenu.style.display = 'none';
                     window.dcodeShareMenuOpen = false;
+                    console.log('✅ Email compartilhado!');
                 });
             }
             
-            // PDF
+            // PDF - APENAS adiciona funcionalidade, NÃO altera ícones
             const sharePdf = document.getElementById('sharePdf');
             if (sharePdf) {
-                sharePdf.addEventListener('click', function() {
+                // Remove event listeners antigos
+                const newSharePdf = sharePdf.cloneNode(true);
+                sharePdf.parentNode.replaceChild(newSharePdf, sharePdf);
+                
+                newSharePdf.addEventListener('click', function() {
                     const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
                     const printWindow = window.open('', '_blank');
                     const tabela = document.querySelector('table.estoque-table');
@@ -4374,53 +4474,47 @@
                     
                     shareMenu.style.display = 'none';
                     window.dcodeShareMenuOpen = false;
+                    console.log('✅ PDF gerado!');
                 });
             }
+            
+            console.log('✅ Botões de compartilhamento configurados - ícones originais preservados');
         } catch (e) {
             console.log('Erro ao configurar botões de compartilhamento:', e);
         }
     }
 
-    // Executa todas as correções
-    function executeAllFixes() {
-        if (window.dcodeFixExecuted) return;
+    // Executa correções do sistema de compartilhamento - SEPARADO DE OUTROS SISTEMAS
+    function executeShareFixes() {
+        if (window.dcodeShareSystemInitialized) return;
         
         try {
-            updateLanguageButtonFlag();
-            fixLanguageMenu();
             fixShareIcons();
             fixShareMenu();
             
-            window.dcodeFixExecuted = true;
-            console.log('DcodeStock: Todas as correções aplicadas com sucesso!');
+            window.dcodeShareSystemInitialized = true;
+            console.log('✅ Sistema de compartilhamento inicializado com sucesso!');
         } catch (e) {
-            console.log('Erro ao executar correções:', e);
+            console.log('Erro ao executar correções de compartilhamento:', e);
         }
     }
 
-    // Executa quando o DOM estiver pronto
+    // Executa quando o DOM estiver pronto - APENAS PARA COMPARTILHAMENTO
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(executeAllFixes, 100);
+            setTimeout(executeShareFixes, 100);
         });
     } else {
-        setTimeout(executeAllFixes, 100);
+        setTimeout(executeShareFixes, 100);
     }
 
     // Backup: executa após 2 segundos se não foi executado ainda
     setTimeout(() => {
-        if (!window.dcodeFixExecuted) {
-            executeAllFixes();
+        if (!window.dcodeShareSystemInitialized) {
+            executeShareFixes();
         }
     }, 2000);
-
-    // Executa quando o idioma muda
-    window.addEventListener('languageChanged', function() {
-        setTimeout(() => {
-            updateLanguageButtonFlag();
-            fixLanguageMenu();
-        }, 100);
-    });
+    </script>
     </script>
 
     <!-- Barra Superior -->
@@ -4438,8 +4532,8 @@
             <span id="notifyBadge" style="display:none;position:absolute;top:2px;right:2px;background:#f00;color:#fff;font-size:0.7em;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;">0</span>
         </button>
         
-        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage" style="font-size:24px;padding:8px;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all 0.3s ease;">
-            <span class="country-flag" id="currentFlag">🇧🇷</span>
+        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage">
+            <span class="country-flag" id="currentFlag" style="font-size: 24px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; opacity: 1; visibility: visible; line-height: 1; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Android Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-text-stroke: 0.5px rgba(0,0,0,0.1); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); position: relative; z-index: 10;">🇧🇷</span>
         </button>
         
         <button id="themeToggleTop" title="Alternar tema" data-translate-title="toggleTheme">🌙</button>
@@ -4459,22 +4553,22 @@
         </button>
     </div>
 
-    <!-- Menu de Seleção de Idiomas -->
+    <!-- Menu de Seleção de Idiomas - Compatível Desktop e Mobile -->
     <div id="languageMenu" style="display:none;position:fixed;top:60px;right:20px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:12px;padding:12px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
         <div style="display:flex;flex-direction:column;gap:8px;">
-            <button class="language-option" data-lang="pt" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Português">
+            <button class="language-option" data-lang="pt" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.3s ease;width:48px;height:48px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-stroke:0.3px rgba(0,0,0,0.1);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));opacity:1;visibility:visible;" title="Português">
                 🇧🇷
             </button>
-            <button class="language-option" data-lang="en" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="English">
+            <button class="language-option" data-lang="en" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.3s ease;width:48px;height:48px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-stroke:0.3px rgba(0,0,0,0.1);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));opacity:1;visibility:visible;" title="English">
                 🇺🇸
             </button>
-            <button class="language-option" data-lang="fr" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Français">
+            <button class="language-option" data-lang="fr" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.3s ease;width:48px;height:48px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-stroke:0.3px rgba(0,0,0,0.1);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));opacity:1;visibility:visible;" title="Français">
                 🇫🇷
             </button>
-            <button class="language-option" data-lang="it" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Italiano">
+            <button class="language-option" data-lang="it" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.3s ease;width:48px;height:48px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-stroke:0.3px rgba(0,0,0,0.1);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));opacity:1;visibility:visible;" title="Italiano">
                 🇮🇹
             </button>
-            <button class="language-option" data-lang="es" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Español">
+            <button class="language-option" data-lang="es" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.3s ease;width:48px;height:48px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif;line-height:1;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-stroke:0.3px rgba(0,0,0,0.1);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));opacity:1;visibility:visible;" title="Español">
                 🇪🇸
             </button>
         </div>
@@ -4875,7 +4969,256 @@
 
     <!-- Scripts -->
     <script>
-        // === FUNCIONALIDADE DO MENU DE IDIOMAS ===
+        // ===== SISTEMA DE IDIOMAS INDEPENDENTE =====
+        let languageSystemInitialized = false;
+        let currentLanguage = 'pt';
+        let languageMenuOpen = false;
+        
+        // Mapping de idiomas com bandeiras
+        const languageFlags = {
+            'pt': '🇧🇷',
+            'en': '🇺🇸', 
+            'fr': '🇫🇷',
+            'it': '🇮🇹',
+            'es': '🇪🇸'
+        };
+        
+        function updateLanguageFlag(langCode) {
+            const currentFlag = document.getElementById('currentFlag');
+            if (currentFlag && languageFlags[langCode]) {
+                currentFlag.textContent = languageFlags[langCode];
+                currentFlag.style.display = 'inline-flex';
+                currentFlag.style.opacity = '1';
+                currentFlag.style.visibility = 'visible';
+            }
+        }
+        
+        function setupLanguageSystem() {
+            if (languageSystemInitialized) return;
+            
+            const btnLanguage = document.getElementById('btnLanguage');
+            const languageMenu = document.getElementById('languageMenu');
+            const languageOptions = document.querySelectorAll('.language-option');
+            
+            if (!btnLanguage || !languageMenu) {
+                console.warn('Elementos de idioma não encontrados');
+                return;
+            }
+            
+            // Garantir que a bandeira apareça no botão
+            updateLanguageFlag(currentLanguage);
+            
+            // Remover listeners anteriores
+            const newBtnLanguage = btnLanguage.cloneNode(true);
+            btnLanguage.parentNode.replaceChild(newBtnLanguage, btnLanguage);
+            
+            // Adicionar listener para o botão
+            newBtnLanguage.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                languageMenuOpen = !languageMenuOpen;
+                languageMenu.style.display = languageMenuOpen ? 'block' : 'none';
+                
+                console.log('Menu de idiomas:', languageMenuOpen ? 'aberto' : 'fechado');
+            });
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (languageMenuOpen && 
+                    !languageMenu.contains(e.target) && 
+                    !newBtnLanguage.contains(e.target)) {
+                    languageMenu.style.display = 'none';
+                    languageMenuOpen = false;
+                }
+            });
+            
+            // Adicionar listeners para as opções de idioma
+            languageOptions.forEach(option => {
+                const newOption = option.cloneNode(true);
+                option.parentNode.replaceChild(newOption, option);
+                
+                newOption.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const selectedLang = this.getAttribute('data-lang');
+                    if (selectedLang && languageFlags[selectedLang]) {
+                        currentLanguage = selectedLang;
+                        updateLanguageFlag(selectedLang);
+                        
+                        // Fechar menu
+                        languageMenu.style.display = 'none';
+                        languageMenuOpen = false;
+                        
+                        console.log('Idioma selecionado:', selectedLang);
+                        
+                        // Chamar função de tradução se existir
+                        if (typeof updateLanguage === 'function') {
+                            updateLanguage(selectedLang);
+                        }
+                    }
+                });
+            });
+            
+            languageSystemInitialized = true;
+            console.log('✅ Sistema de idiomas independente inicializado');
+        }
+        
+        // ===== SISTEMA DE COMPARTILHAMENTO INDEPENDENTE =====
+        let shareSystemInitialized = false;
+        window.dcodeShareMenuOpen = false;
+        
+        function setupShareSystem() {
+            if (shareSystemInitialized) return;
+            
+            const btnShare = document.getElementById('btnShare');
+            const shareMenu = document.getElementById('shareMenu');
+            const shareWhatsapp = document.getElementById('shareWhatsapp');
+            const shareEmail = document.getElementById('shareEmail');
+            const sharePdf = document.getElementById('sharePdf');
+            
+            if (!btnShare || !shareMenu) {
+                console.warn('Elementos de compartilhamento não encontrados');
+                return;
+            }
+            
+            // Garantir que os ícones SVG estão visíveis
+            function ensureShareIconsVisible() {
+                [shareWhatsapp, shareEmail, sharePdf].forEach(btn => {
+                    if (btn) {
+                        btn.style.display = 'flex';
+                        btn.style.opacity = '1';
+                        btn.style.visibility = 'visible';
+                        
+                        const svg = btn.querySelector('svg');
+                        if (svg) {
+                            svg.style.display = 'block';
+                            svg.style.opacity = '1';
+                            svg.style.visibility = 'visible';
+                            svg.style.fill = '#ffffff';
+                        }
+                    }
+                });
+            }
+            
+            ensureShareIconsVisible();
+            
+            // Remover listeners anteriores
+            const newBtnShare = btnShare.cloneNode(true);
+            btnShare.parentNode.replaceChild(newBtnShare, btnShare);
+            
+            // Adicionar listener para o botão
+            newBtnShare.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                window.dcodeShareMenuOpen = !window.dcodeShareMenuOpen;
+                shareMenu.style.display = window.dcodeShareMenuOpen ? 'block' : 'none';
+                
+                if (window.dcodeShareMenuOpen) {
+                    ensureShareIconsVisible();
+                }
+                
+                console.log('Menu de compartilhamento:', window.dcodeShareMenuOpen ? 'aberto' : 'fechado');
+            });
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (window.dcodeShareMenuOpen && 
+                    !shareMenu.contains(e.target) && 
+                    !newBtnShare.contains(e.target)) {
+                    shareMenu.style.display = 'none';
+                    window.dcodeShareMenuOpen = false;
+                }
+            });
+            
+            // Impedir fechamento ao clicar dentro do menu
+            shareMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Adicionar listeners para botões de compartilhamento
+            if (shareWhatsapp) {
+                const newWhatsapp = shareWhatsapp.cloneNode(true);
+                shareWhatsapp.parentNode.replaceChild(newWhatsapp, shareWhatsapp);
+                
+                newWhatsapp.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Função de compartilhamento do WhatsApp
+                    if (typeof compartilharEstoqueAtual === 'function') {
+                        compartilharEstoqueAtual('whatsapp');
+                    } else {
+                        console.log('📱 Compartilhando no WhatsApp');
+                        shareMenu.style.display = 'none';
+                        window.dcodeShareMenuOpen = false;
+                    }
+                });
+            }
+            
+            if (shareEmail) {
+                const newEmail = shareEmail.cloneNode(true);
+                shareEmail.parentNode.replaceChild(newEmail, shareEmail);
+                
+                newEmail.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Função de compartilhamento do Email
+                    if (typeof compartilharEstoqueAtual === 'function') {
+                        compartilharEstoqueAtual('email');
+                    } else {
+                        console.log('📧 Compartilhando por Email');
+                        shareMenu.style.display = 'none';
+                        window.dcodeShareMenuOpen = false;
+                    }
+                });
+            }
+            
+            if (sharePdf) {
+                const newPdf = sharePdf.cloneNode(true);
+                sharePdf.parentNode.replaceChild(newPdf, sharePdf);
+                
+                newPdf.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Função de compartilhamento do PDF
+                    if (typeof compartilharEstoqueAtual === 'function') {
+                        compartilharEstoqueAtual('pdf');
+                    } else {
+                        console.log('📄 Gerando PDF');
+                        shareMenu.style.display = 'none';
+                        window.dcodeShareMenuOpen = false;
+                    }
+                });
+            }
+            
+            shareSystemInitialized = true;
+            console.log('✅ Sistema de compartilhamento independente inicializado');
+        }
+        
+        // ===== INICIALIZAÇÃO DOS SISTEMAS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar um pouco para garantir que todos os elementos estão carregados
+            setTimeout(function() {
+                setupLanguageSystem();
+                setupShareSystem();
+            }, 500);
+        });
+        
+        // Re-inicializar se necessário
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (!languageSystemInitialized) setupLanguageSystem();
+                if (!shareSystemInitialized) setupShareSystem();
+            }, 1000);
+        });
+    </script>
+        
+        // ===== SISTEMA DE TRADUÇÃO COMPLETO =====
         let currentLanguage = 'pt';
         
         // Mapping de idiomas com traduções completas
@@ -4926,65 +5269,257 @@
                     'entriesLabel': 'Entradas',
                     'exitsLabel': 'Saídas',
                     
-                    // Modal Premium
-                    'premiumSubscription': 'Assinatura Premium',
-                    'choosePlan': 'Escolha seu plano:',
-                    'monthly': 'Mensal',
-                    'annual': 'Anual',
-                    'perMonth': 'por mês',
-                    'perYear': 'por ano',
-                    'paymentMethod': 'Método de pagamento:',
-                    'pix': 'PIX',
-                    'credit': 'Crédito',
-                    'debit': 'Débito',
-                    'cancel': 'Cancelar',
-                    'confirm': 'Confirmar',
-                    
-                    // Card Form
-                    'cardDetails': 'Dados do Cartão',
-                    'cardNumber': 'Número do Cartão',
-                    'expiryDate': 'Validade',
-                    'cvv': 'CVV',
-                    'cardName': 'Nome no Cartão',
-                    'installments': 'Parcelas',
-                    
-                    // PIX
-                    'pixPayment': 'Pagamento PIX',
-                    'pixKey': 'Chave PIX',
-                    'copyPix': 'Copiar',
-                    'pixInstructions': 'Copie a chave PIX acima e faça o pagamento em seu banco. Todos os pagamentos devem ser feitos nesta chave.',
-                    
-                    // Premium Features
-                    'advancedReports': 'Relatórios Avançados',
-                    'cloudBackup': 'Backup na Nuvem',
-                    'multipleUsers': 'Múltiplos Usuários',
-                    'prioritySupport': 'Suporte Prioritário',
-                    'basicPlan': 'Básico',
-                    'mostPopular': 'Mais Popular',
-                    'smallBusinessIdeal': 'Ideal para pequenas empresas',
-                    'bestForGrowingBusiness': 'Melhor para empresas em crescimento',
-                    'saveFifteenPercent': 'Economize 15%',
-                    'upToFiveStocks': '✅ Até 5 estoques',
-                    'basicReports': '✅ Relatórios básicos',
-                    'emailSupport': '✅ Suporte por email',
-                    'unlimitedStocks': '✅ Estoques ilimitados',
-                    'advancedReportsFeature': '✅ Relatórios avançados',
-                    'automaticBackup': '✅ Backup automático',
-                    'prioritySupportFeature': '✅ Suporte prioritário',
-                    'multipleUsersFeature': '✅ Múltiplos usuários',
-                    
-                    // Menu Compartilhar
+                    // Compartilhamento
                     'whatsapp': 'WhatsApp',
                     'email': 'Email',
                     'pdf': 'PDF',
                     
                     // Placeholders
                     'stockName': 'Nome do Estoque',
-                    'stockDefault': 'Estoque', // Para "Estoque 1", "Estoque 2", etc.
-                    'itemPlaceholder': 'Nome do item...',
-                    'entryPlaceholder': 'Qtd entrada...',
-                    'exitPlaceholder': 'Qtd saída...',
-                    'valuePlaceholder': 'Valor...',
+                    'stockDefault': 'Estoque'
+                }
+            },
+            'en': { 
+                flag: '🇺🇸', 
+                name: 'EN', 
+                fullName: 'English',
+                translations: {
+                    // Top buttons
+                    'login': 'Login',
+                    'premium': 'Premium',
+                    'shareStock': 'Share stock',
+                    'selectLanguage': 'Select Language',
+                    'toggleTheme': 'Toggle theme',
+                    'notifications': 'Notifications',
+                    
+                    // Navigation
+                    'previousMonth': 'Previous Month',
+                    'nextMonth': 'Next Month',
+                    'newStock': 'New Stock',
+                    'backStock': 'Previous Stock',
+                    
+                    // Table
+                    'item': 'Item',
+                    'entry': 'Entry',
+                    'exit': 'Exit',
+                    'unitValue': 'Value ($)',
+                    
+                    // Charts
+                    'entryChart': 'Entries by Item',
+                    'valueChart': 'Values',
+                    'exitChart': 'Exits',
+                    
+                    // Summary
+                    'itemSummary': 'Item Summary',
+                    'noItemsYet': 'No items added yet',
+                    
+                    // Results
+                    'totalEntries': 'Total Entries:',
+                    'totalExits': 'Total Exits:',
+                    'finalBalance': 'Final Balance:',
+                    'totalValue': 'Total Value:',
+                    
+                    // History
+                    'operationsHistory': 'Operations History',
+                    'clearHistory': 'Clear History',
+                    'entriesLabel': 'Entries',
+                    'exitsLabel': 'Exits',
+                    
+                    // Share Menu
+                    'whatsapp': 'WhatsApp',
+                    'email': 'Email',
+                    'pdf': 'PDF',
+                    
+                    // Placeholders
+                    'stockName': 'Stock Name',
+                    'stockDefault': 'Stock'
+                }
+            },
+            'fr': { 
+                flag: '🇫🇷', 
+                name: 'FR', 
+                fullName: 'Français',
+                translations: {
+                    'login': 'Connexion',
+                    'premium': 'Premium',
+                    'shareStock': 'Partager stock',
+                    'selectLanguage': 'Sélectionner la langue',
+                    'toggleTheme': 'Basculer le thème',
+                    'notifications': 'Notifications',
+                    'previousMonth': 'Mois précédent',
+                    'nextMonth': 'Mois suivant',
+                    'newStock': 'Nouveau stock',
+                    'backStock': 'Stock précédent',
+                    'item': 'Article',
+                    'entry': 'Entrée',
+                    'exit': 'Sortie',
+                    'unitValue': 'Valeur (€)',
+                    'entryChart': 'Entrées par article',
+                    'valueChart': 'Valeurs',
+                    'exitChart': 'Sorties',
+                    'itemSummary': 'Résumé des articles',
+                    'noItemsYet': 'Aucun article ajouté encore',
+                    'totalEntries': 'Total des entrées:',
+                    'totalExits': 'Total des sorties:',
+                    'finalBalance': 'Solde final:',
+                    'totalValue': 'Valeur totale:',
+                    'operationsHistory': 'Historique des opérations',
+                    'clearHistory': 'Effacer l\'historique',
+                    'entriesLabel': 'Entrées',
+                    'exitsLabel': 'Sorties',
+                    'whatsapp': 'WhatsApp',
+                    'email': 'Email',
+                    'pdf': 'PDF',
+                    'stockName': 'Nom du stock',
+                    'stockDefault': 'Stock'
+                }
+            },
+            'it': { 
+                flag: '🇮🇹', 
+                name: 'IT', 
+                fullName: 'Italiano',
+                translations: {
+                    'login': 'Accesso',
+                    'premium': 'Premium',
+                    'shareStock': 'Condividi magazzino',
+                    'selectLanguage': 'Seleziona lingua',
+                    'toggleTheme': 'Cambia tema',
+                    'notifications': 'Notifiche',
+                    'previousMonth': 'Mese precedente',
+                    'nextMonth': 'Mese successivo',
+                    'newStock': 'Nuovo magazzino',
+                    'backStock': 'Magazzino precedente',
+                    'item': 'Articolo',
+                    'entry': 'Entrata',
+                    'exit': 'Uscita',
+                    'unitValue': 'Valore (€)',
+                    'entryChart': 'Entrate per articolo',
+                    'valueChart': 'Valori',
+                    'exitChart': 'Uscite',
+                    'itemSummary': 'Riassunto articoli',
+                    'noItemsYet': 'Nessun articolo aggiunto ancora',
+                    'totalEntries': 'Entrate totali:',
+                    'totalExits': 'Uscite totali:',
+                    'finalBalance': 'Saldo finale:',
+                    'totalValue': 'Valore totale:',
+                    'operationsHistory': 'Cronologia operazioni',
+                    'clearHistory': 'Cancella cronologia',
+                    'entriesLabel': 'Entrate',
+                    'exitsLabel': 'Uscite',
+                    'whatsapp': 'WhatsApp',
+                    'email': 'Email',
+                    'pdf': 'PDF',
+                    'stockName': 'Nome magazzino',
+                    'stockDefault': 'Magazzino'
+                }
+            },
+            'es': { 
+                flag: '🇪🇸', 
+                name: 'ES', 
+                fullName: 'Español',
+                translations: {
+                    'login': 'Iniciar sesión',
+                    'premium': 'Premium',
+                    'shareStock': 'Compartir stock',
+                    'selectLanguage': 'Seleccionar idioma',
+                    'toggleTheme': 'Cambiar tema',
+                    'notifications': 'Notificaciones',
+                    'previousMonth': 'Mes anterior',
+                    'nextMonth': 'Mes siguiente',
+                    'newStock': 'Nuevo stock',
+                    'backStock': 'Stock anterior',
+                    'item': 'Artículo',
+                    'entry': 'Entrada',
+                    'exit': 'Salida',
+                    'unitValue': 'Valor (€)',
+                    'entryChart': 'Entradas por artículo',
+                    'valueChart': 'Valores',
+                    'exitChart': 'Salidas',
+                    'itemSummary': 'Resumen de artículos',
+                    'noItemsYet': 'No se han agregado artículos aún',
+                    'totalEntries': 'Total de entradas:',
+                    'totalExits': 'Total de salidas:',
+                    'finalBalance': 'Saldo final:',
+                    'totalValue': 'Valor total:',
+                    'operationsHistory': 'Historial de operaciones',
+                    'clearHistory': 'Limpiar historial',
+                    'entriesLabel': 'Entradas',
+                    'exitsLabel': 'Salidas',
+                    'whatsapp': 'WhatsApp',
+                    'email': 'Email',
+                    'pdf': 'PDF',
+                    'stockName': 'Nombre del stock',
+                    'stockDefault': 'Stock'
+                }
+            }
+        };
+        
+        // Função para obter tradução
+        function getTranslation(key, lang = currentLanguage) {
+            const language = languages[lang];
+            return language?.translations?.[key] || key;
+        }
+        
+        // Função para atualizar idioma
+        function updateLanguage(newLang) {
+            if (!languages[newLang]) return;
+            
+            currentLanguage = newLang;
+            localStorage.setItem('selectedLanguage', newLang);
+            
+            // Atualizar todos os elementos com data-translate
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-translate');
+                const translation = getTranslation(key, newLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translation;
+                } else {
+                    el.textContent = translation;
+                }
+            });
+            
+            // Atualizar títulos
+            const titleElements = document.querySelectorAll('[data-translate-title]');
+            titleElements.forEach(el => {
+                const key = el.getAttribute('data-translate-title');
+                const translation = getTranslation(key, newLang);
+                el.title = translation;
+            });
+            
+            // Atualizar placeholders
+            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+            placeholderElements.forEach(el => {
+                const key = el.getAttribute('data-translate-placeholder');
+                const translation = getTranslation(key, newLang);
+                el.placeholder = translation;
+            });
+            
+            // Atualizar bandeira no botão
+            updateLanguageFlag(newLang);
+            
+            // Atualizar display do mês se a função existir
+            if (typeof window.updateMonthDisplay === 'function') {
+                window.updateMonthDisplay();
+            }
+            
+            console.log('Idioma atualizado para:', newLang);
+        }
+        
+        // Carregar idioma salvo
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('selectedLanguage') || 'pt';
+            if (languages[savedLang]) {
+                currentLanguage = savedLang;
+                updateLanguage(savedLang);
+            }
+        });
+        
+        // Expor funções globalmente para compatibilidade
+        window.getTranslation = getTranslation;
+        window.updateLanguage = updateLanguage;
+        window.currentLanguage = currentLanguage;
+        window.languages = languages;
                     
                     // Login Modal
                     'welcomeBack': 'Bem-vindo',
@@ -5412,8 +5947,43 @@
                     'exitPlaceholder': 'Qta uscita...',
                     'valuePlaceholder': 'Valore...',
                     
+                    // Login Modal
+                    'welcomeBack': 'Benvenuto',
+                    'loginSubtitle': 'Inserisci le tue credenziali per accedere al sistema',
+                    'userOrEmail': 'Utente o Email',
+                    'password': 'Password',
+                    'signIn': 'Accedi',
+                    'needAccount': 'Hai bisogno di un account? Registrati',
+                    'forgotPassword': 'Password dimenticata?',
+                    
                     // Months
-                    'months': ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
+                    'months': ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+                    
+                    // Additional translations
+                    'addItem': 'Aggiungi Articolo',
+                    'removeItem': 'Rimuovi Articolo',
+                    'clearAll': 'Cancella Tutto',
+                    'save': 'Salva',
+                    'export': 'Esporta',
+                    'import': 'Importa',
+                    'settings': 'Impostazioni',
+                    'about': 'Informazioni',
+                    'help': 'Aiuto',
+                    'close': 'Chiudi',
+                    'ok': 'OK',
+                    'yes': 'Sì',
+                    'no': 'No',
+                    'loading': 'Caricamento...',
+                    'success': 'Successo!',
+                    'error': 'Errore!',
+                    'warning': 'Attenzione!',
+                    'info': 'Informazione',
+                    
+                    // Card placeholders
+                    'cardNumberPlaceholder': '1234 5678 9012 3456',
+                    'cardExpiryPlaceholder': 'MM/AA',
+                    'cardCvvPlaceholder': '123',
+                    'cardNamePlaceholder': 'Nome completo'
                 }
             },
             'es': { 
@@ -5653,7 +6223,8 @@
             const isVisible = menu.style.display !== 'none';
             
             // Esconde outros menus
-            document.getElementById('shareMenu').style.display = 'none';
+            const shareMenu = document.getElementById('shareMenu');
+            if (shareMenu) shareMenu.style.display = 'none';
             
             // Toggle menu de idiomas
             menu.style.display = isVisible ? 'none' : 'block';
@@ -5673,11 +6244,16 @@
                 const lang = this.dataset.lang;
                 const langData = languages[lang];
                 
+                if (!langData) return;
+                
                 // Atualiza idioma atual
                 currentLanguage = lang;
                 
-                // Atualiza texto do botão (apenas bandeira no globo)
-                document.getElementById('currentFlag').textContent = langData.flag;
+                // Atualiza texto do botão (apenas bandeira)
+                const flagElement = document.getElementById('currentFlag');
+                if (flagElement) {
+                    flagElement.textContent = langData.flag;
+                }
                 
                 // Esconde menu
                 document.getElementById('languageMenu').style.display = 'none';
@@ -5695,6 +6271,8 @@
                 
                 // Dispara evento customizado para outros scripts
                 window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
+                
+                console.log(`Idioma selecionado: ${langData.fullName}`);
             });
         });
 
@@ -5746,10 +6324,15 @@
 
         // Fecha menus ao clicar fora
         document.addEventListener('click', function() {
-            document.getElementById('languageMenu').style.display = 'none';
-            document.getElementById('shareMenu').style.display = 'none';
+            const langMenu = document.getElementById('languageMenu');
+            const shareMenu = document.getElementById('shareMenu');
+            if (langMenu) langMenu.style.display = 'none';
+            if (shareMenu) shareMenu.style.display = 'none';
         });
+    </script>
 
+    <!-- Scripts de Funcionalidades -->
+    <script>
         // === FUNÇÕES DO MODAL DE LOGIN === //
         function openLoginModal() {
             const modal = document.getElementById('loginModal');
@@ -6073,6 +6656,11 @@
                     }
                 });
             }
+            
+            dados += '\n📱 Criado com DcodeStock';
+            return dados;
+        }
+        
         // === FIM DAS FUNÇÕES DE COMPARTILHAMENTO ===
     </script>
     
