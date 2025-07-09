@@ -1723,39 +1723,338 @@
         /* === LAYOUT LIMPO - SEM CONTAINERS DESNECESSÁRIOS === */
 
         /* === BOTÕES DE COMPARTILHAMENTO ULTRA-MODERNOS === */
-        #shareWhatsapp:hover {
-            background: #1ebe57 !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5) !important;
-            border-radius: 16px !important;
-        }
-
-        #shareEmail:hover {
-            background: #d33b2c !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(234, 67, 53, 0.5) !important;
-            border-radius: 16px !important;
-        }
-
-        #sharePdf:hover {
-            background: #e64a19 !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5) !important;
-            border-radius: 16px !important;
-        }
-
+        
+        /* Menu de Compartilhamento com Glassmorphism Avançado */
         #shareMenu {
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            background: rgba(var(--bg-color-dark-rgb, 20, 20, 20), 0.9) !important;
+            backdrop-filter: blur(25px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.12) 0%, 
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.04) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            border-radius: 24px !important;
+            animation: shareMenuSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
         }
 
-        /* Botões de compartilhamento com ícones otimizados */
+        @keyframes shareMenuSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Base dos Botões de Compartilhamento */
         #shareWhatsapp, #shareEmail, #sharePdf {
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(0);
+            position: relative !important;
+            overflow: hidden !important;
+            transform: translateZ(0) !important;
+            border-radius: 20px !important;
+            background: linear-gradient(135deg, var(--btn-bg) 0%, var(--btn-bg-dark) 100%) !important;
+            box-shadow: 
+                0 8px 20px var(--btn-shadow),
+                0 4px 12px var(--btn-shadow-light),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            animation: buttonEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        /* WhatsApp Button Variables */
+        #shareWhatsapp {
+            --btn-bg: #25D366;
+            --btn-bg-dark: #1da851;
+            --btn-shadow: rgba(37, 211, 102, 0.35);
+            --btn-shadow-light: rgba(37, 211, 102, 0.2);
+            --btn-glow: rgba(37, 211, 102, 0.6);
+        }
+
+        /* Email Button Variables */
+        #shareEmail {
+            --btn-bg: #EA4335;
+            --btn-bg-dark: #c23321;
+            --btn-shadow: rgba(234, 67, 53, 0.35);
+            --btn-shadow-light: rgba(234, 67, 53, 0.2);
+            --btn-glow: rgba(234, 67, 53, 0.6);
+        }
+
+        /* PDF Button Variables */
+        #sharePdf {
+            --btn-bg: #FF5722;
+            --btn-bg-dark: #e64a19;
+            --btn-shadow: rgba(255, 87, 34, 0.35);
+            --btn-shadow-light: rgba(255, 87, 34, 0.2);
+            --btn-glow: rgba(255, 87, 34, 0.6);
+        }
+
+        @keyframes buttonEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8) rotateY(30deg);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-5px) scale(1.05) rotateY(-5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateY(0deg);
+            }
+        }
+
+        /* Hover Effects Ultra-Modernos */
+        #shareWhatsapp:hover, #shareEmail:hover, #sharePdf:hover {
+            transform: translateY(-12px) scale(1.08) rotateZ(2deg) !important;
+            border-radius: 24px !important;
+            box-shadow: 
+                0 20px 50px var(--btn-glow),
+                0 10px 30px var(--btn-shadow),
+                0 0 40px var(--btn-glow),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3) !important;
+            background: linear-gradient(135deg, 
+                var(--btn-bg) 0%, 
+                var(--btn-bg-dark) 50%,
+                var(--btn-bg) 100%) !important;
+            animation: buttonPulse 1.5s infinite alternate !important;
+        }
+
+        @keyframes buttonPulse {
+            0% {
+                box-shadow: 
+                    0 20px 50px var(--btn-glow),
+                    0 10px 30px var(--btn-shadow),
+                    0 0 40px var(--btn-glow),
+                    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                box-shadow: 
+                    0 25px 60px var(--btn-glow),
+                    0 12px 35px var(--btn-shadow),
+                    0 0 50px var(--btn-glow),
+                    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        /* Active States com Micro-interações */
+        #shareWhatsapp:active, #shareEmail:active, #sharePdf:active {
+            transform: translateY(-5px) scale(1.02) !important;
+            box-shadow: 
+                0 8px 25px var(--btn-shadow),
+                0 4px 15px var(--btn-shadow-light),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.1s ease-out !important;
+        }
+
+        /* Ripple Effect */
+        #shareWhatsapp::before, #shareEmail::before, #sharePdf::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: 1;
+        }
+
+        #shareWhatsapp:active::before, #shareEmail:active::before, #sharePdf:active::before {
+            width: 120%;
+            height: 120%;
+        }
+
+        /* === RESPONSIVIDADE MOBILE PARA BOTÕES DE COMPARTILHAMENTO === */
+        
+        /* Mobile - Tablets */
+        @media (max-width: 768px) {
+            #shareMenu {
+                top: 65px !important;
+                right: 15px !important;
+                padding: 18px !important;
+                border-radius: 20px !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 60px !important;
+                height: 60px !important;
+                padding: 16px !important;
+                border-radius: 18px !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 28px !important;
+                height: 28px !important;
+            }
+        }
+        
+        /* Mobile - Smartphones */
+        @media (max-width: 480px) {
+            #shareMenu {
+                top: 60px !important;
+                right: 12px !important;
+                padding: 16px !important;
+                border-radius: 18px !important;
+                max-width: calc(100vw - 24px) !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 56px !important;
+                height: 56px !important;
+                padding: 14px !important;
+                border-radius: 16px !important;
+                min-width: 56px !important;
+                min-height: 56px !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 26px !important;
+                height: 26px !important;
+                min-width: 26px !important;
+                min-height: 26px !important;
+            }
+            
+            /* Hover effects otimizados para mobile */
+            #shareWhatsapp:hover, #shareEmail:hover, #sharePdf:hover {
+                transform: translateY(-8px) scale(1.05) !important;
+            }
+        }
+        
+        /* Mobile - Telas Pequenas */
+        @media (max-width: 380px) {
+            #shareMenu {
+                top: 58px !important;
+                right: 10px !important;
+                padding: 14px !important;
+                border-radius: 16px !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 52px !important;
+                height: 52px !important;
+                padding: 12px !important;
+                border-radius: 14px !important;
+                min-width: 52px !important;
+                min-height: 52px !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px !important;
+                min-height: 24px !important;
+            }
+        }
+        
+        /* Mobile - Telas Ultra Pequenas */
+        @media (max-width: 320px) {
+            #shareMenu {
+                top: 56px !important;
+                right: 8px !important;
+                padding: 12px !important;
+                border-radius: 14px !important;
+                box-shadow: 
+                    0 15px 30px rgba(0, 0, 0, 0.4),
+                    0 6px 20px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 48px !important;
+                height: 48px !important;
+                padding: 10px !important;
+                border-radius: 12px !important;
+                min-width: 48px !important;
+                min-height: 48px !important;
+                box-shadow: 
+                    0 6px 15px var(--btn-shadow),
+                    0 3px 8px var(--btn-shadow-light),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 22px !important;
+                height: 22px !important;
+                min-width: 22px !important;
+                min-height: 22px !important;
+            }
+            
+            /* Hover simplificado para telas muito pequenas */
+            #shareWhatsapp:hover, #shareEmail:hover, #sharePdf:hover {
+                transform: translateY(-6px) scale(1.03) !important;
+                animation: none !important;
+            }
+        }
+        
+        /* Garantir visibilidade em orientação landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #shareMenu {
+                top: 50px !important;
+                right: 10px !important;
+                padding: 10px !important;
+                gap: 10px !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 44px !important;
+                height: 44px !important;
+                padding: 8px !important;
+                border-radius: 10px !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+        }
+        
+        /* Garantir que o menu não saia da tela em dispositivos pequenos */
+        @media (max-width: 280px) {
+            #shareMenu {
+                right: 4px !important;
+                left: auto !important;
+                max-width: calc(100vw - 8px) !important;
+                padding: 10px !important;
+            }
+            
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                width: 44px !important;
+                height: 44px !important;
+                padding: 8px !important;
+                min-width: 44px !important;
+                min-height: 44px !important;
+            }
+            
+            #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                width: 20px !important;
+                height: 20px !important;
+                min-width: 20px !important;
+                min-height: 20px !important;
+            }
+        }
+        
+        /* Touch targets otimizados para mobile */
+        @media (hover: none) and (pointer: coarse) {
+            #shareWhatsapp, #shareEmail, #sharePdf {
+                min-width: 48px !important;
+                min-height: 48px !important;
+                touch-action: manipulation !important;
+            }
+            
+            /* Remove animações complexas em dispositivos touch */
+            #shareWhatsapp:hover, #shareEmail:hover, #sharePdf:hover {
+                animation: none !important;
+                transform: scale(1.05) !important;
+            }
         }
 
         #shareWhatsapp:hover {
@@ -1776,7 +2075,7 @@
             box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5) !important;
         }
 
-        /* Garantir que os SVGs dos botões sejam sempre visíveis */
+        /* Garantir que os SVGs dos botões sejam sempre visíveis com animações */
         #shareWhatsapp svg,
         #shareEmail svg,
         #sharePdf svg {
@@ -1785,13 +2084,63 @@
             stroke: none !important;
             display: block !important;
             pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+            position: relative;
+            z-index: 2;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
-        /* Efeito de ripple nos botões */
-        #shareWhatsapp:active,
-        #shareEmail:active,
-        #sharePdf:active {
-            transform: translateY(0) scale(0.98);
+        /* FORÇA ABSOLUTA - Garantir que os botões e SVGs sempre apareçam */
+        #shareWhatsapp,
+        #shareEmail,
+        #sharePdf {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 10 !important;
+        }
+
+        #shareWhatsapp svg,
+        #shareEmail svg,
+        #sharePdf svg {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 11 !important;
+        }
+
+        /* Menu de compartilhamento - força de visibilidade */
+        #shareMenu {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 200 !important;
+        }
+
+        #shareMenu[style*="display: none"] {
+            display: none !important;
+        }
+
+        #shareMenu:not([style*="display: none"]) {
+            display: block !important;
+        }
+
+        /* Animação dos SVGs no hover */
+        #shareWhatsapp:hover svg,
+        #shareEmail:hover svg,
+        #sharePdf:hover svg {
+            transform: scale(1.1) rotate(5deg) !important;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+        }
+
+        /* Micro-animação dos SVGs no click */
+        #shareWhatsapp:active svg,
+        #shareEmail:active svg,
+        #sharePdf:active svg {
+            transform: scale(0.95) rotate(-2deg) !important;
+            transition: all 0.1s ease-out !important;
         }
 
         /* === MENU DE IDIOMAS === */
@@ -3691,6 +4040,175 @@
     </style>
 </head>
 <body>
+    <!-- Script de Correção de Bandeiras e Ícones -->
+    <script>
+    // === CORREÇÃO DEFINITIVA DE BANDEIRAS E ÍCONES ===
+    
+    // Corrige bandeiras do botão de idioma
+    function updateLanguageButtonFlag() {
+        const lang = localStorage.getItem('selectedLanguage') || 'pt';
+        const flags = { 
+            pt: '🇧🇷', 
+            en: '🇺🇸', 
+            es: '🇪🇸', 
+            fr: '🇫🇷', 
+            it: '🇮🇹' 
+        };
+        const flag = flags[lang] || '🇧🇷';
+        
+        // Atualiza o botão principal
+        const flagEl = document.getElementById('currentFlag');
+        if (flagEl) {
+            flagEl.textContent = flag;
+            flagEl.innerHTML = flag; // força como emoji
+        }
+        
+        // Força também no botão se não tiver o elemento currentFlag
+        const langBtn = document.getElementById('btnLanguage');
+        if (langBtn && !flagEl) {
+            langBtn.innerHTML = `<span class="country-flag" id="currentFlag">${flag}</span>`;
+        }
+    }
+
+    // Corrige menu de idiomas para mostrar só bandeiras
+    function fixLanguageMenu() {
+        const menu = document.getElementById('languageMenu');
+        if (!menu) return;
+        
+        const flags = { 
+            pt: '🇧🇷', 
+            en: '🇺🇸', 
+            es: '🇪🇸', 
+            fr: '🇫🇷', 
+            it: '🇮🇹' 
+        };
+        
+        menu.querySelectorAll('.language-option').forEach(btn => {
+            const lang = btn.getAttribute('data-lang');
+            if (flags[lang]) {
+                btn.innerHTML = flags[lang];
+                btn.style.fontSize = '28px';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                
+                // Define título baseado no idioma
+                const titles = {
+                    pt: 'Português',
+                    en: 'English', 
+                    es: 'Español',
+                    fr: 'Français',
+                    it: 'Italiano'
+                };
+                btn.title = titles[lang] || lang;
+            }
+        });
+    }
+
+    // Corrige ícones de compartilhamento
+    function fixShareIcons() {
+        const shareIcons = {
+            shareWhatsapp: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+            shareEmail: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>`,
+            sharePdf: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2" ry="2"/><path d="M8 6h8"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg>`
+        };
+        
+        Object.keys(shareIcons).forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                // Se não tem SVG, adiciona
+                if (!btn.querySelector('svg')) {
+                    btn.innerHTML = shareIcons[id];
+                }
+                
+                // Força estilos de visibilidade
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.opacity = '1';
+                btn.style.visibility = 'visible';
+                btn.style.zIndex = '210';
+                
+                // Força o SVG a ser visível
+                const svg = btn.querySelector('svg');
+                if (svg) {
+                    svg.style.display = 'block';
+                    svg.style.opacity = '1';
+                    svg.style.visibility = 'visible';
+                    svg.style.fill = 'none';
+                    svg.style.stroke = 'currentColor';
+                }
+            }
+        });
+    }
+
+    // Garante que o menu de compartilhamento funcione
+    function fixShareMenu() {
+        const btnShare = document.getElementById('btnShare');
+        const shareMenu = document.getElementById('shareMenu');
+        
+        if (btnShare && shareMenu) {
+            // Força visibilidade do botão
+            btnShare.style.display = 'flex';
+            btnShare.style.opacity = '1';
+            btnShare.style.visibility = 'visible';
+            
+            // Inicialmente esconde o menu
+            shareMenu.style.display = 'none';
+            shareMenu.style.opacity = '1';
+            shareMenu.style.visibility = 'visible';
+            shareMenu.style.zIndex = '200';
+            
+            // Remove listeners antigos e adiciona novo
+            btnShare.onclick = function(e) {
+                e.stopPropagation();
+                const isVisible = shareMenu.style.display !== 'none';
+                shareMenu.style.display = isVisible ? 'none' : 'block';
+            };
+            
+            // Fecha ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (!shareMenu.contains(e.target) && e.target !== btnShare) {
+                    shareMenu.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    // Executa todas as correções
+    function executeAllFixes() {
+        updateLanguageButtonFlag();
+        fixLanguageMenu();
+        fixShareIcons();
+        fixShareMenu();
+    }
+
+    // Executa ao carregar a página
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', executeAllFixes);
+    } else {
+        executeAllFixes();
+    }
+
+    // Executa quando o idioma muda
+    window.addEventListener('languageChanged', function() {
+        setTimeout(() => {
+            updateLanguageButtonFlag();
+            fixLanguageMenu();
+        }, 100);
+    });
+
+    // Re-executa a cada 2 segundos para garantir (só nas primeiras vezes)
+    let fixAttempts = 0;
+    const intervalFix = setInterval(() => {
+        executeAllFixes();
+        fixAttempts++;
+        if (fixAttempts >= 5) { // Para após 10 segundos
+            clearInterval(intervalFix);
+        }
+    }, 2000);
+    </script>
+
     <!-- Barra Superior -->
     <div class="top-bar-app">
         <!-- Layout Distribuído: Login - Alerta - Idioma - Tema - Share - Premium -->
@@ -4112,26 +4630,26 @@
         </div>
     </div>
 
-    <!-- Menu de Compartilhamento Ultra-Moderno -->
-    <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:16px;padding:16px;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
-        <div style="display:flex;flex-direction:column;gap:14px;">
-            <!-- WhatsApp Button -->
-            <button id="shareWhatsapp" style="padding:16px;border:none;background:#25D366;color:#ffffff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(37, 211, 102, 0.3);width:56px;height:56px;" data-translate="whatsapp" title="WhatsApp">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+    <!-- Menu de Compartilhamento Ultra-Moderno com Responsividade Mobile Total -->
+    <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);border:1px solid rgba(255, 255, 255, 0.18);border-radius:24px;padding:20px;z-index:200;box-shadow:0 20px 40px rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);backdrop-filter:blur(25px) saturate(180%);-webkit-backdrop-filter:blur(25px) saturate(180%);max-width:calc(100vw - 40px);min-width:min-content;">
+        <div style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+            <!-- WhatsApp Button Ultra-Moderno Mobile-Optimized -->
+            <button id="shareWhatsapp" style="padding:18px;border:none;background:linear-gradient(135deg, #25D366 0%, #1da851 100%);color:#ffffff;border-radius:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 8px 20px rgba(37, 211, 102, 0.35), 0 4px 12px rgba(37, 211, 102, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);width:64px;height:64px;min-width:64px;min-height:64px;position:relative;overflow:hidden;transform:translateZ(0);backdrop-filter:blur(10px);touch-action:manipulation;" data-translate="whatsapp" title="Compartilhar no WhatsApp" aria-label="Compartilhar no WhatsApp">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:2;transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);filter:drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));min-width:32px;min-height:32px;">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.051 3.488"/>
                 </svg>
             </button>
             
-            <!-- Email Button -->
-            <button id="shareEmail" style="padding:16px;border:none;background:#EA4335;color:#ffffff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(234, 67, 53, 0.3);width:56px;height:56px;" data-translate="email" title="Email">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+            <!-- Email Button Ultra-Moderno Mobile-Optimized -->
+            <button id="shareEmail" style="padding:18px;border:none;background:linear-gradient(135deg, #EA4335 0%, #c23321 100%);color:#ffffff;border-radius:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 8px 20px rgba(234, 67, 53, 0.35), 0 4px 12px rgba(234, 67, 53, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);width:64px;height:64px;min-width:64px;min-height:64px;position:relative;overflow:hidden;transform:translateZ(0);backdrop-filter:blur(10px);touch-action:manipulation;" data-translate="email" title="Compartilhar por Email" aria-label="Compartilhar por Email">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:2;transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);filter:drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));min-width:32px;min-height:32px;">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                 </svg>
             </button>
             
-            <!-- PDF Button -->
-            <button id="sharePdf" style="padding:16px;border:none;background:#FF5722;color:#ffffff;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 4px 15px rgba(255, 87, 34, 0.3);width:56px;height:56px;" data-translate="pdf" title="PDF">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+            <!-- PDF Button Ultra-Moderno Mobile-Optimized -->
+            <button id="sharePdf" style="padding:18px;border:none;background:linear-gradient(135deg, #FF5722 0%, #e64a19 100%);color:#ffffff;border-radius:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;transition:all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow:0 8px 20px rgba(255, 87, 34, 0.35), 0 4px 12px rgba(255, 87, 34, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);width:64px;height:64px;min-width:64px;min-height:64px;position:relative;overflow:hidden;transform:translateZ(0);backdrop-filter:blur(10px);touch-action:manipulation;" data-translate="pdf" title="Exportar para PDF" aria-label="Exportar para PDF">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:2;transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);filter:drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));min-width:32px;min-height:32px;">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                     <path d="M9,13H7V15H9V13M9,9H7V11H9V9M13,13H11V15H13V13M13,9H11V11H13V9M17,13H15V15H17V13M17,9H15V11H17V9Z"/>
                 </svg>
@@ -5314,6 +5832,157 @@
             // Removido - sem popup toast
             console.log('Plano Premium ativado com sucesso!');
         }
+
+        // ========== SISTEMA DE COMPARTILHAMENTO ULTRA-MODERNO ==========
+        
+        // Forçar visibilidade imediata dos ícones
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                /* FORÇA MÁXIMA - Garante que os ícones sempre apareçam */
+                #shareWhatsapp, #shareEmail, #sharePdf,
+                #shareWhatsapp svg, #shareEmail svg, #sharePdf svg {
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                #shareMenu {
+                    z-index: 9999 !important;
+                }
+                
+                #shareMenu[style*="display: block"], 
+                #shareMenu[style*="display: flex"] {
+                    display: block !important;
+                }
+            </style>
+        `);
+        
+        // Controle do menu de compartilhamento
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnShare = document.getElementById('btnShare');
+            const shareMenu = document.getElementById('shareMenu');
+            const shareWhatsapp = document.getElementById('shareWhatsapp');
+            const shareEmail = document.getElementById('shareEmail');
+            const sharePdf = document.getElementById('sharePdf');
+            
+            let shareMenuOpen = false;
+            
+            // Toggle do menu de compartilhamento
+            if (btnShare && shareMenu) {
+                btnShare.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    shareMenuOpen = !shareMenuOpen;
+                    shareMenu.style.display = shareMenuOpen ? 'block' : 'none';
+                });
+                
+                // Fechar menu ao clicar fora
+                document.addEventListener('click', function(e) {
+                    if (shareMenuOpen && !shareMenu.contains(e.target) && e.target !== btnShare) {
+                        shareMenu.style.display = 'none';
+                        shareMenuOpen = false;
+                    }
+                });
+                
+                // Impedir que cliques no menu fechem ele
+                shareMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Função para gerar dados de compartilhamento
+            function gerarDadosCompartilhamento() {
+                const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                const tabela = document.querySelector('table.estoque-table tbody');
+                let dados = `📊 *${nomeEstoque}*\n\n`;
+                
+                if (tabela) {
+                    const linhas = tabela.querySelectorAll('tr');
+                    linhas.forEach(linha => {
+                        const inputs = linha.querySelectorAll('input');
+                        if (inputs.length >= 3) {
+                            const nome = inputs[0].value.trim();
+                            const entrada = inputs[1].value.trim();
+                            const saida = inputs[2].value.trim();
+                            
+                            if (nome || entrada || saida) {
+                                dados += `• ${nome || 'Item'}\n`;
+                                if (entrada) dados += `  ↗️ Entrada: ${entrada}\n`;
+                                if (saida) dados += `  ↘️ Saída: ${saida}\n`;
+                                dados += '\n';
+                            }
+                        }
+                    });
+                }
+                
+                dados += '\n📱 Criado com DcodeStock';
+                return dados;
+            }
+            
+            // WhatsApp Share
+            if (shareWhatsapp) {
+                shareWhatsapp.addEventListener('click', function() {
+                    const dados = gerarDadosCompartilhamento();
+                    const textoEncoded = encodeURIComponent(dados);
+                    const url = `https://wa.me/?text=${textoEncoded}`;
+                    window.open(url, '_blank');
+                    shareMenu.style.display = 'none';
+                    shareMenuOpen = false;
+                });
+            }
+            
+            // Email Share
+            if (shareEmail) {
+                shareEmail.addEventListener('click', function() {
+                    const dados = gerarDadosCompartilhamento();
+                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                    const subject = encodeURIComponent(`Estoque: ${nomeEstoque}`);
+                    const body = encodeURIComponent(dados);
+                    const url = `mailto:?subject=${subject}&body=${body}`;
+                    window.location.href = url;
+                    shareMenu.style.display = 'none';
+                    shareMenuOpen = false;
+                });
+            }
+            
+            // PDF Share
+            if (sharePdf) {
+                sharePdf.addEventListener('click', function() {
+                    const nomeEstoque = document.getElementById('nomeEstoqueInput')?.value || 'Meu Estoque';
+                    
+                    // Criar nova janela para PDF
+                    const printWindow = window.open('', '_blank');
+                    const tabela = document.querySelector('table.estoque-table');
+                    
+                    if (printWindow && tabela) {
+                        printWindow.document.write(`
+                            <html>
+                                <head>
+                                    <title>${nomeEstoque} - PDF</title>
+                                    <style>
+                                        body { font-family: Arial, sans-serif; margin: 20px; }
+                                        h1 { color: #333; text-align: center; }
+                                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                        th { background-color: #f2f2f2; }
+                                        .footer { text-align: center; margin-top: 30px; color: #666; }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>📊 ${nomeEstoque}</h1>
+                                    ${tabela.outerHTML}
+                                    <div class="footer">📱 Criado com DcodeStock - ${new Date().toLocaleDateString()}</div>
+                                </body>
+                            </html>
+                        `);
+                        printWindow.document.close();
+                        printWindow.print();
+                    }
+                    
+                    shareMenu.style.display = 'none';
+                    shareMenuOpen = false;
+                });
+            }
+        });
     </script>
     
     <!-- Script para otimização empresarial do vídeo -->
