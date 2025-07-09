@@ -96,13 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('🔴 Clique no botão mês anterior detectado!');
         
         if (verificarNavegacaoPremium('navegacao_mes_anterior')) {
-            console.log('✅ Usuário premium - navegando para mês anterior');
+            console.log('✅ Usuário premium - navegação LIVRE para qualquer mês anterior');
             salvarDadosDoMesAtual(currentStockIndex, displayedDate);
             
             displayedDate.setMonth(displayedDate.getMonth() - 1);
             loadStock(currentStockIndex, null);
             updateMonthDisplay();
             mostrarFeedbackNavegacao(currentStockIndex);
+            console.log(`✅ Navegado para: ${displayedDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`);
         } else {
             console.log('❌ Usuário sem premium - modal deve aparecer!');
         }
@@ -112,13 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('🟠 Clique no botão próximo mês detectado!');
         
         if (verificarNavegacaoPremium('navegacao_mes_proximo')) {
-            console.log('✅ Usuário premium - navegando para próximo mês');
+            console.log('✅ Usuário premium - navegação LIVRE para qualquer mês futuro');
             salvarDadosDoMesAtual(currentStockIndex, displayedDate);
             
             displayedDate.setMonth(displayedDate.getMonth() + 1);
             loadStock(currentStockIndex, null);
             updateMonthDisplay();
             mostrarFeedbackNavegacao(currentStockIndex);
+            console.log(`✅ Navegado para: ${displayedDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`);
         } else {
             console.log('❌ Usuário sem premium - modal deve aparecer!');
         }
@@ -879,17 +881,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🟢 Clique no botão + detectado!');
             
             if (verificarNavegacaoPremium('navegacao_estoque_proximo')) {
-                console.log('Usuário premium - navegando para próximo estoque');
+                console.log('Usuário premium - navegando para próximo estoque (1-10)');
                 const proximoIndex = Math.min(currentStockIndex + 1, MAX_STOCKS - 1);
                 
                 if (proximoIndex !== currentStockIndex) {
                     salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                     currentStockIndex = proximoIndex;
+                    localStorage.setItem('currentStockIndex', currentStockIndex.toString());
                     loadStock(currentStockIndex);
                     mostrarFeedbackNavegacao(currentStockIndex);
+                    console.log(`✅ Navegado para Estoque ${currentStockIndex + 1}`);
                 } else {
-                    console.log('Já está no último estoque');
-                    mostrarMensagem('Você já está no último estoque disponível.', 'info');
+                    console.log('Já está no último estoque (10)');
+                    mostrarMensagem('Você já está no Estoque 10 (último disponível).', 'info');
                 }
             } else {
                 console.log('❌ Usuário sem premium - modal deve aparecer para botão +!');
@@ -909,17 +913,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🔵 Clique no botão - detectado!');
             
             if (verificarNavegacaoPremium('navegacao_estoque_anterior')) {
-                console.log('Usuário premium - navegando para estoque anterior');
+                console.log('Usuário premium - navegando para estoque anterior (1-10)');
                 const anteriorIndex = Math.max(currentStockIndex - 1, 0);
                 
                 if (anteriorIndex !== currentStockIndex) {
                     salvarDadosDoMesAtual(currentStockIndex, displayedDate);
                     currentStockIndex = anteriorIndex;
+                    localStorage.setItem('currentStockIndex', currentStockIndex.toString());
                     loadStock(currentStockIndex);
                     mostrarFeedbackNavegacao(currentStockIndex);
+                    console.log(`✅ Navegado para Estoque ${currentStockIndex + 1}`);
                 } else {
-                    console.log('Já está no primeiro estoque');
-                    mostrarMensagem('Você já está no primeiro estoque.', 'info');
+                    console.log('Já está no primeiro estoque (1)');
+                    mostrarMensagem('Você já está no Estoque 1 (primeiro disponível).', 'info');
                 }
             } else {
                 console.log('❌ Usuário sem premium - modal deve aparecer para botão -!');
@@ -1297,10 +1303,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Verificar se tem premium/login ativo
         if (verificarAssinatura()) {
-            console.log('✅ Usuário tem premium - navegação permitida');
+            console.log('✅ Usuário tem premium - navegação LIVRE permitida');
             // Marcar que já teve premium
             localStorage.setItem('jaTevePremium', 'true');
-            return true; // Usuário tem premium (pago ou logado), pode navegar
+            return true; // Usuário tem premium (pago ou logado), pode navegar LIVREMENTE
         }
         
         // SEM PREMIUM = SEMPRE MOSTRAR MODAL
@@ -1629,7 +1635,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const temAssinatura = verificarAssinatura();
         const temPremium = temLogin || temAssinatura;
         
+        // Atualizar botão Premium baseado no status
+        const btnPremium = document.getElementById('btnPremium');
+        if (btnPremium) {
+            if (temPremium) {
+                btnPremium.innerHTML = '🚪 Sair Premium';
+                btnPremium.title = 'Sair do modo premium';
+                btnPremium.onclick = function() {
+                    if (confirm('⚠️ Tem certeza que deseja sair do modo premium?\n\n📁 Seus dados serão salvos, mas você perderá o acesso aos recursos premium.')) {
+                        sairModoPremiun();
+                    }
+                };
+                btnPremium.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a24)';
+            } else {
+                btnPremium.innerHTML = '⭐ Premium';
+                btnPremium.title = 'Ativar Premium';
+                btnPremium.onclick = function() { showPaymentModal(); };
+                btnPremium.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+            }
+        }
+        
         if (temPremium) {
+            // Habilitar navegação livre se já tem premium
+            habilitarNavegacaoLivreExistente();
+            
             // Adicionar badge premium ao nome do estoque
             if (nomeEstoqueInput && !nomeEstoqueInput.parentNode.querySelector('.premium-badge')) {
                 const badge = document.createElement('span');
@@ -1771,7 +1800,12 @@ function realizarLogin() {
         // Login master bem-sucedido
         ativarLoginPremium(login, { tipo: 'master', usuario: login, email: masterEncontrado.email });
         fecharModalLoginFn();
-        mostrarMensagem(`Login master realizado com sucesso! Bem-vindo, ${login}! Acesso premium ativado.`, 'sucesso');
+        mostrarMensagem(`🎉 Login Master realizado! Bem-vindo, ${login}! 
+        
+✅ MODO PREMIUM ATIVADO:
+📦 Estoques: Navegue livremente de 1 a 10
+📅 Meses: Acesse qualquer mês do ano
+🔓 Todas as funcionalidades desbloqueadas!`, 'sucesso');
         
         // Salvar automaticamente os dados ao fazer login master
         if (typeof salvarDadosDoMesAtual === 'function') {
@@ -1803,7 +1837,12 @@ function realizarLogin() {
             // Login de cliente válido
             ativarLoginPremium(login, usuarioEncontrado);
             fecharModalLoginFn();
-            mostrarMensagem(`Bem-vindo de volta! Acesso premium ativado até ${vencimento.toLocaleDateString('pt-BR')}.`, 'sucesso');
+            mostrarMensagem(`🎉 Bem-vindo de volta, ${login}!
+
+✅ MODO PREMIUM ATIVADO:
+📦 Estoques: Navegue livremente de 1 a 10  
+📅 Meses: Acesse qualquer mês do ano
+🔓 Válido até: ${vencimento.toLocaleDateString('pt-BR')}`, 'sucesso');
             window.location.reload();
         } else {
             // Assinatura expirada
@@ -1829,10 +1868,12 @@ function ativarLoginPremium(login, dadosUsuario) {
         expiracao = new Date(agora);
         expiracao.setFullYear(expiracao.getFullYear() + 10); // 10 anos
         tipo = 'master';
+        console.log('👑 Login MASTER ativado - Acesso PREMIUM total liberado!');
     } else {
         // Cliente usa a expiração da assinatura
         expiracao = new Date(dadosUsuario.vencimento);
         tipo = 'cliente';
+        console.log('⭐ Login CLIENTE ativado - Acesso premium liberado!');
     }
     
     const loginData = {
@@ -1846,6 +1887,9 @@ function ativarLoginPremium(login, dadosUsuario) {
     };
     
     localStorage.setItem('loginPremium', JSON.stringify(loginData));
+    
+    // Habilitar navegação livre após login
+    habilitarNavegacaoLivre();
     
     // Auto-salvar dados do estoque atual quando faz login
     console.log('🔄 Auto-salvando dados após login...');
@@ -1863,6 +1907,10 @@ function ativarLoginPremium(login, dadosUsuario) {
             }
         }
         console.log('✅ Auto-salvamento concluído');
+        console.log('🚀 MODO PREMIUM ATIVADO - Navegação LIVRE:');
+        console.log('   📦 Estoques: 1 a 10 (use botões + e -)');
+        console.log('   📅 Meses: Qualquer mês (use botões de navegação)');
+        console.log('   🔓 Todas as funcionalidades desbloqueadas!');
     }, 100);
     
     atualizarStatusPremium();
@@ -2401,6 +2449,14 @@ function listarTodosUsuarios() {
         
         // Inicializar área PIX
         initializePixArea();
+        
+        // Configurar estado inicial - PIX selecionado por padrão
+        const pixMethod = document.querySelector('.payment-method[data-method="pix"]');
+        if (pixMethod) {
+            pixMethod.classList.add('active');
+            handlePaymentMethodChange('pix');
+            console.log('✅ PIX definido como método padrão');
+        }
     }
 
     function initializePixArea() {
@@ -2433,46 +2489,38 @@ function listarTodosUsuarios() {
     }
 
     function handlePaymentMethodChange(method) {
-        const cardForm = document.getElementById('cardForm');
-        const pixArea = document.getElementById('pixArea');
-        const installmentsGroup = document.getElementById('installmentsGroup');
+        console.log('🔄 Mudando método de pagamento para:', method);
         
-        // Mostrar/ocultar formulário de cartão
-        if (method === 'credit' || method === 'debit') {
-            showCardForm();
-            
-            // Mostrar parcelamento apenas para crédito
-            if (installmentsGroup) {
-                if (method === 'credit') {
-                    installmentsGroup.style.display = 'block';
-                    // Atualizar preços para crédito
-                    const selectedPlan = document.querySelector('.plan-option.selected');
-                    if (selectedPlan) {
-                        updatePricing(selectedPlan.dataset.plan);
-                    }
-                } else {
-                    // Para débito, mostrar mas com apenas opção à vista
-                    installmentsGroup.style.display = 'block';
-                    const selectedPlan = document.querySelector('.plan-option.selected');
-                    if (selectedPlan) {
-                        updatePricingForDebit(selectedPlan.dataset.plan);
-                    }
-                }
-            }
-        } else {
-            hideCardForm();
-            if (installmentsGroup) {
-                installmentsGroup.style.display = 'none';
-            }
+        // Obter todas as áreas de pagamento
+        const pixArea = document.getElementById('pixArea');
+        const debitArea = document.getElementById('debitArea');
+        const creditArea = document.getElementById('creditArea');
+        
+        // Esconder todas as áreas primeiro
+        if (pixArea) pixArea.style.display = 'none';
+        if (debitArea) debitArea.style.display = 'none';
+        if (creditArea) creditArea.style.display = 'none';
+        
+        // Mostrar apenas a área do método selecionado
+        if (method === 'pix' && pixArea) {
+            pixArea.style.display = 'block';
+            console.log('✅ Área PIX exibida');
+        } else if (method === 'debit' && debitArea) {
+            debitArea.style.display = 'block';
+            console.log('✅ Área Débito exibida');
+        } else if (method === 'credit' && creditArea) {
+            creditArea.style.display = 'block';
+            console.log('✅ Área Crédito exibida');
         }
         
-        // Mostrar/ocultar área PIX apenas quando PIX for selecionado
-        if (pixArea) {
-            if (method === 'pix') {
-                pixArea.style.display = 'block';
-            } else {
-                pixArea.style.display = 'none';
-            }
+        // Atualizar estado visual dos botões
+        const allMethods = document.querySelectorAll('.payment-method');
+        allMethods.forEach(btn => btn.classList.remove('active'));
+        
+        const selectedMethod = document.querySelector(`.payment-method[data-method="${method}"]`);
+        if (selectedMethod) {
+            selectedMethod.classList.add('active');
+            console.log('✅ Botão do método marcado como ativo');
         }
         
         // Atualizar instruções específicas do método
@@ -2546,52 +2594,69 @@ function listarTodosUsuarios() {
     }
 
     function initializeCardForm() {
-        // Máscara para número do cartão
-        const cardNumber = document.getElementById('cardNumber');
-        if (cardNumber) {
-            cardNumber.addEventListener('input', (e) => {
-                let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
-                let matches = value.match(/\d{4,16}/g);
-                let match = matches && matches[0] || '';
-                let parts = [];
-                for (let i = 0, len = match.length; i < len; i += 4) {
-                    parts.push(match.substring(i, i + 4));
-                }
-                if (parts.length) {
-                    e.target.value = parts.join(' ');
-                } else {
-                    e.target.value = value;
-                }
-            });
+        // Máscara para número do cartão de débito
+        const debitCardNumber = document.getElementById('debitCardNumber');
+        if (debitCardNumber) {
+            debitCardNumber.addEventListener('input', formatCardNumber);
         }
 
-        // Máscara para data de validade
-        const cardExpiry = document.getElementById('cardExpiry');
-        if (cardExpiry) {
-            cardExpiry.addEventListener('input', (e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                }
-                e.target.value = value;
-            });
+        // Máscara para número do cartão de crédito
+        const creditCardNumber = document.getElementById('creditCardNumber');
+        if (creditCardNumber) {
+            creditCardNumber.addEventListener('input', formatCardNumber);
         }
 
-        // Máscara para CVV
-        const cardCvv = document.getElementById('cardCvv');
-        if (cardCvv) {
-            cardCvv.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/\D/g, '');
-            });
+        // Máscara para data de validade - débito
+        const debitCardExpiry = document.getElementById('debitCardExpiry');
+        if (debitCardExpiry) {
+            debitCardExpiry.addEventListener('input', formatExpiryDate);
         }
 
-        // Formatação do nome
-        const cardName = document.getElementById('cardName');
-        if (cardName) {
-            cardName.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase();
-            });
+        // Máscara para data de validade - crédito
+        const creditCardExpiry = document.getElementById('creditCardExpiry');
+        if (creditCardExpiry) {
+            creditCardExpiry.addEventListener('input', formatExpiryDate);
         }
+
+        // Máscara para CVV - débito
+        const debitCardCvv = document.getElementById('debitCardCvv');
+        if (debitCardCvv) {
+            debitCardCvv.addEventListener('input', formatCvv);
+        }
+
+        // Máscara para CVV - crédito
+        const creditCardCvv = document.getElementById('creditCardCvv');
+        if (creditCardCvv) {
+            creditCardCvv.addEventListener('input', formatCvv);
+        }
+    }
+
+    function formatCardNumber(e) {
+        let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+        let matches = value.match(/\d{4,16}/g);
+        let match = matches && matches[0] || '';
+        let parts = [];
+        for (let i = 0, len = match.length; i < len; i += 4) {
+            parts.push(match.substring(i, i + 4));
+        }
+        if (parts.length) {
+            e.target.value = parts.join(' ');
+        } else {
+            e.target.value = value;
+        }
+    }
+
+    function formatExpiryDate(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        e.target.value = value;
+    }
+
+    function formatCvv(e) {
+        let value = e.target.value.replace(/[^0-9]/gi, '');
+        e.target.value = value.substring(0, 4);
     }
 
     function updatePricing(plan) {
@@ -2713,7 +2778,175 @@ function listarTodosUsuarios() {
         localStorage.setItem('assinaturaPremium', JSON.stringify(subscription));
         atualizarStatusPremium();
         
-        alert(`✅ Assinatura ${plan === 'monthly' ? 'Mensal' : 'Anual'} ativada com sucesso!\n\nVocê agora tem acesso premium ao DcodeStock.`);
+        // Habilitar navegação livre após ativação do premium
+        habilitarNavegacaoLivre();
+        
+        alert(`✅ Assinatura ${plan === 'monthly' ? 'Mensal' : 'Anual'} ativada com sucesso!\n\nVocê agora tem acesso premium ao DcodeStock.\n\n🚀 Todos os botões foram desbloqueados!`);
+    }
+
+    // Função para habilitar navegação livre quando premium for ativado
+    function habilitarNavegacaoLivre() {
+        console.log('🔓 Habilitando navegação livre - Premium ativado!');
+        
+        // Remover qualquer bloqueio visual dos botões
+        const botoesNavegacao = document.querySelectorAll('.month-navigation button, .stock-actions .nav-button');
+        botoesNavegacao.forEach(botao => {
+            botao.disabled = false;
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+            botao.style.pointerEvents = 'auto';
+            botao.classList.remove('disabled', 'blocked');
+        });
+        
+        // Adicionar indicador visual de premium ativo
+        const indicadorPremium = document.createElement('div');
+        indicadorPremium.id = 'premium-indicator';
+        indicadorPremium.innerHTML = '🚀 NAVEGAÇÃO LIVRE ATIVADA';
+        indicadorPremium.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        `;
+        
+        // Adicionar animação CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(indicadorPremium);
+        
+        // Remover indicador após 5 segundos
+        setTimeout(() => {
+            indicadorPremium.style.animation = 'slideDown 0.5s ease reverse';
+            setTimeout(() => {
+                if (indicadorPremium.parentNode) {
+                    indicadorPremium.parentNode.removeChild(indicadorPremium);
+                }
+            }, 500);
+        }, 5000);
+        
+        console.log('✅ Navegação livre habilitada com sucesso!');
+    }
+
+    // Função para habilitar navegação livre para usuários que já têm premium
+    function habilitarNavegacaoLivreExistente() {
+        console.log('🔓 Habilitando navegação livre para usuário premium existente');
+        
+        // Remover qualquer bloqueio visual dos botões
+        const botoesNavegacao = document.querySelectorAll('.month-navigation button, .stock-actions .nav-button');
+        botoesNavegacao.forEach(botao => {
+            botao.disabled = false;
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+            botao.style.pointerEvents = 'auto';
+            botao.classList.remove('disabled', 'blocked');
+        });
+        
+        // Adicionar indicador discreto de premium ativo
+        const existingIndicator = document.getElementById('premium-status');
+        if (!existingIndicator) {
+            const indicadorStatus = document.createElement('div');
+            indicadorStatus.id = 'premium-status';
+            indicadorStatus.innerHTML = '⭐ PREMIUM ATIVO';
+            indicadorStatus.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #4CAF50, #45a049);
+                color: white;
+                padding: 5px 12px;
+                border-radius: 15px;
+                font-weight: bold;
+                font-size: 0.8rem;
+                box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+                z-index: 999;
+                opacity: 0.9;
+            `;
+            document.body.appendChild(indicadorStatus);
+        }
+        
+        console.log('✅ Navegação livre para usuário premium existente habilitada!');
+    }
+
+    // Função para sair do modo premium
+    function sairModoPremiun() {
+        console.log('🚪 Saindo do modo premium...');
+        
+        // Salvar todos os dados antes de sair
+        salvarTodosOsDados();
+        
+        // Remover dados de premium do localStorage
+        localStorage.removeItem('assinaturaPremium');
+        localStorage.removeItem('loginPremium');
+        
+        // Remover indicadores visuais de premium
+        const premiumStatus = document.getElementById('premium-status');
+        if (premiumStatus) premiumStatus.remove();
+        
+        const premiumBadge = document.querySelector('.premium-badge');
+        if (premiumBadge) premiumBadge.remove();
+        
+        // Voltar ao estoque 1 do mês atual
+        currentStockIndex = 0;
+        displayedDate = new Date();
+        localStorage.setItem('currentStockIndex', '0');
+        
+        // Recarregar interface
+        loadStock(0);
+        updateMonthDisplay();
+        atualizarStatusPremium();
+        
+        // Mostrar confirmação
+        alert('✅ Saiu do modo premium com sucesso!\n\n📁 Todos os seus dados foram salvos.\n🔒 Voltou ao modo limitado.');
+        
+        console.log('✅ Saída do modo premium concluída');
+    }
+
+    // Função para salvar todos os dados antes de sair do premium
+    function salvarTodosOsDados() {
+        console.log('💾 Salvando todos os dados...');
+        
+        // Salvar dados do estoque atual
+        salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+        
+        // Salvar dados de todos os estoques dos últimos meses
+        const hoje = new Date();
+        for (let i = 0; i < MAX_STOCKS; i++) {
+            // Salvar dados do mês atual
+            const keyAtual = getStorageKey(i, hoje);
+            const dadosAtuais = localStorage.getItem(keyAtual);
+            if (dadosAtuais) {
+                console.log(`💾 Dados do estoque ${i + 1} (mês atual) salvos`);
+            }
+            
+            // Salvar dados dos últimos 3 meses se existirem
+            for (let j = 1; j <= 3; j++) {
+                const mesAnterior = new Date(hoje);
+                mesAnterior.setMonth(mesAnterior.getMonth() - j);
+                const keyAnterior = getStorageKey(i, mesAnterior);
+                const dadosAnteriores = localStorage.getItem(keyAnterior);
+                if (dadosAnteriores) {
+                    console.log(`💾 Dados do estoque ${i + 1} (${j} mês(es) atrás) salvos`);
+                }
+            }
+        }
+        
+        console.log('✅ Todos os dados foram salvos com sucesso');
     }
 
     // Expor função globalmente para o botão Premium
