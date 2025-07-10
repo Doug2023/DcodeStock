@@ -4,6 +4,7 @@ const FILES_TO_CACHE = [
   './index.html',
   './style.css',
   './script.js',
+  './payment.js',
   './manifest.json',
   './Dcodelogo.png',
   './Dcodeanimation.mp4'
