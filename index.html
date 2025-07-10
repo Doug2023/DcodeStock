@@ -2048,7 +2048,18 @@
         .top-bar-app .language-button,
         .top-bar-app #themeToggleTop,
         .top-bar-app #btnShare,
-        .top-bar-app #btnNotify,
+        .top-bar-app #btnNotify {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            opacity: 1 !important; /* SEMPRE VISÍVEL */
+            visibility: visible !important; /* SEMPRE VISÍVEL */
+            display: inline-flex !important; /* SEMPRE VISÍVEL */
+        }
+        
+        /* Para tema claro - permitir backgrounds coloridos */
         body[data-theme="light"] .top-bar-app .login-button,
         body[data-theme="light"] .top-bar-app .premium-button,
         body[data-theme="light"] .top-bar-app .language-button,
@@ -2061,9 +2072,9 @@
         :root[data-theme="light"] .top-bar-app #themeToggleTop,
         :root[data-theme="light"] .top-bar-app #btnShare,
         :root[data-theme="light"] .top-bar-app #btnNotify {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
+            background: initial !important; /* Permitir background personalizado */
+            border: initial !important; /* Permitir border personalizada */
+            box-shadow: initial !important; /* Permitir shadow personalizada */
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             opacity: 1 !important; /* SEMPRE VISÍVEL */
@@ -2118,13 +2129,19 @@
             color: #9C27B0 !important; /* Roxo vibrante */
         }
 
-        /* Estados hover - APENAS COR, SEM CAIXAS */
+        /* Estados hover - APENAS COR, SEM CAIXAS para tema escuro */
         .top-bar-app .login-button:hover,
         .top-bar-app .premium-button:hover,
         .top-bar-app .language-button:hover,
         .top-bar-app #themeToggleTop:hover,
         .top-bar-app #btnShare:hover,
-        .top-bar-app #btnNotify:hover,
+        .top-bar-app #btnNotify:hover {
+            background: transparent !important; /* Sem fundo */
+            border: none !important; /* Sem borda */
+            box-shadow: none !important; /* Sem sombra */
+        }
+        
+        /* Estados hover para tema claro - permitir backgrounds */
         body[data-theme="light"] .top-bar-app .login-button:hover,
         body[data-theme="light"] .top-bar-app .premium-button:hover,
         body[data-theme="light"] .top-bar-app .language-button:hover,
@@ -2137,22 +2154,16 @@
         :root[data-theme="light"] .top-bar-app #themeToggleTop:hover,
         :root[data-theme="light"] .top-bar-app #btnShare:hover,
         :root[data-theme="light"] .top-bar-app #btnNotify:hover {
-            background: transparent !important; /* Sem fundo */
-            border: none !important; /* Sem borda */
-            box-shadow: none !important; /* Sem sombra */
+            background: initial !important; /* Permitir background personalizado */
+            border: initial !important; /* Permitir border personalizada */
+            box-shadow: initial !important; /* Permitir shadow personalizada */
         }
-        .top-bar-app .login-button:hover,
-        body[data-theme="light"] .top-bar-app .login-button:hover,
-        :root[data-theme="light"] .top-bar-app .login-button:hover {
-            border: none !important; /* Sem borda */
-            color: #66BB6A !important; /* Apenas cor */
+        .top-bar-app .login-button:hover {
+            color: #66BB6A !important; /* Apenas cor para tema escuro */
         }
 
-        .top-bar-app .premium-button:hover,
-        body[data-theme="light"] .top-bar-app .premium-button:hover,
-        :root[data-theme="light"] .top-bar-app .premium-button:hover {
-            border: none !important; /* Sem borda */
-            color: #FFD54F !important; /* Apenas cor */
+        .top-bar-app .premium-button:hover {
+            color: #FFD54F !important; /* Apenas cor para tema escuro */
         }
 
         .top-bar-app #themeToggleTop:hover,
@@ -2387,7 +2398,7 @@
         #themeToggleTop {
             background: transparent !important; /* Sem background */
             border: none !important; /* Sem border */
-            color: var(--text-color) !important; /* Cor dinâmica baseada no tema */
+            color: #2196F3 !important; /* COR FIXA AZUL para visibilidade */
             padding: 12px;
             border-radius: 0 !important; /* Sem bordas por padrão */
             font-size: 1.4rem;
@@ -2403,7 +2414,7 @@
 
         #themeToggleTop:hover {
             background: transparent !important; /* Sem fundo no hover */
-            color: var(--accent-color) !important; /* Apenas cor de destaque */
+            color: #42A5F5 !important; /* Azul mais claro no hover */
             transform: translateY(-2px) scale(1.01) !important; /* Movimento mais suave */
             box-shadow: none !important; /* Sem sombra */
             border-radius: 0 !important; /* Sem bordas arredondadas */
@@ -2413,7 +2424,7 @@
         #btnShare {
             background: transparent !important; /* Sem background */
             border: none !important; /* Sem border */
-            color: var(--text-color) !important; /* Cor do texto dinâmica */
+            color: #FF9800 !important; /* COR FIXA LARANJA para visibilidade */
             padding: 12px;
             border-radius: 0; /* Sem bordas por padrão */
             cursor: pointer;
@@ -2428,7 +2439,7 @@
 
         #btnShare:hover {
             background: transparent !important; /* Sem fundo no hover */
-            color: var(--accent-color) !important; /* Apenas cor de destaque */
+            color: #FFB74D !important; /* Laranja mais claro no hover */
             transform: translateY(-2px) scale(1.01) !important; /* Movimento mais suave */
             box-shadow: none !important; /* Sem sombra */
             border-radius: 0 !important; /* Sem bordas arredondadas */
@@ -2440,11 +2451,18 @@
             transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        /* === FORÇA COR ESPECÍFICA DO SVG DO SHARE NO TEMA LIGHT === */
+        body[data-theme="light"] #btnShare svg,
+        :root[data-theme="light"] #btnShare svg {
+            stroke: #FF9800 !important; /* Força laranja escuro no tema light */
+            color: #FF9800 !important;
+        }
+
         /* === BOTÃO NOTIFICAÇÃO LIVRE ULTRA-MODERNO === */
         #btnNotify {
             background: transparent !important; /* Sem background */
             border: none !important; /* Sem border */
-            color: var(--text-color) !important; /* Cor do texto dinâmica */
+            color: #E91E63 !important; /* COR FIXA ROSA para visibilidade */
             padding: 12px;
             border-radius: 0; /* Sem bordas por padrão */
             cursor: pointer;
@@ -2459,7 +2477,7 @@
 
         #btnNotify:hover {
             background: transparent !important; /* Sem fundo no hover */
-            color: var(--accent-color) !important; /* Apenas cor de destaque */
+            color: #F06292 !important; /* Rosa mais claro no hover */
             transform: translateY(-2px) scale(1.01) !important; /* Movimento mais suave */
             box-shadow: none !important; /* Sem sombra */
             border-radius: 0 !important; /* Sem bordas arredondadas */
@@ -2471,6 +2489,18 @@
             width: 26px;
             height: 26px;
             transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* === FORÇA CORES ESPECÍFICAS DOS SVGs NO TEMA LIGHT === */
+        body[data-theme="light"] #btnNotify svg,
+        :root[data-theme="light"] #btnNotify svg {
+            stroke: #E91E63 !important; /* Rosa vibrante no tema light */
+            color: #E91E63 !important;
+        }
+
+        body[data-theme="light"] #themeToggleTop,
+        :root[data-theme="light"] #themeToggleTop {
+            color: #2196F3 !important; /* Azul vibrante no tema light */
         }
 
         /* === MODAL DE LOGIN ULTRA MODERNO === */
@@ -5398,9 +5428,15 @@
                     return false;
                 });
                 
-                // Garante que não haja interrupções
+                // Garante que não haja interrupções - LOOP INFINITO
                 video.addEventListener('pause', function() {
-                    setTimeout(forcePlay, 100);
+                    setTimeout(forcePlay, 50);
+                });
+                
+                // Garante restart automático quando termina
+                video.addEventListener('ended', function() {
+                    video.currentTime = 0;
+                    forcePlay();
                 });
                 
                 // Otimização para apresentação empresarial
@@ -5423,6 +5459,14 @@
                     }
                 });
                 
+                // Loop infinito - verifica a cada segundo se está rodando
+                setInterval(function() {
+                    if (video.paused || video.ended) {
+                        video.currentTime = 0;
+                        forcePlay();
+                    }
+                }, 1000);
+                
                 // Inicializa com opacidade 0 para transição suave
                 video.style.opacity = '0';
                 
@@ -5437,5 +5481,4 @@
     <script src="script.js"></script>
     <script src="payment.js"></script>
 </body>
-</html>
 </html>
