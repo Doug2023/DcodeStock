@@ -1,0 +1,14 @@
+node_modules/
+.git/
+.DS_Store
+*.log
+Thumbs.db
+.env
+.env.local
+.env.production.local
+.env.development.local
+Git1/
+Dada/
+2025/
+*.md
+README*
