@@ -1,4 +1,3 @@
-
 const CACHE_NAME = 'dcode-stock-v2';
 const FILES_TO_CACHE = [
   './',
@@ -46,26 +45,30 @@ self.addEventListener('activate', event => {
 // Estratégia de cache: Cache First com fallback para network
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).then(fetchResponse => {
-        // Cache new GET requests
-        if (event.request.method === 'GET') {
-          const responseClone = fetchResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
+    caches.match(event.request)
+      .then(response => {
+        // Return cached version or fetch from network
+        return response || fetch(event.request)
+          .then(fetchResponse => {
+            // Clone the response before caching
+            const responseClone = fetchResponse.clone();
+            
+            // Cache new responses (only for GET requests)
+            if (event.request.method === 'GET') {
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseClone);
+              });
+            }
+            
+            return fetchResponse;
           });
-        }
-        return fetchResponse;
-      }).catch(() => {
-        // Fallback universal: se for navegação (document), retorna index.html
-        if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+      })
+      .catch(() => {
+        // Return offline fallback if available
+        if (event.request.destination === 'document') {
           return caches.match('./index.html');
         }
-      });
-    })
+      })
   );
 });
 

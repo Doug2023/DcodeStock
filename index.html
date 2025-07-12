@@ -1,25 +1,11 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-
-    <!-- Viewport deve ser a primeira meta tag para iOS -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta charset="UTF-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="Dcode Stock" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="HandheldFriendly" content="true" />
-    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <meta name="description" content="Sistema moderno de gerenciamento de estoque - DcodeStock" />
     <meta name="keywords" content="estoque, inventário, gestão, stock, management" />
     <meta name="author" content="Douglas Dcode" />
-
     <title>DcodeStock - Gerenciamento de Estoque</title>
     
     <!-- PWA Manifest -->
@@ -39,7 +25,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="Dcodelogo.png" />
     
     <!-- iOS Splash Screen -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-startup-image" href="Dcodelogo.png" />
     
     <!-- Favicon -->
@@ -50,117 +35,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet" />
     <style>
-        /* RESPONSIVIDADE PARA BOTOES DE ESTOQUE (- e +) */
-        @media (max-width: 900px) {
-            .stock-actions {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 12px !important;
-                width: 100vw;
-                max-width: 100vw;
-                padding: 0 2vw;
-                margin: 10px 0 0 0;
-            }
-            .stock-actions .nav-button {
-                width: auto !important;
-                min-width: 48px !important;
-                max-width: 20vw !important;
-                padding: 10px 2vw !important;
-                font-size: 1em !important;
-                margin: 0 !important;
-                border-radius: 10px !important;
-                white-space: nowrap !important;
-                display: inline-block !important;
-            }
-            .nome-estoque-container {
-                flex: 1 1 40vw !important;
-                min-width: 80px !important;
-                max-width: 40vw !important;
-                margin: 0 2vw !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            #nomeEstoqueInput {
-                width: 100% !important;
-                min-width: 60px !important;
-                max-width: 100% !important;
-                font-size: 1em !important;
-                padding: 10px 2vw !important;
-                border-radius: 10px !important;
-            }
-        }
-        /* RESPONSIVIDADE MÁXIMA PARA BOTOES EM MOBILE */
-        @media (max-width: 900px) {
-            button, .btn, .btn-confirm, .btn-cancel, .btn-action, .btn-padrao, .btn-custom {
-                width: 100vw;
-                min-width: 0;
-                max-width: 100vw;
-                box-sizing: border-box !important;
-                margin: 0 0 12px 0 !important;
-                font-size: 1.15em !important;
-                display: block !important;
-                border-radius: 12px !important;
-            }
-            /* EXCEÇÃO: .month-navigation SEMPRE EM LINHA, NUNCA COLUNA */
-            .month-navigation {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 12px !important;
-                width: 100vw;
-                max-width: 100vw;
-                padding: 0 2vw;
-                margin: 10px 0 0 0;
-            }
-            .month-navigation button {
-                width: auto !important;
-                min-width: 60px !important;
-                max-width: 32vw !important;
-                padding: 10px 2vw !important;
-                font-size: 1em !important;
-                margin: 0 !important;
-                border-radius: 10px !important;
-                white-space: nowrap !important;
-                display: inline-block !important;
-            }
-            .month-navigation #mesAtual {
-                min-width: 60px !important;
-                max-width: 40vw !important;
-                width: auto !important;
-                font-size: 1em !important;
-                padding: 10px 2vw !important;
-                margin: 0 2vw !important;
-                border-radius: 10px !important;
-                overflow-x: auto !important;
-                text-overflow: ellipsis !important;
-                white-space: nowrap !important;
-                display: inline-block !important;
-            }
-        }
-        /* RESPONSIVIDADE AVANÇADA PARA GRUPOS DE BOTOES EM MOBILE */
-        @media (max-width: 700px) {
-            .botoes-flex button, .botoes-row button, .botoes-actions button, .premium-actions button, .acoes-tabela button, .acoes-mobile button, .acoes-btns button, .acoes button, .acoes-topo button, .acoes-bottom button, .acoes-header button, .acoes-footer button, .acoes-bar button, .acoes-menu button, .acoes-share button, .acoes-pagamento button, .acoes-modal button, .acoes-login button, .acoes-cadastro button, .acoes-premium button, .acoes-estoque button, .acoes-filtros button, .acoes-rapidas button, .acoes-usuario button, .acoes-conta button, .acoes-pix button, .acoes-cartao button, .acoes-confirm button, .acoes-cancel button, .acoes-final button, .acoes-padrao button, .acoes-custom button,
-            .acoes-flex button, .acoes-inline button, .acoes-group button, .acoes-row button, .acoes-col button, .acoes-btn-group button, .acoes-btn-row button, .acoes-btn-col button, .acoes-btns button, .acoes-btn button, .acoes-btns-row button, .acoes-btns-col button, .acoes-btns-group button, .acoes-btns-flex button, .acoes-btns-inline button, .acoes-btns-bar button, .acoes-btns-menu button, .acoes-btns-header button, .acoes-btns-footer button, .acoes-btns-top button, .acoes-btns-bottom button, .acoes-btns-actions button, .acoes-btns-modal button, .acoes-btns-login button, .acoes-btns-cadastro button, .acoes-btns-premium button, .acoes-btns-estoque button, .acoes-btns-filtros button, .acoes-btns-rapidas button, .acoes-btns-usuario button, .acoes-btns-conta button, .acoes-btns-pix button, .acoes-btns-cartao button, .acoes-btns-confirm button, .acoes-btns-cancel button, .acoes-btns-final button, .acoes-btns-padrao button, .acoes-btns-custom button {
-                width: 100% !important;
-                min-width: 0 !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-                margin: 0 0 10px 0 !important;
-                font-size: 1.1em !important;
-                display: block !important;
-            }
-            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
-                flex-direction: column !important;
-                gap: 12px !important;
-                align-items: stretch !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
-        }
         /* --- General Styles --- */
         :root {
             --bg-color-dark: #000000;
@@ -247,11 +121,7 @@
             border: 2px solid transparent !important;
             border-radius: 8px !important;
             padding: 8px 12px !important;
-            font-size: 16px !important; /* Evita zoom em inputs no iOS */
-            -webkit-appearance: none;
-            appearance: none;
-            border-radius: 8px !important;
-            outline: none !important;
+            font-size: 0.9rem !important;
             font-weight: 500 !important;
             transition: all 0.3s ease !important;
             width: 100% !important;
@@ -263,13 +133,6 @@
         input[type="text"]:focus,
         input[type="number"]:focus,
         input[type="date"]:focus {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-            caret-color: #4CAF50;
-            /* Evita zoom e bugs de input em mobile */
-            touch-action: manipulation;
-            -webkit-user-select: auto;
-            user-select: auto;
             outline: none !important;
             border: 2px solid #4CAF50 !important;
             background: var(--bg-color-dark) !important;
@@ -388,28 +251,6 @@
         }
 
         /* --- Header & Navigation REORGANIZADO --- */
-
-        /* RESPONSIVIDADE PARA BOTOES EM CELULAR */
-        .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-        @media (max-width: 600px) {
-            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
-                flex-direction: column !important;
-                gap: 12px !important;
-                align-items: stretch !important;
-            }
-            button, .btn, .btn-confirm, .btn-cancel, .btn-action, .btn-padrao, .btn-custom {
-                width: 100% !important;
-                min-width: 0 !important;
-                max-width: 100% !important;
-                font-size: 1.1em;
-            }
-        }
         header {
             display: flex;
             flex-direction: column;
@@ -434,53 +275,18 @@
             color: var(--text-color);
             border: 1px solid var(--border-color);
             border-radius: 8px;
+            padding: 12px 20px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            min-width: 100px;
         }
 
         .month-navigation button:hover {
             background: var(--button-hover-bg);
             border-color: var(--accent-color);
             transform: translateY(-1px);
-        }
-
-
-        /* RESPONSIVIDADE SÊNIOR PARA NAVEGAÇÃO DE MÊS */
-        @media (max-width: 700px) {
-            .month-navigation {
-                flex-direction: row;
-                gap: 4vw;
-                width: 100vw;
-                max-width: 100vw;
-                padding: 0 2vw;
-                justify-content: center;
-                align-items: center;
-                margin: 10px 0 0 0;
-            }
-            .month-navigation button {
-                min-width: 64px;
-                max-width: 32vw;
-                width: auto;
-                font-size: 1em;
-                padding: 10px 2vw;
-                margin: 0;
-                border-radius: 10px;
-                white-space: nowrap;
-            }
-            #mesAtual {
-                min-width: 80px;
-                max-width: 40vw;
-                width: auto;
-                font-size: 1em;
-                padding: 10px 2vw;
-                margin: 0 2vw;
-                border-radius: 10px;
-                overflow-x: auto;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
         }
 
         #mesAtual {
@@ -556,7 +362,23 @@
             color: var(--secondary-text-color);
         }
 
-        /* NUNCA sobrescrever #btnLimparHistorico aqui! Todo o controle visual e de posicionamento está no style.css global. */
+        /* Botão Limpar Histórico */
+        #btnLimparHistorico {
+            background: var(--bg-color-dark);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        #btnLimparHistorico:hover {
+            background: var(--button-hover-bg);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
 
         /* === RESPONSIVIDADE MÓVEL LIMPA === */
         @media (max-width: 768px) {
@@ -596,6 +418,10 @@
                 font-size: 0.9rem;
             }
             
+            #btnLimparHistorico {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
         }
 
         /* --- Responsividade dos Botões e Navegação --- */
@@ -1154,6 +980,23 @@
             color: var(--text-color) !important;
         }
 
+        #btnLimparHistorico {
+            background: var(--bg-color-dark) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #btnLimparHistorico:hover {
+            background: var(--button-hover-bg) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
         #registroOperacoes ul {
             list-style: none;
@@ -1916,6 +1759,12 @@
             position: relative;
             overflow: hidden;
             transform: translateZ(0);
+            background: transparent !important;
+            border-radius: 12px !important;
+            border: 1px solid #eee !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+            color: inherit !important;
+            transition: box-shadow 0.2s;
         }
 
         #shareWhatsapp:hover {
@@ -1936,13 +1785,14 @@
             box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5) !important;
         }
 
-        /* Garantir que os SVGs dos botões sejam sempre visíveis */
+        /* Não force nenhuma cor nos SVGs dos botões de compartilhamento para manter as cores originais de marca. 
+           Garanta que os SVGs tenham o atributo fill com a cor da marca diretamente no HTML, por exemplo:
+           <svg ... fill="#25D366"> para WhatsApp, <svg ... fill="#EA4335"> para Email, <svg ... fill="#FF5722"> para PDF.
+           Se o SVG usar currentColor, altere para a cor da marca no próprio SVG.
+        */
         #shareWhatsapp svg,
         #shareEmail svg,
         #sharePdf svg {
-            fill: #ffffff !important;
-            color: #ffffff !important;
-            stroke: none !important;
             display: block !important;
             pointer-events: none;
         }
@@ -3921,19 +3771,19 @@
     <!-- Menu de Seleção de Idiomas -->
     <div id="languageMenu" style="display:none;position:fixed;top:70px;right:50%;transform:translateX(50%);background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:12px;padding:12px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
         <div style="display:flex;flex-direction:column;gap:8px;">
-            <button class="language-option" data-lang="pt" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Português">
+            <button class="language-option" data-lang="pt" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Português">
                 🇧🇷
             </button>
-            <button class="language-option" data-lang="en" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="English">
+            <button class="language-option" data-lang="en" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="English">
                 🇺🇸
             </button>
-            <button class="language-option" data-lang="fr" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Français">
+            <button class="language-option" data-lang="fr" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Français">
                 🇫🇷
             </button>
-            <button class="language-option" data-lang="it" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Italiano">
+            <button class="language-option" data-lang="it" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Italiano">
                 🇮🇹
             </button>
-            <button class="language-option" data-lang="es" style="padding:12px;border:none;background:transparent;color:var(--text-color);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s ease;width:48px;height:48px;" title="Español">
+            <button class="language-option" data-lang="es" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Español">
                 🇪🇸
             </button>
         </div>
@@ -4018,12 +3868,6 @@
     <main>
         <div class="table-responsive">
             <table class="estoque-table">
-                <colgroup>
-                    <col style="width: 25%">
-                    <col style="width: 25%">
-                    <col style="width: 25%">
-                    <col style="width: 25%">
-                </colgroup>
                 <thead>
                     <tr>
                         <th data-translate="item">Item</th>
@@ -4054,8 +3898,6 @@
             <h3 data-translate="valueChart">Valores</h3>
             <canvas id="graficoBarras"></canvas>
         </div>
-        <!-- Botão Limpar Histórico como última opção dentro do main -->
-        <!-- Botão Limpar Histórico removido deste local para ser colocado após o histórico de operações -->
     </main>
 
     <!-- Resumo de Itens -->
@@ -4080,7 +3922,9 @@
     <section id="registroOperacoes">
         <div class="historico-header">
             <h3 data-translate="operationsHistory">📋 Histórico de Operações</h3>
+            <button id="btnLimparHistorico" data-translate="clearHistory">Limpar Histórico</button>
         </div>
+        
         <div class="historico-duplo">
             <div class="historico-coluna">
                 <h4 data-translate="entriesLabel">📈 Entradas</h4>
@@ -4099,7 +3943,6 @@
 
     <!-- Modais -->
     
-    <!-- Modal de Planos Premium Ultra-Moderno -->
     <!-- Modal de Planos Premium Ultra-Moderno -->
     <div id="modalPagamento" class="premium-modal">
         <div class="premium-container">
@@ -4301,6 +4144,7 @@
             </div>
 
             <div class="premium-actions">
+                
                 <button id="cancelarPagamento" class="btn-cancel" data-translate="cancel">Cancelar</button>
                 <button id="confirmarPagamento" class="btn-confirm" data-translate="confirm">
                     <span class="btn-text">Assinar Agora</span>
@@ -4311,19 +4155,19 @@
     </div>
 
     <!-- Menu de Compartilhamento com Ícones Originais -->
-    <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:16px;padding:16px;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
-        <div style="display:flex;flex-direction:column;gap:14px;">
+    <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:none;border:none;border-radius:0;padding:0;z-index:200;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
+        <div style="display:flex;flex-direction:column;gap:0;background:none;border:none;padding:0;margin:0;box-shadow:none;">
             <!-- WhatsApp Button -->
-            <button id="shareWhatsapp" style="padding:0;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;box-shadow:0 4px 15px rgba(37,211,102,0.3);transition:all 0.3s;" title="WhatsApp">
-                <img src="icones/whatsapp.gif" alt="WhatsApp" style="width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(37,211,102,0.2);background:#25D366;" />
+            <button id="shareWhatsapp" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="WhatsApp">
+                <img src="../icones/whatsapp.gif" alt="WhatsApp" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
             </button>
             <!-- Email Button -->
-            <button id="shareEmail" style="padding:0;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;box-shadow:0 4px 15px rgba(66,133,244,0.3);transition:all 0.3s;" title="Email">
-                <img src="icones/email.png" alt="Email" style="width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(66,133,244,0.2);background:#4285F4;" />
+            <button id="shareEmail" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="Email">
+                <img src="../icones/email.png" alt="Email" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
             </button>
             <!-- PDF Button -->
-            <button id="sharePdf" style="padding:0;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;box-shadow:0 4px 15px rgba(234,67,53,0.3);transition:all 0.3s;" title="PDF">
-                <img src="icones/pdf.png" alt="PDF" style="width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(234,67,53,0.2);background:#EA4335;" />
+            <button id="sharePdf" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="PDF">
+                <img src="../icones/pdf.png" alt="PDF" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
             </button>
         </div>
     </div>
@@ -5636,6 +5480,4 @@
     <script src="script.js"></script>
     <script src="payment.js"></script>
 </body>
-    <!-- Botão Limpar Histórico fixo como última coisa da página -->
-    <button id="btnLimparHistorico" data-translate="clearHistory">Limpar Histórico</button>
 </html>
