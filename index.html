@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <!-- iOS/PWA/Apple Touch Fixes -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dcode Stock">
+    <link rel="apple-touch-icon" href="Dcodelogo.png">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="description" content="Sistema moderno de gerenciamento de estoque - DcodeStock" />
     <meta name="keywords" content="estoque, inventário, gestão, stock, management" />
     <meta name="author" content="Douglas Dcode" />
@@ -122,7 +133,11 @@
             border: 2px solid transparent !important;
             border-radius: 8px !important;
             padding: 8px 12px !important;
-            font-size: 0.9rem !important;
+            font-size: 16px !important; /* Evita zoom em inputs no iOS */
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 8px !important;
+            outline: none !important;
             font-weight: 500 !important;
             transition: all 0.3s ease !important;
             width: 100% !important;
@@ -134,6 +149,13 @@
         input[type="text"]:focus,
         input[type="number"]:focus,
         input[type="date"]:focus {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            caret-color: #4CAF50;
+            /* Evita zoom e bugs de input em mobile */
+            touch-action: manipulation;
+            -webkit-user-select: auto;
+            user-select: auto;
             outline: none !important;
             border: 2px solid #4CAF50 !important;
             background: var(--bg-color-dark) !important;
