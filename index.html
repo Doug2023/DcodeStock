@@ -5,19 +5,17 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!-- iOS/PWA/Apple Touch Fixes -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dcode Stock">
-    <link rel="apple-touch-icon" href="Dcodelogo.png">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="HandheldFriendly" content="true">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta charset="UTF-8" />
+
+    <!-- Viewport deve ser a primeira meta tag para iOS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="format-detection" content="telephone=no" />
+    <meta charset="UTF-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Dcode Stock" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="description" content="Sistema moderno de gerenciamento de estoque - DcodeStock" />
     <meta name="keywords" content="estoque, inventário, gestão, stock, management" />
     <meta name="author" content="Douglas Dcode" />
@@ -558,23 +556,7 @@
             color: var(--secondary-text-color);
         }
 
-        /* Botão Limpar Histórico */
-        #btnLimparHistorico {
-            background: var(--bg-color-dark);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        #btnLimparHistorico:hover {
-            background: var(--button-hover-bg);
-            border-color: var(--accent-color);
-            transform: translateY(-1px);
-        }
+        /* NUNCA sobrescrever #btnLimparHistorico aqui! Todo o controle visual e de posicionamento está no style.css global. */
 
         /* === RESPONSIVIDADE MÓVEL LIMPA === */
         @media (max-width: 768px) {
@@ -614,10 +596,6 @@
                 font-size: 0.9rem;
             }
             
-            #btnLimparHistorico {
-                padding: 10px 16px;
-                font-size: 0.9rem;
-            }
         }
 
         /* --- Responsividade dos Botões e Navegação --- */
@@ -1176,23 +1154,6 @@
             color: var(--text-color) !important;
         }
 
-        #btnLimparHistorico {
-            background: var(--bg-color-dark) !important;
-            color: var(--text-color) !important;
-            border: 2px solid var(--border-color) !important;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        #btnLimparHistorico:hover {
-            background: var(--button-hover-bg) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
 
         #registroOperacoes ul {
             list-style: none;
