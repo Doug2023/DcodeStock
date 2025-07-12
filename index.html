@@ -252,6 +252,28 @@
         }
 
         /* --- Header & Navigation REORGANIZADO --- */
+
+        /* RESPONSIVIDADE PARA BOTOES EM CELULAR */
+        .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (max-width: 600px) {
+            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
+                flex-direction: column !important;
+                gap: 12px !important;
+                align-items: stretch !important;
+            }
+            button, .btn, .btn-confirm, .btn-cancel, .btn-action, .btn-padrao, .btn-custom {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                font-size: 1.1em;
+            }
+        }
         header {
             display: flex;
             flex-direction: column;
@@ -3862,6 +3884,12 @@
     <main>
         <div class="table-responsive">
             <table class="estoque-table">
+                <colgroup>
+                    <col style="width: 25%">
+                    <col style="width: 25%">
+                    <col style="width: 25%">
+                    <col style="width: 25%">
+                </colgroup>
                 <thead>
                     <tr>
                         <th data-translate="item">Item</th>
