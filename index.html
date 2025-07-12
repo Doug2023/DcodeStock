@@ -1,4 +1,7 @@
 
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -18,6 +21,7 @@
     <meta name="description" content="Sistema moderno de gerenciamento de estoque - DcodeStock" />
     <meta name="keywords" content="estoque, inventário, gestão, stock, management" />
     <meta name="author" content="Douglas Dcode" />
+
     <title>DcodeStock - Gerenciamento de Estoque</title>
     
     <!-- PWA Manifest -->
@@ -48,25 +52,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet" />
     <style>
+        /* RESPONSIVIDADE PARA BOTOES DE ESTOQUE (- e +) */
+        @media (max-width: 900px) {
+            .stock-actions {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                width: 100vw;
+                max-width: 100vw;
+                padding: 0 2vw;
+                margin: 10px 0 0 0;
+            }
+            .stock-actions .nav-button {
+                width: auto !important;
+                min-width: 48px !important;
+                max-width: 20vw !important;
+                padding: 10px 2vw !important;
+                font-size: 1em !important;
+                margin: 0 !important;
+                border-radius: 10px !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
+            }
+            .nome-estoque-container {
+                flex: 1 1 40vw !important;
+                min-width: 80px !important;
+                max-width: 40vw !important;
+                margin: 0 2vw !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            #nomeEstoqueInput {
+                width: 100% !important;
+                min-width: 60px !important;
+                max-width: 100% !important;
+                font-size: 1em !important;
+                padding: 10px 2vw !important;
+                border-radius: 10px !important;
+            }
+        }
         /* RESPONSIVIDADE MÁXIMA PARA BOTOES EM MOBILE */
         @media (max-width: 900px) {
             button, .btn, .btn-confirm, .btn-cancel, .btn-action, .btn-padrao, .btn-custom {
-                width: 100vw !important;
-                min-width: 0 !important;
-                max-width: 100vw !important;
+                width: 100vw;
+                min-width: 0;
+                max-width: 100vw;
                 box-sizing: border-box !important;
                 margin: 0 0 12px 0 !important;
                 font-size: 1.15em !important;
                 display: block !important;
                 border-radius: 12px !important;
             }
-            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
-                flex-direction: column !important;
-                gap: 14px !important;
-                align-items: stretch !important;
-                width: 100vw !important;
-                box-sizing: border-box !important;
+            /* EXCEÇÃO: .month-navigation SEMPRE EM LINHA, NUNCA COLUNA */
+            .month-navigation {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
                 justify-content: center !important;
+                gap: 12px !important;
+                width: 100vw;
+                max-width: 100vw;
+                padding: 0 2vw;
+                margin: 10px 0 0 0;
+            }
+            .month-navigation button {
+                width: auto !important;
+                min-width: 60px !important;
+                max-width: 32vw !important;
+                padding: 10px 2vw !important;
+                font-size: 1em !important;
+                margin: 0 !important;
+                border-radius: 10px !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
+            }
+            .month-navigation #mesAtual {
+                min-width: 60px !important;
+                max-width: 40vw !important;
+                width: auto !important;
+                font-size: 1em !important;
+                padding: 10px 2vw !important;
+                margin: 0 2vw !important;
+                border-radius: 10px !important;
+                overflow-x: auto !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
             }
         }
         /* RESPONSIVIDADE AVANÇADA PARA GRUPOS DE BOTOES EM MOBILE */
@@ -362,18 +436,53 @@
             color: var(--text-color);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px 20px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            min-width: 100px;
         }
 
         .month-navigation button:hover {
             background: var(--button-hover-bg);
             border-color: var(--accent-color);
             transform: translateY(-1px);
+        }
+
+
+        /* RESPONSIVIDADE SÊNIOR PARA NAVEGAÇÃO DE MÊS */
+        @media (max-width: 700px) {
+            .month-navigation {
+                flex-direction: row;
+                gap: 4vw;
+                width: 100vw;
+                max-width: 100vw;
+                padding: 0 2vw;
+                justify-content: center;
+                align-items: center;
+                margin: 10px 0 0 0;
+            }
+            .month-navigation button {
+                min-width: 64px;
+                max-width: 32vw;
+                width: auto;
+                font-size: 1em;
+                padding: 10px 2vw;
+                margin: 0;
+                border-radius: 10px;
+                white-space: nowrap;
+            }
+            #mesAtual {
+                min-width: 80px;
+                max-width: 40vw;
+                width: auto;
+                font-size: 1em;
+                padding: 10px 2vw;
+                margin: 0 2vw;
+                border-radius: 10px;
+                overflow-x: auto;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
 
         #mesAtual {
