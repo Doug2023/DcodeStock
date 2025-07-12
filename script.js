@@ -939,12 +939,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button to clear history for current stock (for the current month)
     if (btnLimparHistorico) {
         btnLimparHistorico.addEventListener('click', () => {
-            const stockName = cleanText(allStocksMeta[currentStockIndex].namesByMonth[getMonthYearKey(displayedDate)]) || cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
-            if (confirm(`Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}" no mês de ${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}? Esta ação é irreversível.`)) {
-                // Limpar ambas as listas
-                listaEntradas.innerHTML = '';
-                listaSaidas.innerHTML = '';
-                salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+            let stockName = '';
+            try {
+                stockName = cleanText(allStocksMeta?.[currentStockIndex]?.namesByMonth?.[getMonthYearKey(displayedDate)]) || cleanText(window.getStockName ? window.getStockName(currentStockIndex, window.currentLanguage || 'pt') : `Estoque ${currentStockIndex + 1}`);
+            } catch (e) {
+                stockName = '';
+            }
+            let msg = stockName
+                ? `Tem certeza que deseja apagar todo o histórico de operações para o estoque "${stockName}" no mês de ${meses[displayedDate.getMonth()]} ${displayedDate.getFullYear()}? Esta ação é irreversível.`
+                : 'Tem certeza que deseja apagar todo o histórico de operações? Esta ação é irreversível.';
+            if (confirm(msg)) {
+                if (typeof listaEntradas !== 'undefined' && typeof listaSaidas !== 'undefined') {
+                    listaEntradas.innerHTML = '';
+                    listaSaidas.innerHTML = '';
+                }
+                if (typeof salvarDadosDoMesAtual === 'function') {
+                    salvarDadosDoMesAtual(currentStockIndex, displayedDate);
+                }
                 alert('Histórico de operações apagado com sucesso!');
             }
         });

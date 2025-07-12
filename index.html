@@ -4093,6 +4093,8 @@
             <h3 data-translate="valueChart">Valores</h3>
             <canvas id="graficoBarras"></canvas>
         </div>
+        <!-- Botão Limpar Histórico como última opção dentro do main -->
+        <!-- Botão Limpar Histórico removido deste local para ser colocado após o histórico de operações -->
     </main>
 
     <!-- Resumo de Itens -->
@@ -4117,9 +4119,7 @@
     <section id="registroOperacoes">
         <div class="historico-header">
             <h3 data-translate="operationsHistory">📋 Histórico de Operações</h3>
-            <button id="btnLimparHistorico" data-translate="clearHistory">Limpar Histórico</button>
         </div>
-        
         <div class="historico-duplo">
             <div class="historico-coluna">
                 <h4 data-translate="entriesLabel">📈 Entradas</h4>
@@ -4138,6 +4138,7 @@
 
     <!-- Modais -->
     
+    <!-- Modal de Planos Premium Ultra-Moderno -->
     <!-- Modal de Planos Premium Ultra-Moderno -->
     <div id="modalPagamento" class="premium-modal">
         <div class="premium-container">
@@ -5674,4 +5675,6 @@
     <script src="script.js"></script>
     <script src="payment.js"></script>
 </body>
+    <!-- Botão Limpar Histórico fixo como última coisa da página -->
+    <button id="btnLimparHistorico" data-translate="clearHistory">Limpar Histórico</button>
 </html>
