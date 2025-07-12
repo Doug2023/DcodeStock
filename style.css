@@ -1353,11 +1353,33 @@ table.estoque-table input {
     transform: scale(1.05) !important;
 }
 
+
 [data-theme="light"] .premium-button,
 [data-theme="light"] #btnPremium {
     background-color: #ffc107 !important;
     color: #212529 !important;
     border: 1px solid #e0a800 !important;
+    font-size: 1rem !important;
+    padding: 8px 16px !important;
+    min-width: 90px !important;
+    max-width: 180px !important;
+    width: auto !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 600px) {
+  .premium-button, #btnPremium {
+    font-size: 0.95rem !important;
+    padding: 7px 10px !important;
+    min-width: 70px !important;
+    max-width: 120px !important;
+    width: 100% !important;
+    border-radius: 7px !important;
+    box-sizing: border-box !important;
+    margin: 0 auto !important;
+    display: block !important;
+  }
 }
 
 [data-theme="light"] .premium-button:hover,
