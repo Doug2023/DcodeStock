@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -47,6 +48,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet" />
     <style>
+        /* RESPONSIVIDADE MÁXIMA PARA BOTOES EM MOBILE */
+        @media (max-width: 900px) {
+            button, .btn, .btn-confirm, .btn-cancel, .btn-action, .btn-padrao, .btn-custom {
+                width: 100vw !important;
+                min-width: 0 !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+                margin: 0 0 12px 0 !important;
+                font-size: 1.15em !important;
+                display: block !important;
+                border-radius: 12px !important;
+            }
+            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
+                flex-direction: column !important;
+                gap: 14px !important;
+                align-items: stretch !important;
+                width: 100vw !important;
+                box-sizing: border-box !important;
+                justify-content: center !important;
+            }
+        }
+        /* RESPONSIVIDADE AVANÇADA PARA GRUPOS DE BOTOES EM MOBILE */
+        @media (max-width: 700px) {
+            .botoes-flex button, .botoes-row button, .botoes-actions button, .premium-actions button, .acoes-tabela button, .acoes-mobile button, .acoes-btns button, .acoes button, .acoes-topo button, .acoes-bottom button, .acoes-header button, .acoes-footer button, .acoes-bar button, .acoes-menu button, .acoes-share button, .acoes-pagamento button, .acoes-modal button, .acoes-login button, .acoes-cadastro button, .acoes-premium button, .acoes-estoque button, .acoes-filtros button, .acoes-rapidas button, .acoes-usuario button, .acoes-conta button, .acoes-pix button, .acoes-cartao button, .acoes-confirm button, .acoes-cancel button, .acoes-final button, .acoes-padrao button, .acoes-custom button,
+            .acoes-flex button, .acoes-inline button, .acoes-group button, .acoes-row button, .acoes-col button, .acoes-btn-group button, .acoes-btn-row button, .acoes-btn-col button, .acoes-btns button, .acoes-btn button, .acoes-btns-row button, .acoes-btns-col button, .acoes-btns-group button, .acoes-btns-flex button, .acoes-btns-inline button, .acoes-btns-bar button, .acoes-btns-menu button, .acoes-btns-header button, .acoes-btns-footer button, .acoes-btns-top button, .acoes-btns-bottom button, .acoes-btns-actions button, .acoes-btns-modal button, .acoes-btns-login button, .acoes-btns-cadastro button, .acoes-btns-premium button, .acoes-btns-estoque button, .acoes-btns-filtros button, .acoes-btns-rapidas button, .acoes-btns-usuario button, .acoes-btns-conta button, .acoes-btns-pix button, .acoes-btns-cartao button, .acoes-btns-confirm button, .acoes-btns-cancel button, .acoes-btns-final button, .acoes-btns-padrao button, .acoes-btns-custom button {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                margin: 0 0 10px 0 !important;
+                font-size: 1.1em !important;
+                display: block !important;
+            }
+            .botoes-flex, .botoes-row, .botoes-actions, .premium-actions, .acoes-tabela, .acoes-mobile, .acoes-btns, .acoes, .acoes-topo, .acoes-bottom, .acoes-header, .acoes-footer, .acoes-bar, .acoes-menu, .acoes-share, .acoes-pagamento, .acoes-modal, .acoes-login, .acoes-cadastro, .acoes-premium, .acoes-estoque, .acoes-filtros, .acoes-rapidas, .acoes-usuario, .acoes-conta, .acoes-pix, .acoes-cartao, .acoes-confirm, .acoes-cancel, .acoes-final, .acoes-padrao, .acoes-custom, .acoes-flex, .acoes-inline, .acoes-group, .acoes-row, .acoes-col, .acoes-btn-group, .acoes-btn-row, .acoes-btn-col, .acoes-btns, .acoes-btn, .acoes-btns-row, .acoes-btns-col, .acoes-btns-group, .acoes-btns-flex, .acoes-btns-inline, .acoes-btns-bar, .acoes-btns-menu, .acoes-btns-header, .acoes-btns-footer, .acoes-btns-top, .acoes-btns-bottom, .acoes-btns-actions, .acoes-btns-modal, .acoes-btns-login, .acoes-btns-cadastro, .acoes-btns-premium, .acoes-btns-estoque, .acoes-btns-filtros, .acoes-btns-rapidas, .acoes-btns-usuario, .acoes-btns-conta, .acoes-btns-pix, .acoes-btns-cartao, .acoes-btns-confirm, .acoes-btns-cancel, .acoes-btns-final, .acoes-btns-padrao, .acoes-btns-custom {
+                flex-direction: column !important;
+                gap: 12px !important;
+                align-items: stretch !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+        }
         /* --- General Styles --- */
         :root {
             --bg-color-dark: #000000;
