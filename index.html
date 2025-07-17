@@ -1,3 +1,4 @@
+<!-- Removido CSS fora da tag <style> -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -35,6 +36,63 @@
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet" />
     <style>
+        /* Força os botões do topo a manterem a mesma cor no modo claro e escuro */
+        /* Força os botões do topo a manterem o estilo dark SEMPRE, independente do tema */
+        .top-bar-app .login-button,
+        .top-bar-app .premium-button,
+        .top-bar-app .language-button,
+        .top-bar-app #themeToggleTop,
+        .top-bar-app #btnShare,
+        .top-bar-app #btnNotify {
+            color: #fff !important;
+            background: #111 !important;
+            border: none !important;
+            box-shadow: 0 2px 8px #0008 !important;
+            transition: background 0.2s, color 0.2s;
+        }
+        /* Força ainda mais a prioridade para NUNCA ficar verde, azul ou amarelo */
+        .top-bar-app .login-button,
+        .top-bar-app .premium-button,
+        .top-bar-app .language-button {
+            background: #111 !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 2px 8px #0008 !important;
+        }
+        .top-bar-app .login-button:hover,
+        .top-bar-app .premium-button:hover,
+        .top-bar-app .language-button:hover {
+            background: #222 !important;
+            color: #fff !important;
+        }
+        /* Remove qualquer cor de fundo de svg, video ou img dentro do botão de idioma */
+        .top-bar-app .language-button video,
+        .top-bar-app .language-button svg {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .top-bar-app .language-button img {
+            box-shadow: none !important;
+        }
+        /* Remove qualquer cor de fundo do botão premium */
+        .top-bar-app .premium-button {
+            background: #111 !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px #0008 !important;
+        }
+        .top-bar-app .premium-button:hover {
+            background: #222 !important;
+            color: #fff !important;
+        }
+        .top-bar-app .login-button:hover,
+        .top-bar-app .premium-button:hover,
+        .top-bar-app .language-button:hover,
+        .top-bar-app #themeToggleTop:hover,
+        .top-bar-app #btnShare:hover,
+        .top-bar-app #btnNotify:hover {
+            background: #222 !important;
+            color: #fff !important;
+        }
         /* --- General Styles --- */
         :root {
             --bg-color-dark: #000000;
@@ -62,6 +120,22 @@
             --button-hover-bg: #ffffff !important;
             --accent-color: #007bff !important;
             --accent-rgb: 0, 123, 255 !important;
+        }
+
+        /* Remove theme-specific backgrounds for top bar buttons in light mode */
+        :root[data-theme="light"] .top-bar-app .login-button,
+        :root[data-theme="light"] .top-bar-app .premium-button,
+        :root[data-theme="light"] .top-bar-app .language-button {
+            background: #111 !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 2px 8px #0008 !important;
+        }
+        :root[data-theme="light"] .top-bar-app .login-button:hover,
+        :root[data-theme="light"] .top-bar-app .premium-button:hover,
+        :root[data-theme="light"] .top-bar-app .language-button:hover {
+            background: #222 !important;
+            color: #fff !important;
         }
 
         /* TEMA DARK */
@@ -1725,83 +1799,85 @@
 
         /* === LAYOUT LIMPO - SEM CONTAINERS DESNECESSÁRIOS === */
 
-        /* === BOTÕES DE COMPARTILHAMENTO ULTRA-MODERNOS === */
-        #shareWhatsapp:hover {
-            background: #1ebe57 !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5) !important;
-            border-radius: 16px !important;
-        }
 
-        #shareEmail:hover {
-            background: #d33b2c !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(234, 67, 53, 0.5) !important;
-            border-radius: 16px !important;
-        }
-
-        #sharePdf:hover {
-            background: #e64a19 !important;
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5) !important;
-            border-radius: 16px !important;
-        }
-
-        #shareMenu {
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            background: rgba(var(--bg-color-dark-rgb, 20, 20, 20), 0.9) !important;
-        }
-
-        /* Botões de compartilhamento com ícones otimizados */
+        /* === BOTÕES DE COMPARTILHAMENTO ULTRA-MODERNOS E VISÍVEIS === */
         #shareWhatsapp, #shareEmail, #sharePdf {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            margin: 0 8px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            box-shadow: 0 4px 16px rgba(76,175,80,0.10), 0 1.5px 6px rgba(0,0,0,0.10);
+            transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+            cursor: pointer;
             position: relative;
+            z-index: 1;
             overflow: hidden;
-            transform: translateZ(0);
-            background: transparent !important;
-            border-radius: 12px !important;
-            border: 1px solid #eee !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
-            color: inherit !important;
-            transition: box-shadow 0.2s;
         }
-
-        #shareWhatsapp:hover {
-            background: #1faa52 !important;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5) !important;
-        }
-
-        #shareEmail:hover {
-            background: #d33b2c !important;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(234, 67, 53, 0.5) !important;
-        }
-
-        #sharePdf:hover {
-            background: #e64919 !important;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5) !important;
-        }
-
-        /* Não force nenhuma cor nos SVGs dos botões de compartilhamento para manter as cores originais de marca. 
-           Garanta que os SVGs tenham o atributo fill com a cor da marca diretamente no HTML, por exemplo:
-           <svg ... fill="#25D366"> para WhatsApp, <svg ... fill="#EA4335"> para Email, <svg ... fill="#FF5722"> para PDF.
-           Se o SVG usar currentColor, altere para a cor da marca no próprio SVG.
-        */
         #shareWhatsapp svg,
         #shareEmail svg,
         #sharePdf svg {
-            display: block !important;
-            pointer-events: none;
+            width: 28px;
+            height: 28px;
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.10));
         }
-
-        /* Efeito de ripple nos botões */
-        #shareWhatsapp:active,
-        #shareEmail:active,
-        #sharePdf:active {
-            transform: translateY(0) scale(0.98);
+        #shareWhatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            box-shadow: 0 4px 16px rgba(37,211,102,0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+        }
+        #shareEmail {
+            background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+            box-shadow: 0 4px 16px rgba(66,133,244,0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+        }
+        #sharePdf {
+            background: linear-gradient(135deg, #FF5252 0%, #FF1744 100%);
+            box-shadow: 0 4px 16px rgba(255,82,82,0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+        }
+        #shareWhatsapp:hover, #shareWhatsapp:focus {
+            background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+            box-shadow: 0 6px 24px rgba(37,211,102,0.28), 0 2px 8px rgba(0,0,0,0.12);
+            transform: scale(1.08);
+        }
+        #shareEmail:hover, #shareEmail:focus {
+            background: linear-gradient(135deg, #34A853 0%, #4285F4 100%);
+            box-shadow: 0 6px 24px rgba(66,133,244,0.28), 0 2px 8px rgba(0,0,0,0.12);
+            transform: scale(1.08);
+        }
+        #sharePdf:hover, #sharePdf:focus {
+            background: linear-gradient(135deg, #FF1744 0%, #FF5252 100%);
+            box-shadow: 0 6px 24px rgba(255,82,82,0.28), 0 2px 8px rgba(0,0,0,0.12);
+            transform: scale(1.08);
+        }
+        #shareWhatsapp:active, #shareEmail:active, #sharePdf:active {
+            filter: brightness(0.95);
+            transform: scale(0.97);
+        }
+        /* Pequeno efeito de ripple ao clicar */
+        #shareWhatsapp::after, #shareEmail::after, #sharePdf::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.18);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+        #shareWhatsapp:active::after, #shareEmail:active::after, #sharePdf:active::after {
+            width: 120%;
+            height: 120%;
+            opacity: 1;
+            transition: 0s;
         }
 
         /* === MENU DE IDIOMAS === */
@@ -2348,6 +2424,12 @@
             opacity: 0.7;
             transition: all 0.5s ease;
             z-index: 1;
+            animation: globe-spin 3s linear infinite;
+        }
+
+        @keyframes globe-spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .language-button:hover .globe-icon {
@@ -3748,7 +3830,9 @@
         </button>
         
         <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage" style="font-size:24px;padding:8px;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all 0.3s ease;">
-            <span class="country-flag" id="currentFlag">🇧🇷</span>
+            <span class="globe-container" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#2196F3 0%,#00BCD4 100%);box-shadow:0 2px 8px #2196f322;">
+                <video id="globeVideo" src="Mapamundi.mp4" autoplay loop muted playsinline style="width:36px;height:36px;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;"></video>
+            </span>
         </button>
         
         <button id="themeToggleTop" title="Alternar tema" data-translate-title="toggleTheme">🌙</button>
@@ -3762,29 +3846,97 @@
                 <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
         </button>
+        <!-- Share Menu Moderno -->
+        <div id="shareMenu" style="display:none;position:absolute;min-width:60px;background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:12px;padding:12px 10px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+            <div style="display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;">
+                <button class="share-option" onclick="window.open('https://wa.me/?text='+encodeURIComponent(document.title+' '+window.location.href),'_blank')" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;background:none;border:none;">
+                    <img src="icones/whatsapp.gif" alt="WhatsApp" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;">
+                </button>
+                <button class="share-option" onclick="window.open('mailto:?subject='+encodeURIComponent(document.title)+'&body='+encodeURIComponent(window.location.href),'_blank')" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;background:none;border:none;">
+                    <img src="icones/email.png" alt="Email" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;">
+                </button>
+                <button class="share-option" onclick="window.print()" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;background:none;border:none;">
+                    <img src="icones/pdf.png" alt="PDF" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;">
+                </button>
+            </div>
+        </div>
         
         <button id="btnPremium" title="Ativar Premium" onclick="showPaymentModal()" class="premium-button" data-translate="premium">
             👑 Premium
         </button>
     </div>
 
+    <script>
+    // Fix share menu position to always appear below the share button
+    function positionShareMenu() {
+        const btn = document.getElementById('btnShare');
+        const menu = document.getElementById('shareMenu');
+        if (!btn || !menu) return;
+        const rect = btn.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        menu.style.top = (rect.bottom + scrollTop + 8) + 'px';
+        menu.style.left = (rect.left + scrollLeft) + 'px';
+        menu.style.right = '';
+    }
+    document.getElementById('btnShare').addEventListener('click', function(e) {
+        const menu = document.getElementById('shareMenu');
+        if (menu.style.display === 'block') {
+            menu.style.display = 'none';
+        } else {
+            positionShareMenu();
+            menu.style.display = 'block';
+        }
+        e.stopPropagation();
+    });
+    window.addEventListener('resize', function() {
+        const menu = document.getElementById('shareMenu');
+        if (menu.style.display === 'block') {
+            positionShareMenu();
+        }
+    });
+    window.addEventListener('scroll', function() {
+        const menu = document.getElementById('shareMenu');
+        if (menu.style.display === 'block') {
+            positionShareMenu();
+        }
+    });
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('shareMenu');
+        if (menu && menu.style.display === 'block' && !menu.contains(e.target) && e.target.id !== 'btnShare') {
+            menu.style.display = 'none';
+        }
+    });
+    </script>
+    <style>
+    /* Responsividade para o menu de compartilhamento */
+    @media (max-width: 600px) {
+      #shareMenu {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        min-width: 180px !important;
+        max-width: 90vw !important;
+      }
+    }
+    </style>
+
     <!-- Menu de Seleção de Idiomas -->
-    <div id="languageMenu" style="display:none;position:fixed;top:70px;right:50%;transform:translateX(50%);background:var(--bg-color-dark);border:2px solid var(--border-color);border-radius:12px;padding:12px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
-        <div style="display:flex;flex-direction:column;gap:8px;">
-            <button class="language-option" data-lang="pt" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Português">
-                🇧🇷
+    <div id="languageMenu" style="display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:60px;background:transparent;border:none;border-radius:0;padding:0;z-index:200;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;">
+            <button class="language-option" data-lang="pt" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Português" aria-label="Português">
+                <img src="icones/br.png.png" alt="Bandeira do Brasil" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
-            <button class="language-option" data-lang="en" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="English">
-                🇺🇸
+            <button class="language-option" data-lang="en" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="English" aria-label="English">
+                <img src="icones/us.png.png" alt="Flag of United States" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Flag not found';" />
             </button>
-            <button class="language-option" data-lang="fr" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Français">
-                🇫🇷
+            <button class="language-option" data-lang="fr" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Français" aria-label="Français">
+                <img src="icones/fr.png.png" alt="Drapeau de la France" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Drapeau non trouvé';" />
             </button>
-            <button class="language-option" data-lang="it" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Italiano">
-                🇮🇹
+            <button class="language-option" data-lang="it" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Italiano" aria-label="Italiano">
+                <img src="icones/it.png.png" alt="Bandiera d'Italia" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandiera non trovata';" />
             </button>
-            <button class="language-option" data-lang="es" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;width:48px;height:48px;" title="Español">
-                🇪🇸
+            <button class="language-option" data-lang="es" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Español" aria-label="Español">
+                <img src="icones/es.png.png" alt="Bandera de España" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandera no encontrada';" />
             </button>
         </div>
     </div>
@@ -4057,9 +4209,9 @@
                 <h4 class="payment-details-title">💰 Pagamento PIX - Instantâneo</h4>
                 <div class="pix-content">
                     <div class="pix-info">
-                        <span class="pix-label">🔐 Chave PIX (Copie e Cole no seu App)</span>
+                        <span class="pix-label">🔐 Chave PIX</span>
                         <div class="pix-key-container">
-                            <input type="text" id="pixKey" value="douglasdcode@gmail.com" readonly class="pix-key-input" title="Clique para selecionar">
+                            <input type="text" id="pixKey" value="7068f01a-eb21-4114-9f09-d9f5e1b0b51a" readonly class="pix-key-input" title="Clique para selecionar" style="width:100%;font-size:1.2em;font-weight:bold;color:#219653;background:#eaffea;border:2px solid #4CAF50;border-radius:8px;padding:10px 12px;text-align:center;letter-spacing:1px;box-shadow:0 2px 8px #0001;">
                             <button id="copyPixBtn" class="copy-pix-btn" title="Copiar chave PIX">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
@@ -4070,13 +4222,8 @@
                     </div>
                     <div class="pix-instructions">
                         <p><strong>💡 Como pagar com PIX:</strong></p>
-                        <p>1. 📋 Copie a chave PIX acima (douglasdcode@gmail.com)</p>
-                        <p>2. 📱 Abra seu aplicativo bancário favorito</p>
-                        <p>3. 💸 Escolha a opção PIX e cole a chave</p>
-                        <p>4. ✅ Confirme o pagamento do valor escolhido</p>
-                        <p style="color: #4CAF50; font-weight: bold; text-align: center; margin-top: 16px;">
-                            🚀 Liberação automática em segundos!
-                        </p>
+                        <p>Copie a chave acima e faça o pagamento em seu app bancário.</p>
+                        <p>Após o pagamento, a liberação é automática em segundos!</p>
                     </div>
                 </div>
             </div>
@@ -4164,27 +4311,11 @@
         </div>
     </div>
 
-    <!-- Menu de Compartilhamento com Ícones Originais -->
-    <div id="shareMenu" style="display:none;position:fixed;top:70px;right:20px;background:none;border:none;border-radius:0;padding:0;z-index:200;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
-        <div style="display:flex;flex-direction:column;gap:0;background:none;border:none;padding:0;margin:0;box-shadow:none;">
-            <!-- WhatsApp Button -->
-            <button id="shareWhatsapp" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="WhatsApp">
-                <img src="../icones/whatsapp.gif" alt="WhatsApp" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
-            </button>
-            <!-- Email Button -->
-            <button id="shareEmail" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="Email">
-                <img src="../icones/email.png" alt="Email" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
-            </button>
-            <!-- PDF Button -->
-            <button id="sharePdf" style="all:unset;cursor:pointer;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;display:block;" title="PDF">
-                <img src="../icones/pdf.png" alt="PDF" width="32" height="32" style="display:block;background:none;border:none;box-shadow:none;padding:0;margin:0;outline:none;" />
-            </button>
-        </div>
-    </div>
 
 
 
     <!-- Scripts -->
+    <!-- ...existing code... -->
     <script>
         // === FUNCIONALIDADE DO MENU DE IDIOMAS ===
         let currentLanguage = 'pt';
@@ -4957,18 +5088,30 @@
             console.log(`Idioma alterado para: ${languages[lang].fullName}`);
         }
 
+        // === MENU DE IDIOMAS E SHARE MODERNO ===
+        // Helper to position a menu below a button
+        function positionMenuBelowButton(menu, button) {
+            const btnRect = button.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            menu.style.top = (btnRect.bottom + 8 + scrollTop) + 'px';
+            menu.style.left = (btnRect.left + btnRect.width/2 - menu.offsetWidth/2 + scrollLeft) + 'px';
+        }
+
         // Toggle menu de idiomas
         document.getElementById('btnLanguage').addEventListener('click', function(e) {
             e.stopPropagation();
             const menu = document.getElementById('languageMenu');
             const isVisible = menu.style.display !== 'none';
-            
-            // Esconde outros menus
+            if (!isVisible) {
+                menu.style.display = 'block';
+                // Aguarda renderização para garantir offsetWidth correto
+                setTimeout(() => positionMenuBelowButton(menu, this), 0);
+            } else {
+                menu.style.display = 'none';
+            }
+            // Fecha o outro menu
             document.getElementById('shareMenu').style.display = 'none';
-            
-            // Toggle menu de idiomas
-            menu.style.display = isVisible ? 'none' : 'block';
-            
             // Marca idioma atual como selecionado
             document.querySelectorAll('.language-option').forEach(opt => {
                 opt.classList.remove('selected');
@@ -4978,43 +5121,74 @@
             });
         });
 
-        // Seleção de idioma
-        document.querySelectorAll('.language-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const lang = this.dataset.lang;
-                const langData = languages[lang];
-                
-                // Atualiza idioma atual
-                currentLanguage = lang;
-                
-                // Atualiza texto do botão (apenas bandeira no globo)
-                document.getElementById('currentFlag').textContent = langData.flag;
-                
-                // Esconde menu
-                document.getElementById('languageMenu').style.display = 'none';
-                
-                // Aplica as traduções em toda a interface
-                applyTranslations(lang);
-                
-                // Força re-tradução após breve delay para garantir que todos os elementos sejam atualizados
-                setTimeout(() => {
-                    applyTranslations(lang);
-                }, 200);
-                
-                // Salva preferência
-                localStorage.setItem('selectedLanguage', lang);
-                
-                // Dispara evento customizado para outros scripts
-                window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
-            });
+        // Toggle menu de share
+        document.getElementById('btnShare').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('shareMenu');
+            const isVisible = menu.style.display !== 'none';
+            if (!isVisible) {
+                menu.style.display = 'block';
+                positionMenuBelowButton(menu, this);
+            } else {
+                menu.style.display = 'none';
+            }
+            // Fecha o outro menu
+            document.getElementById('languageMenu').style.display = 'none';
         });
 
+        // Fecha menus ao clicar fora
+        document.addEventListener('click', function() {
+            document.getElementById('languageMenu').style.display = 'none';
+            document.getElementById('shareMenu').style.display = 'none';
+        });
+
+        // Fecha menus ao rolar ou redimensionar (para evitar menus "perdidos")
+        window.addEventListener('scroll', function() {
+            document.getElementById('languageMenu').style.display = 'none';
+            document.getElementById('shareMenu').style.display = 'none';
+        });
+        window.addEventListener('resize', function() {
+            document.getElementById('languageMenu').style.display = 'none';
+            document.getElementById('shareMenu').style.display = 'none';
+        });
+
+        // Seleção de idioma
+        document.querySelectorAll('.language-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const lang = this.getAttribute('data-lang');
+                if (lang && languages[lang]) {
+                    currentLanguage = lang;
+                    localStorage.setItem('selectedLanguage', lang);
+                    applyTranslations(lang);
+                }
+                document.getElementById('languageMenu').style.display = 'none';
+            });
+        });
         // Carrega idioma salvo e aplica traduções
         document.addEventListener('DOMContentLoaded', function() {
             const savedLang = localStorage.getItem('selectedLanguage') || 'pt';
             if (languages[savedLang]) {
                 currentLanguage = savedLang;
-                document.getElementById('currentFlag').textContent = languages[savedLang].flag;
+                // Atualiza a bandeira do botão ao carregar para todas as linguagens
+                const flagImg = document.getElementById('currentFlag');
+                let flagSrc = '';
+                switch (savedLang) {
+                  case 'pt': flagSrc = 'icones/br.png'; break;
+                  case 'en': flagSrc = 'icones/us.png'; break;
+                  case 'fr': flagSrc = 'icones/fr.png'; break;
+                  case 'it': flagSrc = 'icones/it.png'; break;
+                  case 'es': flagSrc = 'icones/es.png'; break;
+                  default: flagSrc = 'icones/br.png'; break;
+                }
+                flagImg.src = flagSrc;
+                flagImg.alt = savedLang;
+                flagImg.style.display = 'inline-block';
+                // Remove qualquer texto ou emoji do botão
+                Array.from(flagImg.parentElement.childNodes).forEach(node => {
+                  if (node.nodeType === Node.TEXT_NODE) node.textContent = '';
+                  if (node.nodeType === Node.ELEMENT_NODE && node !== flagImg && node.tagName !== 'IMG') node.remove();
+                });
                 applyTranslations(savedLang); // Aplica as traduções na inicialização
             }
             
@@ -5489,5 +5663,58 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="script.js"></script>
     <script src="payment.js"></script>
-</body>
-</html>
+    <script>
+    // Compartilhamento: expande opções ao clicar no botão principal
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnShare = document.getElementById('btnShare');
+        const shareOptions = document.getElementById('shareOptions');
+        let open = false;
+        if (btnShare && shareOptions) {
+            btnShare.addEventListener('click', function(e) {
+                e.stopPropagation();
+                open = !open;
+                if (open) {
+                    shareOptions.style.display = 'flex';
+                    setTimeout(() => {
+                        shareOptions.style.opacity = '1';
+                        shareOptions.style.transform = 'translateY(-50%) scale(1)';
+                        shareOptions.style.pointerEvents = 'auto';
+                    }, 10);
+                } else {
+                    shareOptions.style.opacity = '0';
+                    shareOptions.style.transform = 'translateY(-50%) scale(0.95)';
+                    shareOptions.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        shareOptions.style.display = 'none';
+                    }, 200);
+                }
+            });
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('selectedLanguage') || 'pt';
+            if (languages[savedLang]) {
+                currentLanguage = savedLang;
+                applyTranslations(savedLang);
+            }
+            // Reaplica traduções quando novos elementos são adicionados
+            const observer = new MutationObserver(function(mutations) {
+                let shouldReapply = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        for (let node of mutation.addedNodes) {
+                            if (node.nodeType === Node.ELEMENT_NODE && (node.hasAttribute && (node.hasAttribute('data-translate') || node.hasAttribute('data-translate-title') || node.hasAttribute('data-translate-placeholder')))) {
+                                shouldReapply = true;
+                            }
+                        }
+                    }
+                });
+                if (shouldReapply) {
+                    setTimeout(() => {
+                        applyTranslations(currentLanguage);
+                    }, 50);
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });

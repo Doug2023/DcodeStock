@@ -443,8 +443,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Color Generation & Storage ---
     const coresMap = JSON.parse(localStorage.getItem('coresMap') || '{}');
+    // Gera uma lista de cores únicas (sem repetição) para os gráficos
+    function gerarCoresUnicas(qtd) {
+        const coresBase = [
+            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+            '#8BC34A', '#E91E63', '#00BCD4', '#CDDC39', '#FF5722', '#607D8B',
+            '#795548', '#009688', '#3F51B5', '#FFC107', '#C62828', '#AD1457',
+            '#6A1B9A', '#283593', '#0277BD', '#00838F', '#2E7D32', '#F9A825', '#FF6F00'
+        ];
+        const cores = [];
+        let i = 0;
+        while (cores.length < qtd) {
+            if (i < coresBase.length) {
+                cores.push(coresBase[i]);
+            } else {
+                // Gera cor aleatória se acabar a paleta
+                let cor;
+                do {
+                    cor = `hsl(${Math.floor(Math.random()*360)}, 70%, 55%)`;
+                } while (cores.includes(cor));
+                cores.push(cor);
+            }
+            i++;
+        }
+        return cores;
+    }
+
     function gerarCor(nome) {
         if (!coresMap[nome]) {
+            // Gera cor aleatória, mas não garante unicidade global
             const r = Math.floor(Math.random() * 156 + 100);
             const g = Math.floor(Math.random() * 156 + 100);
             const b = Math.floor(Math.random() * 156 + 100);
@@ -616,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Updates chart data based on table content with error handling
     function atualizarGraficos() {
         try {
-            const labels = [], entradas = [], valores = [], cores = [];
+            const labels = [], entradas = [], valores = [];
             const dataSaida = {}, corSaidaPorItem = {};
             const linhas = tabelaBody.querySelectorAll('tr');
 
@@ -628,7 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Filtrar nomes inválidos (vazio, undefined, null)
                 if (nome && nome !== 'undefined' && nome !== 'null' && nome.length > 0) {
-                    const cor = gerarCor(nome);
                     if (ent > 0) {
                         const existingIndex = labels.indexOf(nome);
                         if (existingIndex > -1) {
@@ -638,15 +664,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             labels.push(nome);
                             entradas.push(ent);
                             valores.push(val);
-                            cores.push(cor);
                         }
                     }
                     if (sai > 0) {
                         dataSaida[nome] = (dataSaida[nome] || 0) + sai;
-                        corSaidaPorItem[nome] = cor;
+                        corSaidaPorItem[nome] = gerarCor(nome);
                     }
                 }
             });
+
+            // Gera cores únicas para cada gráfico
+            const cores = gerarCoresUnicas(labels.length);
 
             // Update Pie Chart with safety check
             if (chartPizza && chartPizza.data) {
@@ -656,7 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 chartPizza.update('none'); // 'none' para performance
             }
 
-            // Update Bar Chart (Valores) with safety check
             if (chartBarras && chartBarras.data) {
                 chartBarras.data.labels = labels;
                 chartBarras.data.datasets[0].data = valores;
@@ -664,12 +691,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 chartBarras.update('none');
             }
 
-            // Update Saídas Chart with safety check
             if (chartSaidas && chartSaidas.data) {
                 const saidaLabels = Object.keys(dataSaida).filter(l => l && l !== 'undefined' && l !== 'null' && l.trim().length > 0);
+                const coresSaida = gerarCoresUnicas(saidaLabels.length);
                 chartSaidas.data.labels = saidaLabels;
                 chartSaidas.data.datasets[0].data = saidaLabels.map(l => dataSaida[l]);
-                chartSaidas.data.datasets[0].backgroundColor = saidaLabels.map(l => corSaidaPorItem[l]);
+                chartSaidas.data.datasets[0].backgroundColor = coresSaida;
                 chartSaidas.update('none');
             }
         } catch (error) {
