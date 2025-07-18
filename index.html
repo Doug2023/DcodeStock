@@ -3817,7 +3817,7 @@
     <!-- Barra Superior -->
     <div class="top-bar-app">
         <!-- Layout Distribuído: Login - Alerta - Idioma - Tema - Share - Premium -->
-        <button id="btnLogin" title="Fazer Login" onclick="openLoginModal()" class="login-button" data-translate="login">
+        <button id="btnLogin" title="Fazer Login" class="login-button" data-translate="login">
             🔑 Login
         </button>
         
@@ -3829,9 +3829,9 @@
             <span id="notifyBadge" style="display:none;position:absolute;top:2px;right:2px;background:#f00;color:#fff;font-size:0.7em;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;">0</span>
         </button>
         
-        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage" style="font-size:24px;padding:8px;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all 0.3s ease;">
-            <span class="globe-container" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#2196F3 0%,#00BCD4 100%);box-shadow:0 2px 8px #2196f322;">
-                <video id="globeVideo" src="Mapamundi.mp4" autoplay loop muted playsinline style="width:36px;height:36px;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;"></video>
+        <button id="btnLanguage" title="Selecionar Idioma" class="language-button" data-translate-title="selectLanguage" style="font-size:20px;padding:6px;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all 0.3s ease;display:inline-flex;align-items:center;vertical-align:middle;">
+            <span class="globe-container" style="display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#2196F3 0%,#00BCD4 100%);box-shadow:0 2px 8px #2196f322;vertical-align:middle;">
+                <video id="globeVideo" src="Mapamundi.mp4" autoplay loop muted playsinline style="width:23px;height:23px;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;vertical-align:middle;"></video>
             </span>
         </button>
         
@@ -3867,7 +3867,38 @@
     </div>
 
     <script>
-    // Fix share menu position to always appear below the share button
+    // --- Menu Compartilhamento ---
+    // Garante que o botão de login abre o modal corretamente
+    function openLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    function closeLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var btnLogin = document.getElementById('btnLogin');
+      if (btnLogin) {
+        btnLogin.addEventListener('click', function(e) {
+          e.preventDefault();
+          openLoginModal();
+        });
+      }
+      // Fecha modal ao clicar fora da área do login
+      var loginModal = document.getElementById('loginModal');
+      if (loginModal) {
+        loginModal.addEventListener('click', function(e) {
+          if (e.target === loginModal) closeLoginModal();
+        });
+      }
+    });
     function positionShareMenu() {
         const btn = document.getElementById('btnShare');
         const menu = document.getElementById('shareMenu');
@@ -3880,6 +3911,7 @@
         menu.style.right = '';
     }
     document.getElementById('btnShare').addEventListener('click', function(e) {
+        e.stopPropagation();
         const menu = document.getElementById('shareMenu');
         if (menu.style.display === 'block') {
             menu.style.display = 'none';
@@ -3887,7 +3919,8 @@
             positionShareMenu();
             menu.style.display = 'block';
         }
-        e.stopPropagation();
+        // Fecha o menu de idiomas se aberto
+        document.getElementById('languageMenu').style.display = 'none';
     });
     window.addEventListener('resize', function() {
         const menu = document.getElementById('shareMenu');
@@ -3901,11 +3934,43 @@
             positionShareMenu();
         }
     });
-    document.addEventListener('click', function(e) {
-        const menu = document.getElementById('shareMenu');
-        if (menu && menu.style.display === 'block' && !menu.contains(e.target) && e.target.id !== 'btnShare') {
+
+    // --- Menu Idiomas ---
+    function positionLanguageMenu() {
+        const btn = document.getElementById('btnLanguage');
+        const menu = document.getElementById('languageMenu');
+        if (!btn || !menu) return;
+        const rect = btn.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        menu.style.top = (rect.bottom + scrollTop + 8) + 'px';
+        menu.style.left = (rect.left + scrollLeft) + 'px';
+        menu.style.right = '';
+    }
+    document.getElementById('btnLanguage').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('languageMenu');
+        if (menu.style.display === 'block') {
             menu.style.display = 'none';
+        } else {
+            positionLanguageMenu();
+            menu.style.display = 'block';
         }
+        // Fecha o menu de compartilhamento se aberto
+        document.getElementById('shareMenu').style.display = 'none';
+    });
+    // Não fechar ao clicar dentro do menu de idiomas
+    document.getElementById('languageMenu').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    // Não fechar ao clicar dentro do menu de compartilhamento
+    document.getElementById('shareMenu').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    // Fecha ambos menus ao clicar fora
+    document.addEventListener('click', function() {
+        document.getElementById('languageMenu').style.display = 'none';
+        document.getElementById('shareMenu').style.display = 'none';
     });
     </script>
     <style>
@@ -3918,25 +3983,96 @@
         max-width: 90vw !important;
       }
     }
+
+    /* Botões do topo sempre escuros, sem caixa (sem fundo, sem borda, sem sombra) */
+    .top-bar-app button,
+    .top-bar-app .login-button,
+    .top-bar-app .premium-button,
+    .top-bar-app #btnNotify,
+    .top-bar-app #btnLanguage,
+    .top-bar-app #themeToggleTop,
+    .top-bar-app #btnShare {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #181c22 !important;
+      filter: none !important;
+      outline: none !important;
+      transition: color 0.2s;
+    }
+    .top-bar-app button svg,
+    .top-bar-app button span,
+    .top-bar-app button video {
+      color: #181c22 !important;
+      stroke: #181c22 !important;
+      filter: none !important;
+    }
+    /* Não aplicar cor escura nem filtro nas imagens das bandeiras do menu de idiomas */
+    #languageMenu img {
+      color: unset !important;
+      filter: unset !important;
+      box-shadow: 0 1px 4px #0002 !important;
+      border-radius: 8px !important;
+      background: none !important;
+      border: none !important;
+      object-fit: cover !important;
+      display: block !important;
+      width: 36px !important;
+      height: 36px !important;
+      opacity: 1 !important;
+      z-index: 9999 !important;
+    }
+    #languageMenu {
+      z-index: 9999 !important;
+    }
+    .top-bar-app .globe-container {
+      background: none !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      width: 23px !important;
+      height: 23px !important;
+      border-radius: 50% !important;
+      overflow: hidden !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .top-bar-app .globe-container video {
+      background: none !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      width: 23px !important;
+      height: 23px !important;
+      aspect-ratio: 1/1 !important;
+      object-fit: cover !important;
+      border-radius: 50% !important;
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
     </style>
 
     <!-- Menu de Seleção de Idiomas -->
-    <div id="languageMenu" style="display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:60px;background:transparent;border:none;border-radius:0;padding:0;z-index:200;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
-        <div style="display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;">
+    <div id="languageMenu" style="display:none;position:absolute;min-width:60px;background:var(--bg-color-dark,#232a36);border:2px solid var(--border-color,#232a36);border-radius:12px;padding:14px 10px;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+        <div style="display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;">
             <button class="language-option" data-lang="pt" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Português" aria-label="Português">
-                <img src="icones/br.png.png" alt="Bandeira do Brasil" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
+                <img src="icones/brasil.png" alt="Bandeira do Brasil" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
             <button class="language-option" data-lang="en" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="English" aria-label="English">
-                <img src="icones/us.png.png" alt="Flag of United States" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Flag not found';" />
+                <img src="icones/eua.png" alt="Bandeira dos EUA" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
             <button class="language-option" data-lang="fr" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Français" aria-label="Français">
-                <img src="icones/fr.png.png" alt="Drapeau de la France" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Drapeau non trouvé';" />
+                <img src="icones/frança.png" alt="Bandeira da França" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
             <button class="language-option" data-lang="it" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Italiano" aria-label="Italiano">
-                <img src="icones/it.png.png" alt="Bandiera d'Italia" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandiera non trovata';" />
+                <img src="icones/italia.png" alt="Bandeira da Itália" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
             <button class="language-option" data-lang="es" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;padding:0;" title="Español" aria-label="Español">
-                <img src="icones/es.png.png" alt="Bandera de España" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandera no encontrada';" />
+                <img src="icones/espanha.png" alt="Bandeira da Espanha" style="width:36px;height:36px;border-radius:8px;box-shadow:0 1px 4px #0002;object-fit:cover;display:block;background:none;border:none;" onerror="this.style.opacity='0.3';this.alt='Bandeira não encontrada';" />
             </button>
         </div>
     </div>
@@ -4030,6 +4166,12 @@
     <main>
         <div class="table-responsive">
             <table class="estoque-table">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:25%">
+                    <col style="width:25%">
+                    <col style="width:25%">
+                </colgroup>
                 <thead>
                     <tr>
                         <th data-translate="item">Item</th>
@@ -4067,9 +4209,79 @@
         <div class="resumo-header">
             <h3 data-translate="itemSummary">📦 Resumo dos Itens</h3>
         </div>
-        <div id="listaResumoItens">
-            <p class="resumo-vazio" data-translate="noItemsYet">Nenhum item inserido ainda</p>
-        </div>
+        <ul id="listaResumoItens" class="resumo-lista">
+            <li class="resumo-vazio" data-translate="noItemsYet">Nenhum item inserido ainda</li>
+        </ul>
+        <style>
+        /* Ajuste responsivo: itens do resumo em coluna, um abaixo do outro */
+        #listaResumoItens.resumo-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        #listaResumoItens.resumo-lista li {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: var(--bg-color-light, #f8f9fa);
+            margin: 0;
+            box-shadow: 0 1px 4px #0001;
+            font-size: 1em;
+            word-break: break-word;
+        }
+        #listaResumoItens.resumo-lista li:not(.resumo-vazio):hover {
+            background: #e3e7ef;
+        }
+        @media (max-width: 600px) {
+          #listaResumoItens.resumo-lista {
+            gap: 4px;
+          }
+          #listaResumoItens.resumo-lista li {
+            font-size: 0.98em;
+            padding: 10px 6px;
+            border-radius: 5px;
+          }
+        }
+
+        /* Botões Login e Premium mais visíveis no modo escuro */
+        .top-bar-app .login-button,
+        .top-bar-app .premium-button {
+            color: #fff !important;
+            background: linear-gradient(90deg, #2196F3 0%, #00BCD4 100%) !important;
+            border-radius: 8px !important;
+            font-weight: bold !important;
+            box-shadow: 0 2px 8px #2196f355 !important;
+            border: none !important;
+            padding: 7px 18px !important;
+            margin: 0 6px !important;
+            transition: background 0.2s, color 0.2s;
+        }
+        .top-bar-app .login-button:hover,
+        .top-bar-app .premium-button:hover {
+            background: linear-gradient(90deg, #1976D2 0%, #0097A7 100%) !important;
+            color: #fff !important;
+        }
+
+        /* Garantir que as bandeiras do menu de idiomas fiquem visíveis quando o menu estiver aberto */
+        #languageMenu {
+          z-index: 9999 !important;
+        }
+        #languageMenu img {
+          display: block !important;
+          width: 36px !important;
+          height: 36px !important;
+          opacity: 1 !important;
+          background: none !important;
+          border: none !important;
+          filter: none !important;
+        }
+        </style>
     </section>
 
     <!-- Resultados Finais -->
@@ -4342,48 +4554,6 @@
                     'backStock': 'Voltar Estoque',
                     
                     // Tabela
-                    'item': 'Item',
-                    'entry': 'Entrada',
-                    'exit': 'Saída',
-                    'unitValue': 'Valor (R$)',
-                    
-                    // Gráficos
-                    'entryChart': 'Entradas por Item',
-                    'valueChart': 'Valores',
-                    'exitChart': 'Saídas',
-                    
-                    // Resumo
-                    'itemSummary': 'Resumo dos Itens',
-                    'noItemsYet': 'Nenhum item inserido ainda',
-                    
-                    // Resultados
-                    'totalEntries': 'Total de Entradas:',
-                    'totalExits': 'Total de Saídas:',
-                    'finalBalance': 'Saldo Final:',
-                    'totalValue': 'Valor Total:',
-                    
-                    // Histórico
-                    'operationsHistory': 'Histórico de Operações',
-                    'clearHistory': 'Limpar Histórico',
-                    'entriesLabel': 'Entradas',
-                    'exitsLabel': 'Saídas',
-                    
-                    // Modal Premium
-                    'premiumSubscription': 'Assinatura Premium',
-                    'choosePlan': 'Escolha seu plano:',
-                    'monthly': 'Mensal',
-                    'annual': 'Anual',
-                    'perMonth': 'por mês',
-                    'perYear': 'por ano',
-                    'paymentMethod': 'Método de pagamento:',
-                    'pix': 'PIX',
-                    'credit': 'Crédito',
-                    'debit': 'Débito',
-                    'cancel': 'Cancelar',
-                    'confirm': 'Confirmar',
-                    
-                    // Card Form
-                    'cardDetails': 'Dados do Cartão',
                     'cardNumber': 'Número do Cartão',
                     'expiryDate': 'Validade',
                     'cvv': 'CVV',
@@ -4467,19 +4637,8 @@
                     'cardNamePlaceholder': 'Nome completo'
                 }
             },
-            'en': { 
-                flag: '🇺🇸', 
-                name: 'EN', 
-                fullName: 'English',
-                translations: {
-                    // Top buttons
-                    'login': 'Login',
-                    'premium': 'Premium',
-                    'shareStock': 'Share stock',
-                    'selectLanguage': 'Select Language',
-                    'toggleTheme': 'Toggle theme',
-                    'notifications': 'Notifications',
-                    
+            // ...apenas UMA definição para cada idioma, já presente acima...
+        };
                     // Navigation
                     'previousMonth': 'Previous Month',
                     'nextMonth': 'Next Month',
