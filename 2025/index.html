@@ -4919,10 +4919,13 @@
             e.stopPropagation();
             const menu = document.getElementById('languageMenu');
             const isVisible = menu.style.display !== 'none';
+            
             // Esconde outros menus
             document.getElementById('shareMenu').style.display = 'none';
+            
             // Toggle menu de idiomas
             menu.style.display = isVisible ? 'none' : 'block';
+            
             // Marca idioma atual como selecionado
             document.querySelectorAll('.language-option').forEach(opt => {
                 opt.classList.remove('selected');
@@ -4930,11 +4933,6 @@
                     opt.classList.add('selected');
                 }
             });
-        });
-
-        // Prevent closing the menu when clicking inside it
-        document.getElementById('languageMenu').addEventListener('click', function(e) {
-            e.stopPropagation();
         });
 
         // Seleção de idioma

@@ -281,25 +281,25 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Limpar lista anterior
         listaResumoItens.innerHTML = '';
-
+        
         const itensArray = Object.keys(itensResumo);
-
+        
         if (itensArray.length === 0) {
             const emptyText = window.getTranslation ? window.getTranslation('noItemsYet', window.currentLanguage || 'pt') : 'Nenhum item inserido ainda';
-            listaResumoItens.innerHTML = `<li class="resumo-vazio">${emptyText}</li>`;
+            listaResumoItens.innerHTML = `<p class="resumo-vazio">${emptyText}</p>`;
         } else {
             itensArray.forEach(nome => {
                 const item = itensResumo[nome];
                 const saldo = item.entrada - item.saida;
-
-                const liItem = document.createElement('li');
-                liItem.className = 'resumo-item';
-
+                
+                const divItem = document.createElement('div');
+                divItem.className = 'resumo-item';
+                
                 let saldoClass = 'zero';
                 if (saldo > 0) saldoClass = 'positivo';
                 else if (saldo < 0) saldoClass = 'negativo';
-
-                liItem.innerHTML = `
+                
+                divItem.innerHTML = `
                     <div class="resumo-item-info">
                         <div class="resumo-item-nome">${nome}</div>
                         <div class="resumo-item-valores">
@@ -309,8 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-
-                listaResumoItens.appendChild(liItem);
+                
+                listaResumoItens.appendChild(divItem);
             });
         }
         
