@@ -246,6 +246,23 @@ table.estoque-table td {
     text-align: center;
     font-size: 0.9rem;
     word-wrap: break-word;
+    vertical-align: middle;
+}
+
+/* Alinhar e igualar campos de preenchimento da tabela */
+table.estoque-table td input {
+    width: 100%;
+    min-width: 80px;
+    max-width: 100px;
+    height: 32px;
+    background: var(--bg-color-light);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    text-align: center;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: block;
 }
 
 table.estoque-table th:nth-child(1),
@@ -256,6 +273,17 @@ table.estoque-table th:nth-child(3),
 table.estoque-table td:nth-child(3) { width: 20%; }
 table.estoque-table th:nth-child(4),
 table.estoque-table td:nth-child(4) { width: 20%; }
+/* Padroniza todas as colunas da tabela para 25% */
+table.estoque-table th,
+table.estoque-table td {
+    width: 25%;
+}
+
+/* Deixar todas as colunas com o mesmo tamanho */
+table.estoque-table th,
+table.estoque-table td {
+    width: 25%;
+}
 
 table.estoque-table input {
     width: 100%;
@@ -377,6 +405,62 @@ table.estoque-table input:focus {
     25% { transform: translateX(-3px); }
     75% { transform: translateX(3px); }
 }
+/* --- Estilos para a lista de resumo dos itens --- */
+.resumo-itens-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 1rem auto;
+    max-width: 500px;
+    background: var(--bg-color-medium);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.resumo-item-li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-color-dark);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+.resumo-item-li:last-child {
+    border-bottom: none;
+}
+.resumo-item-nome {
+    font-weight: bold;
+    flex: 2;
+    text-align: left;
+}
+.resumo-entrada, .resumo-saida, .resumo-saldo {
+    flex: 1;
+    text-align: center;
+    font-family: monospace;
+}
+.resumo-saldo.positivo {
+    color: #4caf50;
+    font-weight: bold;
+}
+.resumo-saldo.negativo {
+    color: #f44336;
+    font-weight: bold;
+}
+.resumo-saldo.zero {
+    color: #ffc107;
+    font-weight: bold;
+}
+@media screen and (max-width: 600px) {
+    .resumo-itens-lista {
+        max-width: 98vw;
+        font-size: 0.85rem;
+    }
+    .resumo-item-li {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+}
 
 /* --- Theme Toggle Styles --- */
 .theme-toggle {
@@ -412,18 +496,16 @@ table.estoque-table input:focus {
 /* --- Responsividade para o botão de tema --- */
 @media (max-width: 768px) {
     .theme-toggle {
-        width: 32px;
-        height: 32px;
-        font-size: 24px;
-        top: 8px;
-    }
-    
-    header {
-        padding-top: 55px;
-    }
-}
-
-@media (max-width: 480px) {
+    width: 100%;
+    height: 32px;
+    background: var(--bg-color-light);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    text-align: center;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: block;
     .theme-toggle {
         width: 28px;
         height: 28px;
@@ -654,6 +736,151 @@ select:focus {
         padding: 1px;
     }
 
+/* Responsividade extrema para telas muito pequenas (mini) */
+@media screen and (max-width: 400px) {
+    html, body {
+        font-size: 13px !important;
+    }
+    header {
+        padding: 0.5rem 0.2rem !important;
+    }
+    .video-container {
+        width: 120px !important;
+        max-width: 100vw !important;
+    }
+    .month-navigation, .stock-actions {
+        flex-direction: column !important;
+        gap: 2px !important;
+        padding: 0 0.2rem !important;
+    }
+    .month-navigation button, .stock-actions button {
+        font-size: 0.7rem !important;
+        padding: 4px 6px !important;
+    }
+    #mesAtual, #nomeEstoqueInput {
+        font-size: 1rem !important;
+        margin: 0 2px !important;
+        max-width: 100px !important;
+    }
+    table.estoque-table th, table.estoque-table td {
+        padding: 2px !important;
+        font-size: 0.6rem !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+    table.estoque-table input {
+        font-size: 0.6rem !important;
+        padding: 0 !important;
+    }
+    /* Garante que o cabeçalho da tabela não quebre linha nos títulos */
+    table.estoque-table th {
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+    .theme-toggle {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 14px !important;
+        top: 2px !important;
+    }
+
+    /* Corrige posição do menu de compartilhamento para aparecer abaixo do botão share */
+    #shareMenu {
+        position: absolute !important;
+        left: 0 !important;
+        right: auto !important;
+        top: 40px !important;
+        margin: 0 !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 12px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        z-index: 9999 !important;
+    }
+    #btnShare {
+        position: relative !important;
+        z-index: 10000 !important;
+    }
+    .share-icon-btn {
+        background: none !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-width: 24px !important;
+        min-height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .share-icon-btn svg {
+        width: 24px !important;
+        height: 24px !important;
+        color: #fff !important;
+        stroke: #fff !important;
+        border: none !important;
+    }
+}
+/* Responsividade para telas gigantes (ultra-wide) */
+@media screen and (min-width: 1800px) {
+    html, body {
+        font-size: 22px !important;
+    }
+    header, main, .video-container, .graficos-top, #resultadoFinal, #registroOperacoes {
+        max-width: 1600px !important;
+        margin: 0 auto !important;
+        padding: 2rem !important;
+    }
+    .grafico-container, .grafico-meio {
+        min-width: 600px !important;
+    }
+    table.estoque-table th, table.estoque-table td {
+        font-size: 1.2rem !important;
+        padding: 16px !important;
+    }
+    #mesAtual {
+        font-size: 3rem !important;
+    }
+}
+/* Orientação vertical extrema */
+@media screen and (max-width: 600px) and (orientation: portrait) {
+    header, main, .video-container {
+        padding: 0.2rem !important;
+    }
+    .month-navigation, .stock-actions {
+        flex-direction: column !important;
+        gap: 2px !important;
+    }
+    #mesAtual {
+        font-size: 1.2rem !important;
+    }
+}
+/* Orientação horizontal extrema */
+@media screen and (max-height: 400px) and (orientation: landscape) {
+    html, body {
+        font-size: 11px !important;
+    }
+    header, main, .video-container {
+        padding: 0.1rem !important;
+    }
+    .month-navigation, .stock-actions {
+        flex-direction: row !important;
+        gap: 2px !important;
+    }
+    #mesAtual {
+        font-size: 0.9rem !important;
+    }
+    table.estoque-table th, table.estoque-table td {
+        font-size: 0.5rem !important;
+        padding: 1px !important;
+    }
+}
     #controleEstoque { /* Regra para este ID que não estava no HTML, mas mantive a estrutura para caso adicione */
         display: flex;
         align-items: center;
@@ -908,7 +1135,6 @@ table.estoque-table input {
     color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
 }
-
 [data-theme="light"] button,
 [data-theme="light"] .nav-button,
 [data-theme="light"] .month-navigation button,
@@ -1262,25 +1488,38 @@ table.estoque-table input {
 }
 
 /* Botão de idioma - tema claro */
+
 [data-theme="light"] #btnLanguage,
 [data-theme="light"] .language-button {
-    background-color: #007bff !important;
+    background: transparent !important;
     color: #ffffff !important;
-    border: 1px solid #0056b3 !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    filter: none !important;
 }
+
 
 [data-theme="light"] #btnLanguage:hover,
 [data-theme="light"] .language-button:hover {
-    background-color: #0056b3 !important;
+    background: transparent !important;
     color: #ffffff !important;
     transform: scale(1.05) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    filter: none !important;
 }
+
 
 [data-theme="light"] #btnLanguage:focus,
 [data-theme="light"] .language-button:focus {
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3) !important;
-    background-color: #0056b3 !important;
+    background: transparent !important;
     color: #ffffff !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    filter: none !important;
 }
 
 [data-theme="light"] #btnLanguage .country-flag,
@@ -1380,8 +1619,6 @@ table.estoque-table input {
         border: none !important;
         box-shadow: none !important;
         outline: none !important;
-    }
 }
-
 
 
