@@ -260,12 +260,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Resumo em Tempo Real dos Itens ---
     function atualizarResumoItens() {
         if (!listaResumoItens) return;
+        
         const itensResumo = {};
         const linhas = tabelaBody.querySelectorAll('tr');
+        
         linhas.forEach(linha => {
             const nome = linha.querySelector('.item')?.value?.trim();
             const entrada = parseFloat(linha.querySelector('.entrada')?.value) || 0;
             const saida = parseFloat(linha.querySelector('.saida')?.value) || 0;
+            
+            // Filtrar nomes inválidos
             if (nome && nome !== 'undefined' && nome !== 'null' && nome.length > 0 && (entrada > 0 || saida > 0)) {
                 if (!itensResumo[nome]) {
                     itensResumo[nome] = { entrada: 0, saida: 0 };
@@ -274,28 +278,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 itensResumo[nome].saida += saida;
             }
         });
+        
+        // Limpar lista anterior
         listaResumoItens.innerHTML = '';
+        
         const itensArray = Object.keys(itensResumo);
+        
         if (itensArray.length === 0) {
             const emptyText = window.getTranslation ? window.getTranslation('noItemsYet', window.currentLanguage || 'pt') : 'Nenhum item inserido ainda';
             listaResumoItens.innerHTML = `<p class="resumo-vazio">${emptyText}</p>`;
         } else {
-            // Cria uma única lista organizada
-            const ul = document.createElement('ul');
-            ul.className = 'resumo-itens-lista';
             itensArray.forEach(nome => {
                 const item = itensResumo[nome];
                 const saldo = item.entrada - item.saida;
+                
+                const divItem = document.createElement('div');
+                divItem.className = 'resumo-item';
+                
                 let saldoClass = 'zero';
                 if (saldo > 0) saldoClass = 'positivo';
                 else if (saldo < 0) saldoClass = 'negativo';
-                const li = document.createElement('li');
-                li.className = `resumo-item-li`;
-                li.innerHTML = `<span class="resumo-item-nome">${nome}</span> <span class="resumo-entrada">${item.entrada}</span> <span class="resumo-saida">${item.saida}</span> <span class="resumo-saldo ${saldoClass}">${saldo}</span>`;
-                ul.appendChild(li);
+                
+                divItem.innerHTML = `
+                    <div class="resumo-item-info">
+                        <div class="resumo-item-nome">${nome}</div>
+                        <div class="resumo-item-valores">
+                            <span class="resumo-entrada">${item.entrada}</span>
+                            <span class="resumo-saida">${item.saida}</span>
+                            <span class="resumo-saldo ${saldoClass}">${saldo}</span>
+                        </div>
+                    </div>
+                `;
+                
+                listaResumoItens.appendChild(divItem);
             });
-            listaResumoItens.appendChild(ul);
         }
+        
+        // Verificar notificações de reposição
         verificarNotificacoes(itensArray, itensResumo);
     }
     
@@ -1170,14 +1189,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listeners para compartilhamento
     if (btnShare && shareMenu) {
+        // Função para posicionar o menu abaixo do botão share
+        function positionShareMenu() {
+            const btnRect = btnShare.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            shareMenu.style.top = (btnRect.bottom + 8 + scrollTop) + 'px';
+            shareMenu.style.left = (btnRect.left + btnRect.width/2 - shareMenu.offsetWidth/2 + scrollLeft) + 'px';
+            shareMenu.style.right = '';
+        }
+
         btnShare.addEventListener('click', function(e) {
             e.stopPropagation();
-            console.log('🔗 Clique no botão compartilhar detectado');
-            shareMenu.style.display = shareMenuOpen ? 'none' : 'flex';
-            shareMenuOpen = !shareMenuOpen;
+            if (shareMenu.style.display === 'block' || shareMenu.style.display === 'flex') {
+                shareMenu.style.display = 'none';
+                shareMenuOpen = false;
+            } else {
+                shareMenu.style.display = 'block';
+                positionShareMenu();
+                shareMenuOpen = true;
+            }
         });
 
-        // Fechar menu ao clicar fora
+        // Fecha menu ao clicar fora
         document.addEventListener('click', function(e) {
             if (shareMenuOpen && !shareMenu.contains(e.target) && e.target !== btnShare) {
                 shareMenu.style.display = 'none';
@@ -1185,9 +1219,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Fecha menu ao rolar ou redimensionar
+        window.addEventListener('resize', function() {
+            if (shareMenuOpen) positionShareMenu();
+        });
+        window.addEventListener('scroll', function() {
+            if (shareMenuOpen) positionShareMenu();
+        });
+
         // Prevenir fechamento ao clicar dentro do menu
         shareMenu.addEventListener('click', function(e) {
             e.stopPropagation();
+        });
+
+        // Fecha menu ao compartilhar
+        [shareWhatsapp, shareEmail, sharePdf].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    shareMenu.style.display = 'none';
+                    shareMenuOpen = false;
+                });
+            }
         });
 
         console.log('✅ Event listeners de compartilhamento adicionados');
