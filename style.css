@@ -1,3 +1,4 @@
+
 /* RESET BÁSICO */
 * {
     margin: 0;
@@ -534,33 +535,28 @@ table.estoque-table input:focus {
 
 /* --- Responsividade para o botão de tema --- */
 @media (max-width: 768px) {
-    .theme-toggle {
-    width: 100%;
-    height: 32px;
+  .theme-toggle {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    top: 5px;
     background: var(--bg-color-light);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    font-size: 1rem;
     text-align: center;
     margin: 0 auto;
     box-sizing: border-box;
     display: block;
-    .theme-toggle {
-        width: 28px;
-        height: 28px;
-        font-size: 20px;
-        top: 5px;
-    }
-    
-    header {
-        padding-top: 50px;
-    }
+  }
+  header {
+    padding-top: 50px;
+  }
 }
 
-/* --- Validação de Input --- */
+/* --- Validação de Input (mantém para fora do media query) --- */
 .input-erro {
-    border-color: #ff6b6b;
-    background-color: rgba(255, 107, 107, 0.1);
+  border-color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
 }
 
 /* TEMA DARK (padrão) */
