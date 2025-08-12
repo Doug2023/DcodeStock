@@ -3839,10 +3839,6 @@ table.estoque-table td {
         }
 
     </style>
-
-<!-- Chart.js e plugin de funil/pirâmide (apenas uma vez, ordem correta) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-funnel@4.0.3/dist/chartjs-chart-funnel.umd.min.js"></script>
 </head>
 <body>
     <!-- Barra Superior -->
@@ -4101,14 +4097,6 @@ table.estoque-table td {
                     <!-- Linhas serão adicionadas dinamicamente -->
                 </tbody>
             </table>
-            <!-- Linha de totais oculta para gráficos -->
-            <div id="totaisResumoOculto" style="width:1px;height:1px;overflow:hidden;position:absolute;left:-9999px;top:auto;">
-                <span id="entradaTotal">0</span>
-                <span id="saidaTotal">0</span>
-                <span id="saldoTotal">0</span>
-                <span id="valorFinal">0.00</span>
-            </div>
-            </table>
         </div>
 
         <!-- Gráficos REORGANIZADOS - Logo após a tabela -->
@@ -4130,156 +4118,202 @@ table.estoque-table td {
     </main>
 
     <!-- Resumo de Itens -->
-<section id="graficoFunilDemo" style="width:100%;max-width:480px;margin:32px auto 0 auto;padding:16px 0 12px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--resumo-funil-bg);border-radius:18px;box-shadow:0 2px 12px #0002;">
-  <div id="canvasjsPyramidChart" style="height: 240px; width: 100%; max-width: 440px;"></div>
-  <!-- Bloco único de valores e rótulos centralizado -->
-  <div id="resumoValoresRotulos" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:440px;margin:10px auto 0 auto;gap:0;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;width:100%;gap:0;">
-      <div style="flex:1;text-align:center;font-size:1em;font-weight:600;color:#2196f3;line-height:1.1;" id="valorEntradaResumo"></div>
-      <div style="flex:1;text-align:center;font-size:1em;font-weight:600;color:#ff9800;line-height:1.1;" id="valorSaidaResumo"></div>
-      <div style="flex:1;text-align:center;font-size:1em;font-weight:600;color:#4caf50;line-height:1.1;" id="valorSaldoResumo"></div>
-      <div style="flex:1;text-align:center;font-size:1em;font-weight:600;color:#9c27b0;line-height:1.1;" id="valorTotalResumo"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:0;margin-top:1px;">
-      <div style="flex:1;text-align:center;font-size:0.88em;color:#2196f3;">Entradas</div>
-      <div style="flex:1;text-align:center;font-size:0.88em;color:#ff9800;">Saídas</div>
-      <div style="flex:1;text-align:center;font-size:0.88em;color:#4caf50;">Saldo Final</div>
-      <div style="flex:1;text-align:center;font-size:0.88em;color:#9c27b0;">Valor Total</div>
-    </div>
-  </div>
-  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-  <script>
-    function getResumoValores() {
-      var entrada = document.getElementById('entradaTotal')?.textContent || '0';
-      var saida = document.getElementById('saidaTotal')?.textContent || '0';
-      var saldo = document.getElementById('saldoTotal')?.textContent || '0';
-      var valor = document.getElementById('valorFinal')?.textContent || '0.00';
-      return { entrada, saida, saldo, valor };
+    <section id="resumoItens">
+        <div class="resumo-header">
+            <h3 data-translate="itemSummary">📦 Resumo dos Itens</h3>
+        </div>
+        <div id="chartContainer" style="height: 450px; width: 100%; max-width: 700px; margin: 24px auto;"></div>
+        <style>
+        /* Esconder créditos do CanvasJS */
+        #chartContainer a[href*="canvasjs"],
+        #chartContainer text[text-anchor="end"],
+        #chartContainer div[style*="position: absolute"]:has-text("canvasjs") {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        </style>
+        <!-- Spans ocultos para capturar os dados -->
+        <div style="display: none;">
+            <span id="totalItens">0</span>
+            <span id="totalEntradas">0</span>
+            <span id="totalSaidas">0</span>
+            <span id="saldoFinal">0</span>
+        </div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+// Variável global para armazenar a instância do gráfico pirâmide
+let pyramidChart = null;
+
+// Função para atualizar a pirâmide com dados reais
+function atualizarPiramideResumo() {
+    // Obter os dados dos elementos de resumo
+    const totalEntradas = document.getElementById('entradaTotal')?.textContent || '0';
+    const totalSaidas = document.getElementById('saidaTotal')?.textContent || '0';
+    const saldoFinal = document.getElementById('saldoTotal')?.textContent || '0';
+    const valorFinal = document.getElementById('valorFinal')?.textContent || '0.00';
+
+    // Monta os dados para a pirâmide, cada segmento com o texto completo
+    const dados = [
+        {
+            y: Math.max(parseInt(totalEntradas), 1),
+            indexLabel: `Total de Entradas: ${totalEntradas}`,
+            color: "#4CAF50"
+        },
+        {
+            y: Math.max(parseInt(totalSaidas), 1),
+            indexLabel: `Total de Saídas: ${totalSaidas}`,
+            color: "#FF9800"
+        },
+        {
+            y: Math.max(Math.abs(parseInt(saldoFinal)), 1),
+            indexLabel: `Saldo Final: ${saldoFinal}`,
+            color: saldoFinal >= 0 ? "#2196F3" : "#F44336"
+        },
+        {
+            y: 1,
+            indexLabel: `Valor Total: R$ ${valorFinal}`,
+            color: "#FFD700"
+        }
+    ];
+
+    if (pyramidChart) {
+        pyramidChart.options.data[0].dataPoints = dados;
+        pyramidChart.render();
     }
-    function atualizarResumoValoresLinha() {
-      var valores = getResumoValores();
-      var entrada = valores.entrada;
-      var saida = valores.saida;
-      var saldo = valores.saldo;
-      var valor = valores.valor;
-      var elEntrada = document.getElementById('valorEntradaResumo');
-      var elSaida = document.getElementById('valorSaidaResumo');
-      var elSaldo = document.getElementById('valorSaldoResumo');
-      var elTotal = document.getElementById('valorTotalResumo');
-      if (elEntrada) elEntrada.textContent = entrada;
-      if (elSaida) elSaida.textContent = saida;
-      if (elSaldo) elSaldo.textContent = saldo;
-      if (elTotal) elTotal.textContent = valor;
-    }
-    function getPyramidBgColor() {
-      var root = document.documentElement;
-      var isLight = root.getAttribute('data-theme') === 'light';
-      var bgColor = getComputedStyle(root).getPropertyValue(isLight ? '--bg-color-light' : '--bg-color-dark') || (isLight ? '#fff' : '#181828');
-      return bgColor.trim();
-    }
-    function renderPyramidChart() {
-      var valores = getResumoValores();
-      var bgColor = getPyramidBgColor();
-      var root = document.documentElement;
-      var isLight = root.getAttribute('data-theme') === 'light';
-      // Cores para textos do gráfico
-      var labelColor = isLight ? '#222' : '#fafafa';
-      var indexLabelColor = isLight ? '#222' : '#fff';
-      var titleColor = isLight ? '#2196f3' : '#90caf9';
-      var options = {
+}
+
+// Inicializar a pirâmide
+window.addEventListener('DOMContentLoaded', function () {
+    var options = {
         animationEnabled: true,
         exportEnabled: false,
-        backgroundColor: bgColor,
-        title: {
-          text: "Resumo da operação",
-          fontColor: titleColor,
-          fontSize: 16
+        creditHref: "",
+        creditText: "",
+        toolTip: {
+            enabled: true,
+            fontSize: 14,
+            backgroundColor: "rgba(0,0,0,0.8)",
+            fontColor: "white",
+            borderThickness: 0,
+            cornerRadius: 8
         },
+        title: {
+            text: "Dados do Estoque",
+            fontSize: 24,
+            fontColor: "var(--text-color)",
+            fontWeight: "bold",
+            margin: 20
+        },
+        backgroundColor: "transparent",
         data: [{
-          type: "pyramid",
-          indexLabelFontSize: 13,
-          showInLegend: false,
-          toolTipContent: "<b>{indexLabel}:</b> {y}",
-          indexLabel: "{indexLabel}: {y}",
-          indexLabelFontColor: indexLabelColor,
-          labelFontColor: labelColor,
-          dataPoints: [
-            { y: Number(valores.entrada), indexLabel: "Entradas" },
-            { y: Number(valores.saida), indexLabel: "Saídas" },
-            { y: Number(valores.saldo), indexLabel: "Saldo Final" },
-            { y: Number(valores.valor.replace(/[^\d\,\.\-]/g, '').replace(',', '.')), indexLabel: "Valor Total (R$)" }
-          ]
+            type: "pyramid",
+            indexLabelFontSize: 16,
+            indexLabelFontColor: "var(--text-color)",
+            indexLabelFontWeight: "bold",
+            showInLegend: false,
+            toolTipContent: "<b>{indexLabel}</b>",
+            dataPoints: [
+                { 
+                    y: 1, 
+                    indexLabel: "Total de Itens: 0",
+                    color: "#4CAF50"
+                },
+                { 
+                    y: 1, 
+                    indexLabel: "Entradas: 0",
+                    color: "#2196F3"
+                },
+                { 
+                    y: 1, 
+                    indexLabel: "Saídas: 0",
+                    color: "#FF9800"
+                },
+                { 
+                    y: 1, 
+                    indexLabel: "Saldo: 0",
+                    color: "#9E9E9E"
+                }
+            ]
         }]
-      };
-      var chart = new CanvasJS.Chart("canvasjsPyramidChart", options);
-      chart.render();
-      function removeCanvasjsLink() {
-        var links = document.querySelectorAll('#graficoFunilDemo a');
-        links.forEach(function(link) {
-          if (link.href && link.href.includes('canvasjs.com')) {
-            link.remove();
-          }
-        });
-      }
-      removeCanvasjsLink();
-      var funilDemo = document.getElementById('graficoFunilDemo');
-      if (funilDemo) {
-        new MutationObserver(function() {
-          removeCanvasjsLink();
-        }).observe(funilDemo, {childList:true,subtree:true});
-      }
+    };
+    
+    if (window.$ && $("#chartContainer").length) {
+        pyramidChart = $("#chartContainer").CanvasJSChart(options);
+    } else if (document.getElementById("chartContainer")) {
+        pyramidChart = new CanvasJS.Chart("chartContainer", options);
+        pyramidChart.render();
     }
-    function observeResumoValoresLinha() {
-      var ids = ['entradaTotal','saidaTotal','saldoTotal','valorFinal'];
-      ids.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) {
-          new MutationObserver(function(){
-            atualizarResumoValoresLinha();
-          }).observe(el, {childList:true,subtree:true,characterData:true});
+    
+    // Remover créditos do CanvasJS após renderização
+    setTimeout(function() {
+        const chartContainer = document.getElementById("chartContainer");
+        if (chartContainer) {
+            // Remover todos os links e textos de crédito
+            const creditElements = chartContainer.querySelectorAll('a[href*="canvasjs"], text[text-anchor="end"]');
+            creditElements.forEach(el => el.remove());
+            
+            // Remover divs de crédito
+            const creditDivs = chartContainer.querySelectorAll('div[style*="position: absolute"]');
+            creditDivs.forEach(div => {
+                if (div.textContent && div.textContent.toLowerCase().includes('canvasjs')) {
+                    div.remove();
+                }
+            });
         }
-      });
-    }
-    function observeThemeChange() {
-      var root = document.documentElement;
-      var lastTheme = root.getAttribute('data-theme');
-      new MutationObserver(function(mutations) {
-        var newTheme = root.getAttribute('data-theme');
-        if (newTheme !== lastTheme) {
-          lastTheme = newTheme;
-          renderPyramidChart();
+    }, 500);
+    
+    // Atualizar com dados iniciais
+    atualizarPiramideResumo();
+});
+
+// Observer para detectar mudanças nos valores e atualizar a pirâmide
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' || mutation.type === 'characterData') {
+            // Verificar se algum dos spans de resumo foi alterado
+            const targetIds = ['totalItens', 'totalEntradas', 'totalSaidas', 'saldoFinal'];
+            if (targetIds.some(id => 
+                mutation.target.id === id || 
+                (mutation.target.parentNode && mutation.target.parentNode.id === id)
+            )) {
+                // Aguardar um pouco antes de atualizar para garantir que todos os valores foram atualizados
+                setTimeout(atualizarPiramideResumo, 100);
+            }
         }
-      }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-    }
-    function observeResumoValores() {
-      var ids = ['entradaTotal','saidaTotal','saldoTotal','valorFinal'];
-      ids.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) {
-          new MutationObserver(function(){
-            renderPyramidChart();
-          }).observe(el, {childList:true,subtree:true,characterData:true});
-        }
-      });
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function(){
-        renderPyramidChart();
-        observeResumoValores();
-        observeThemeChange();
-        atualizarResumoValoresLinha();
-        observeResumoValoresLinha();
-      }, 300);
     });
-  </script>
-</section>
+});
+
+// Observar mudanças nos elementos de resumo
+window.addEventListener('DOMContentLoaded', function() {
+    const elementosParaObservar = ['totalItens', 'totalEntradas', 'totalSaidas', 'saldoFinal'];
+    elementosParaObservar.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            observer.observe(elemento, { 
+                childList: true, 
+                characterData: true, 
+                subtree: true 
+            });
+        }
+    });
+});
+</script>
+    </section>
 
     <!-- Resultados Finais -->
+    <section id="resultadoFinal">
+        <p><strong data-translate="totalEntries">Total de Entradas:</strong> <span id="entradaTotal">0</span></p>
+        <p><strong data-translate="totalExits">Total de Saídas:</strong> <span id="saidaTotal">0</span></p>
+        <p><strong data-translate="finalBalance">Saldo Final:</strong> <span id="saldoTotal">0</span></p>
+        <p><strong data-translate="totalValue">Valor Total:</strong> R$ <span id="valorFinal">0.00</span></p>
+    </section>
 
     <!-- Histórico de Operações -->
     <section id="registroOperacoes">
-        <div class="historico-header" style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;width:100%;">
-            <h3 data-translate="operationsHistory" style="margin:0;flex:1 1 180px;text-align:center;min-width:150px;">📋 Histórico de Operações</h3>
+        <div class="historico-header">
+            <h3 data-translate="operationsHistory">📋 Histórico de Operações</h3>
+            <button id="btnLimparHistorico" data-translate="clearHistory">Limpar Histórico</button>
         </div>
         
         <div class="historico-duplo">
@@ -4295,15 +4329,22 @@ table.estoque-table td {
                     <!-- Saídas serão adicionadas dinamicamente -->
                 </ul>
             </div>
-        </div>
-    </section>
 
-    <!-- Botão vermelho de limpar histórico (de fora a fora) -->
-    <div style="width:100%;max-width:100vw;padding:0;margin:32px 0 0 0;display:flex;justify-content:center;">
-      <button id="btnLimparHistoricoFull" style="width:100%;max-width:700px;background:#e53935;color:#fff;font-size:1.15rem;font-weight:700;padding:18px 0;border:none;border-radius:12px;box-shadow:0 2px 12px #0002;cursor:pointer;transition:background 0.2s;letter-spacing:0.5px;">
-        🗑️ Limpar Histórico
-      </button>
-    </div>
+        </div>
+        <!-- Botão vermelho Limpar Histórico abaixo do campo de histórico de operações -->
+        <div style="width:100%;display:flex;justify-content:center;margin:24px 0 0 0;">
+          <button id="btnLimparHistoricoGlobal" style="width:100%;max-width:420px;background:#e53935;color:#fff;font-size:1.1rem;font-weight:600;padding:14px 0;border:none;border-radius:8px;box-shadow:0 2px 8px #0002;cursor:pointer;transition:background 0.2s;letter-spacing:0.5px;">🗑️ Limpar histórico</button>
+        </div>
+        <script>
+          document.getElementById('btnLimparHistoricoGlobal').onclick = function() {
+            if(confirm('Tem certeza que deseja apagar TODO o histórico? Esta ação não pode ser desfeita!')) {
+              localStorage.clear();
+              alert('Histórico e dados locais apagados! A página será recarregada.');
+              window.location.reload();
+            }
+          };
+        </script>
+    </section>
 
     <!-- Modais -->
     
@@ -4524,45 +4565,52 @@ table.estoque-table td {
         
         // Mapping de idiomas com traduções completas
         const languages = {
-            'pt': {
-                flag: '🇧🇷',
-                name: 'PT',
+            'pt': { 
+                flag: '🇧🇷', 
+                name: 'PT', 
                 fullName: 'Português',
                 translations: {
-                    // Top buttons
+                    // Botões do topo
                     'login': 'Login',
                     'premium': 'Premium',
                     'shareStock': 'Compartilhar estoque',
                     'selectLanguage': 'Selecionar Idioma',
                     'toggleTheme': 'Alternar tema',
                     'notifications': 'Notificações',
-                    // Navigation
+                    
+                    // Navegação
                     'previousMonth': 'Mês Anterior',
                     'nextMonth': 'Próximo Mês',
                     'newStock': 'Novo Estoque',
                     'backStock': 'Voltar Estoque',
+                    
                     // Tabela
                     'item': 'Item',
                     'entry': 'Entrada',
                     'exit': 'Saída',
                     'unitValue': 'Valor (R$)',
+                    
                     // Gráficos
                     'entryChart': 'Entradas por Item',
                     'valueChart': 'Valores',
                     'exitChart': 'Saídas',
+                    
                     // Resumo
                     'itemSummary': 'Resumo dos Itens',
                     'noItemsYet': 'Nenhum item inserido ainda',
+                    
                     // Resultados
                     'totalEntries': 'Total de Entradas:',
                     'totalExits': 'Total de Saídas:',
                     'finalBalance': 'Saldo Final:',
                     'totalValue': 'Valor Total:',
+                    
                     // Histórico
                     'operationsHistory': 'Histórico de Operações',
                     'clearHistory': 'Limpar Histórico',
                     'entriesLabel': 'Entradas',
                     'exitsLabel': 'Saídas',
+                    
                     // Modal Premium
                     'premiumSubscription': 'Assinatura Premium',
                     'choosePlan': 'Escolha seu plano:',
@@ -4576,6 +4624,7 @@ table.estoque-table td {
                     'debit': 'Débito',
                     'cancel': 'Cancelar',
                     'confirm': 'Confirmar',
+                    
                     // Card Form
                     'cardDetails': 'Dados do Cartão',
                     'cardNumber': 'Número do Cartão',
@@ -4583,11 +4632,13 @@ table.estoque-table td {
                     'cvv': 'CVV',
                     'cardName': 'Nome no Cartão',
                     'installments': 'Parcelas',
+                    
                     // PIX
                     'pixPayment': 'Pagamento PIX',
                     'pixKey': 'Chave PIX',
                     'copyPix': 'Copiar',
                     'pixInstructions': 'Copie a chave PIX acima e faça o pagamento em seu banco. Todos os pagamentos devem ser feitos nesta chave.',
+                    
                     // Premium Features
                     'advancedReports': 'Relatórios Avançados',
                     'cloudBackup': 'Backup na Nuvem',
@@ -4606,17 +4657,20 @@ table.estoque-table td {
                     'automaticBackup': '✅ Backup automático',
                     'prioritySupportFeature': '✅ Suporte prioritário',
                     'multipleUsersFeature': '✅ Múltiplos usuários',
+                    
                     // Menu Compartilhar
                     'whatsapp': 'WhatsApp',
                     'email': 'Email',
                     'pdf': 'PDF',
+                    
                     // Placeholders
                     'stockName': 'Nome do Estoque',
-                    'stockDefault': 'Estoque',
+                    'stockDefault': 'Estoque', // Para "Estoque 1", "Estoque 2", etc.
                     'itemPlaceholder': 'Nome do item...',
                     'entryPlaceholder': 'Qtd entrada...',
                     'exitPlaceholder': 'Qtd saída...',
                     'valuePlaceholder': 'Valor...',
+                    
                     // Login Modal
                     'welcomeBack': 'Bem-vindo',
                     'loginSubtitle': 'Entre com suas credenciais para acessar o sistema',
@@ -4625,8 +4679,10 @@ table.estoque-table td {
                     'signIn': 'Entrar',
                     'needAccount': 'Precisa de uma conta? Registre-se',
                     'forgotPassword': 'Esqueceu a senha?',
+                    
                     // Meses
                     'months': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    
                     // Additional translations
                     'addItem': 'Adicionar Item',
                     'removeItem': 'Remover Item',
@@ -4646,6 +4702,7 @@ table.estoque-table td {
                     'error': 'Erro!',
                     'warning': 'Aviso!',
                     'info': 'Informação',
+                    
                     // Card placeholders
                     'cardNumberPlaceholder': '1234 5678 9012 3456',
                     'cardExpiryPlaceholder': 'MM/AA',
@@ -4653,49 +4710,6 @@ table.estoque-table td {
                     'cardNamePlaceholder': 'Nome completo'
                 }
             },
-            // ...demais idiomas completos já presentes no arquivo...
-        };
-
-        // Notificação visual simples
-        function mostrarNotificacao(msg, corFundo = '#e53935') {
-          // Remove notificações antigas
-          document.querySelectorAll('.notificacao-flutuante').forEach(e => e.remove());
-          const div = document.createElement('div');
-          div.className = 'notificacao-flutuante';
-          div.textContent = msg;
-          div.style.position = 'fixed';
-          div.style.bottom = '32px';
-          div.style.left = '50%';
-          div.style.transform = 'translateX(-50%)';
-          div.style.background = corFundo;
-          div.style.color = '#fff';
-          div.style.padding = '18px 32px';
-          div.style.borderRadius = '12px';
-          div.style.fontWeight = '700';
-          div.style.fontSize = '1.1rem';
-          div.style.boxShadow = '0 2px 16px #0005';
-          div.style.zIndex = '9999';
-          div.style.opacity = '0';
-          div.style.transition = 'opacity 0.3s';
-          document.body.appendChild(div);
-          setTimeout(() => { div.style.opacity = '1'; }, 10);
-          setTimeout(() => { div.style.opacity = '0'; setTimeout(()=>div.remove(), 400); }, 2200);
-        }
-
-        // Evento do botão vermelho de limpar histórico
-        document.addEventListener('DOMContentLoaded', function() {
-          var btn = document.getElementById('btnLimparHistoricoFull');
-          if (btn) {
-            btn.addEventListener('click', function() {
-              mostrarNotificacao('Histórico limpo com sucesso!', '#e53935');
-              // Aqui pode adicionar a lógica real de limpeza se desejar
-            });
-          }
-        });
-    // Bloco de traduções e funções JS movido para dentro da tag <script>
-    </script>
-        <!-- O bloco de traduções e demais objetos/funções JS deve estar DENTRO de <script> e nunca fora! -->
-        <!-- Se aparecer código na tela, revise se há algum trecho JS fora da tag <script>. -->
             'en': { 
                 flag: '🇺🇸', 
                 name: 'EN', 
@@ -5263,6 +5277,36 @@ table.estoque-table td {
                 const translationKey = placeholders[elementId];
                 if (element && translations[translationKey]) {
                     element.setAttribute('placeholder', translations[translationKey]);
+                    // Traduzir o valor do campo estoque se estiver vazio, igual ao texto padrão, ou igual ao nome padrão de qualquer idioma
+                    const allPlaceholders = Object.keys(languages).map(l => languages[l].translations[translationKey]);
+                    const stockRegexes = Object.keys(languages).map(l => {
+                        const word = languages[l].translations['stockDefault'];
+                        return new RegExp(`^${word} ?\\d+$`);
+                    });
+                    let shouldTranslate = false;
+                    if (!element.value || allPlaceholders.includes(element.value)) {
+                        shouldTranslate = true;
+                    } else {
+                        shouldTranslate = stockRegexes.some(r => r.test(element.value));
+                    }
+                    if (shouldTranslate) {
+                        // Se o valor for um nome padrão com número, traduz mantendo o número
+                    let num = null;
+                    for (const l of Object.keys(languages)) {
+                        const word = languages[l].translations['stockDefault'];
+                        const regex = new RegExp(`^${word} ?(\d+)$`);
+                        const found = element.value.match(regex);
+                        if (found) {
+                            num = found[1];
+                            break;
+                        }
+                    }
+                    if (num) {
+                        element.value = `${translations['stockDefault']} ${num}`;
+                    } else {
+                        element.value = translations[translationKey];
+                    }
+                    }
                 }
             });
             
@@ -5917,10 +5961,6 @@ table.estoque-table td {
                         shareOptions.style.display = 'none';
                     }, 200);
                 }
-            });
-        }
-    });
-    </script>
-
-</body>
-</html>
+                });
+            }
+        });
